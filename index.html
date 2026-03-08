@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Domino Assistant MVP</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#0f172a;color:#e5e7eb;margin:0}
+    .app{max-width:760px;margin:0 auto;padding:14px}
+    .card{background:#111827;border:1px solid #374151;border-radius:12px;padding:12px;margin-bottom:10px}
+    h1{font-size:1.2rem;margin:0 0 8px}
+    h2{font-size:1rem;margin:0 0 8px}
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    input,select,button{border-radius:10px;border:1px solid #4b5563;background:#1f2937;color:#fff;padding:8px}
+    button{background:#2563eb;border-color:#2563eb}
+    .tile{display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;background:#1f2937;border:1px solid #4b5563;border-radius:999px;margin:4px 4px 0 0}
+    .muted{color:#9ca3af;font-size:.9rem}
+    .log{max-height:220px;overflow:auto;font-size:.92rem}
+    .tag{font-size:.75rem;background:#052e16;color:#bbf7d0;padding:2px 6px;border-radius:999px;border:1px solid #166534}
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="card">
+    <h1>Domino Assistant MVP</h1>
+    <div class="muted">Reglas venezolanas · 4 jugadores · sin pozo</div>
+  </div>
+
+  <div class="card">
+    <h2>1) Tu mano rápida (7 fichas)</h2>
+    <div class="row">
+      <input id="tileInput" placeholder="Ej: 6-6,6-5,5-4,4-4,3-2,1-0,0-0" style="flex:1;min-width:240px" />
+      <button id="setHand">Guardar mano</button>
+    </div>
+    <div id="handView"></div>
+  </div>
+
+  <div class="card">
+    <h2>2) Mesa y turnos</h2>
+    <div class="row">
+      <label>Extremo A <input id="endA" type="number" min="0" max="6" value="-1" style="width:68px"></label>
+      <label>Extremo B <input id="endB" type="number" min="0" max="6" value="-1" style="width:68px"></label>
+      <button id="setEnds">Actualizar extremos</button>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <select id="playerSel"><option>Jugador 1</option><option>Jugador 2</option><option>Jugador 3</option><option>Jugador 4</option></select>
+      <select id="eventSel"><option value="play">Jugó ficha</option><option value="pass">Pasó</option></select>
+      <input id="eventTile" placeholder="ficha 6-4 (si aplica)" />
+      <button id="addEvent">Registrar</button>
+    </div>
+    <div class="muted" id="endsView" style="margin-top:6px">Extremos: no definidos</div>
+  </div>
+
+  <div class="card">
+    <h2>3) Recomendación legal v1</h2>
+    <button id="recommend">Recomendar jugada</button>
+    <div id="rec" style="margin-top:8px" class="muted">Sin recomendación aún.</div>
+  </div>
+
+  <div class="card">
+    <h2>4) Log de eventos</h2>
+    <div id="log" class="log muted"></div>
+  </div>
+</div>
+<script>
+const state={hand:[],events:[],ends:{a:null,b:null},passes:{"Jugador 1":0,"Jugador 2":0,"Jugador 3":0,"Jugador 4":0}};
+const $=id=>document.getElementById(id);
+const parseTile=t=>{const m=t.trim().match(/^(\d)\s*[-|]\s*(\d)$/);if(!m)return null;const a=+m[1],b=+m[2];if(a>6||b>6)return null;return [a,b];};
+function render(){
+  $('handView').innerHTML=state.hand.map(t=>`<span class='tile'>${t[0]}-${t[1]}</span>`).join('')||"<span class='muted'>Sin mano</span>";
+  $('endsView').textContent=(state.ends.a===null||state.ends.b===null)?'Extremos: no definidos':`Extremos: ${state.ends.a} | ${state.ends.b}`;
+  $('log').innerHTML=state.events.map((e,i)=>`#${i+1} · ${e.p} · ${e.t}${e.tile?` (${e.tile[0]}-${e.tile[1]})`:''}`).join('<br>')||'Sin eventos.';
+}
+$('setHand').onclick=()=>{const arr=$('tileInput').value.split(',').map(s=>parseTile(s)).filter(Boolean).slice(0,7);state.hand=arr;render();};
+$('setEnds').onclick=()=>{const a=+$('endA').value,b=+$('endB').value;state.ends.a=(a>=0&&a<=6)?a:null;state.ends.b=(b>=0&&b<=6)?b:null;render();};
+$('addEvent').onclick=()=>{const p=$('playerSel').value,t=$('eventSel').value;const tile=parseTile($('eventTile').value||'');state.events.unshift({p,t,tile});if(t==='pass')state.passes[p]++;render();};
+function legalMoves(){
+  if(state.ends.a===null||state.ends.b===null) return state.hand.map(t=>({tile:t,side:'apertura'}));
+  return state.hand.filter(([x,y])=>[x,y].includes(state.ends.a)||[x,y].includes(state.ends.b)).map(t=>{
+    const [x,y]=t; if(x===state.ends.a||y===state.ends.a) return {tile:t,side:'A'}; return {tile:t,side:'B'};
+  });
+}
+function scoreMove(m){
+  const [a,b]=m.tile; const isDouble=a===b?8:0; const high=a+b; const blockBonus=(a===state.ends.a&&b===state.ends.b)||(a===state.ends.b&&b===state.ends.a)?5:0; return isDouble+high+blockBonus;
+}
+$('recommend').onclick=()=>{
+  const moves=legalMoves();
+  if(!moves.length){$('rec').innerHTML='<span class="tag">PASAR</span> No tienes jugadas legales con los extremos actuales.';return;}
+  moves.sort((m1,m2)=>scoreMove(m2)-scoreMove(m1));
+  const best=moves[0];
+  const [a,b]=best.tile;
+  const reason=[];
+  if(a===b) reason.push('prioriza doble');
+  reason.push('maximiza pip total');
+  if(best.side!=='apertura') reason.push(`juega por lado ${best.side}`);
+  $('rec').innerHTML=`<span class="tag">JUGAR</span> ${a}-${b} · ${reason.join(' · ')}`;
+};
+render();
+</script>
+</body>
+</html>
