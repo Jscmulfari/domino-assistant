@@ -9,7 +9,8 @@
     .app{max-width:860px;margin:0 auto;padding:12px}
     .title{font-size:1.2rem;font-weight:800;margin-bottom:6px}
     .counter{font-size:1rem;font-weight:700;margin-bottom:10px;color:#93c5fd}
-    .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .grid-wrap{overflow-x:auto;padding-bottom:2px}
+    .grid{display:grid;grid-template-columns:repeat(7,72px);gap:8px;min-width:max-content}
     .tile{border:1px solid #475569;background:#1e293b;border-radius:12px;padding:6px;min-height:112px;cursor:pointer;transition:.1s}
     .tile.sel{border-color:#22c55e;background:#14532d;box-shadow:0 0 0 2px #22c55e55}
     .tile:active{transform:scale(.98)}
@@ -22,21 +23,22 @@
     .pip.show{opacity:1}
     .cta{margin-top:12px;width:100%;padding:12px;border-radius:10px;border:1px solid #22c55e;background:#14532d;color:#dcfce7;font-weight:800;font-size:1rem;display:none}
     .cta.show{display:block}
-    @media (max-width:640px){.grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.tile{min-height:96px}}
+    @media (max-width:640px){.grid{grid-template-columns:repeat(7,64px);gap:6px}.tile{min-height:96px}}
   </style>
 </head>
 <body>
   <main class="app">
     <div class="title">Selecciona exactamente 7 fichas</div>
     <div id="counter" class="counter">0 / 7 seleccionadas</div>
-    <div id="grid" class="grid"></div>
+    <div style="color:#94a3b8;font-size:.85rem;margin-bottom:8px">Orden fijo: 0-0 → 6-6</div>
+    <div class="grid-wrap"><div id="grid" class="grid"></div></div>
     <button id="confirm" class="cta">✓ Confirmar mano</button>
   </main>
 
   <script>
     const P={0:[],1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
     const tiles=[]; for(let a=0;a<=6;a++) for(let b=a;b<=6;b++) tiles.push([a,b]);
-    tiles.sort((x,y)=> (y[0]-x[0]) || (y[1]-x[1]));
+    tiles.sort((x,y)=> (x[0]-y[0]) || (x[1]-y[1]));
     const key=t=>`${t[0]}-${t[1]}`;
     const state={selected:[]};
     const grid=document.getElementById('grid');
