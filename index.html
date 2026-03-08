@@ -12,7 +12,7 @@
     .pairs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
     .pair-btn{border:1px solid #475569;background:#1e293b;color:#fff;border-radius:10px;padding:10px;font-weight:700}
     .pair-btn.active{border-color:#22c55e;background:#14532d}
-    .options{margin-top:10px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .options{margin-top:10px;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
     .tile{border:1px solid #475569;background:#1e293b;border-radius:12px;padding:6px;min-height:104px;cursor:pointer;transition:.1s}
     .tile.sel{border-color:#22c55e;background:#14532d;box-shadow:0 0 0 2px #22c55e55}
     .tile:active{transform:scale(.98)}
@@ -25,7 +25,7 @@
     .pip.show{opacity:1}
     .cta{margin-top:12px;width:100%;padding:12px;border-radius:10px;border:1px solid #22c55e;background:#14532d;color:#dcfce7;font-weight:800;font-size:1rem;display:none}
     .cta.show{display:block}
-    @media (max-width:520px){.pairs,.options{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.tile{min-height:92px}}
+    @media (max-width:520px){.pairs{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.options{grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}.tile{min-height:88px;padding:4px}}
   </style>
 </head>
 <body>
@@ -41,7 +41,8 @@
 
   <script>
     const P={0:[],1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
-    const key=t=>`${t[0]}-${t[1]}`;
+    const norm=t=>[Math.min(t[0],t[1]),Math.max(t[0],t[1])];
+    const key=t=>{const n=norm(t);return `${n[0]}-${n[1]}`};
     const state={selected:[],activePair:0};
     const pairs=document.getElementById('pairs');
     const options=document.getElementById('options');
@@ -51,7 +52,7 @@
     function pips(n){const v=new Set(P[n]);return `<div class="pips">${Array.from({length:9},(_,i)=>`<span class="pip ${v.has(i)?'show':''}"></span>`).join('')}</div>`}
     function face(a,b){return `<div class="domino"><div class="half top">${pips(a)}</div><div class="half bottom">${pips(b)}</div></div>`}
 
-    function pairOptions(a){const arr=[];for(let b=a;b<=6;b++)arr.push([a,b]);return arr;}
+    function pairOptions(a){const arr=[];for(let b=0;b<=6;b++)arr.push([a,b]);return arr;}
 
     function render(){
       pairs.innerHTML = Array.from({length:7},(_,a)=>`<button class="pair-btn ${state.activePair===a?'active':''}" data-a="${a}">${a}-${a}</button>`).join('');
