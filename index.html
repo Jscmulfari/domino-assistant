@@ -3,141 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Domino Assistant</title>
+  <title>Domino Selector</title>
   <style>
-    :root{
-      --s-1:4px;--s-2:8px;--s-3:12px;--s-4:16px;--s-5:20px;
-      --bg:#070b16;--panel:#0f1628;--panel-2:#111d33;--border:#253454;
-      --text:#eef3ff;--muted:#9fb0d3;--accent:#4f7dff;--ok:#22c55e;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#1b2a4d 0%,transparent 60%),var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,sans-serif}
-    .layout{max-width:1100px;margin:0 auto;padding:var(--s-4);display:grid;gap:var(--s-3)}
-
-    .command_header{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--s-3);padding:var(--s-4);background:linear-gradient(180deg,var(--panel),#0b1324);border:1px solid var(--border);border-radius:14px}
-    .h-title{font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:800;line-height:1.05}
-    .h-sub{font-size:.9rem;color:var(--muted);margin-top:var(--s-1)}
-    .h-meta{display:flex;align-items:center;gap:var(--s-2)}
-    .pill{padding:6px 10px;border:1px solid #3b4f78;border-radius:999px;background:#111f3a;color:#c7d8ff;font-size:.8rem}
-
-    .board_stage{display:grid;grid-template-columns:1.7fr .9fr;gap:var(--s-3);align-items:start}
-    .board_main{padding:var(--s-4);background:linear-gradient(180deg,var(--panel-2),#0d1830);border:1px solid var(--border);border-radius:14px}
-    .board_side{padding:var(--s-4);background:linear-gradient(180deg,var(--panel),#0b1324);border:1px solid var(--border);border-radius:14px}
-
-    .section-title{font-size:1rem;font-weight:700;margin-bottom:var(--s-2)}
-    .counter{font-size:.9rem;color:var(--muted);margin-bottom:var(--s-2)}
-
-    .tile_groups{display:grid;gap:8px}
-    .tile_row{display:grid;grid-template-columns:28px 1fr;gap:6px;align-items:center}
-    .row_label{font-size:.72rem;font-weight:800;color:#a9bde6;text-align:center}
-    .tile_grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(52px,1fr));gap:4px}
-    .tile_btn{min-height:88px;border:1px solid #3e5682;border-radius:10px;padding:4px 3px;background:linear-gradient(180deg,#22365f,#111b32);cursor:pointer;transition:.12s ease;box-shadow:inset 0 1px 0 #ffffff1f,0 4px 10px #0007}
-    .tile_btn:hover{transform:translateY(-1px)}
-    .tile_btn:active{transform:scale(.98)}
-    .tile_btn.sel{border-color:var(--ok);box-shadow:0 0 0 2px #22c55e55,inset 0 1px 0 #ffffff22;background:linear-gradient(180deg,#1f6242,#13422e)}
-
-    .domino{display:grid;grid-template-rows:1fr 1fr;gap:0;height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#0f172a;color:#e2e8f0}
+    .app{max-width:860px;margin:0 auto;padding:12px}
+    .title{font-size:1.2rem;font-weight:800;margin-bottom:6px}
+    .counter{font-size:1rem;font-weight:700;margin-bottom:10px;color:#93c5fd}
+    .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .tile{border:1px solid #475569;background:#1e293b;border-radius:12px;padding:6px;min-height:112px;cursor:pointer;transition:.1s}
+    .tile.sel{border-color:#22c55e;background:#14532d;box-shadow:0 0 0 2px #22c55e55}
+    .tile:active{transform:scale(.98)}
+    .domino{height:100%;display:grid;grid-template-rows:1fr 1fr;gap:0}
     .half{display:grid;place-items:center;background:#f8fafc}
-    .half.top{border-top-left-radius:6px;border-top-right-radius:6px}
-    .half.bottom{border-bottom-left-radius:6px;border-bottom-right-radius:6px;border-top:2px solid #0f172a}
-    .pips{width:22px;height:22px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr)}
-    .pip{width:5px;height:5px;border-radius:99px;background:#0f172a;opacity:0;place-self:center}
+    .half.top{border-top-left-radius:8px;border-top-right-radius:8px}
+    .half.bottom{border-top:2px solid #0f172a;border-bottom-left-radius:8px;border-bottom-right-radius:8px}
+    .pips{width:28px;height:28px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr)}
+    .pip{width:6px;height:6px;border-radius:99px;background:#0f172a;opacity:0;place-self:center}
     .pip.show{opacity:1}
-
-    .confirm{display:none;margin-top:var(--s-3);width:100%;padding:11px;border-radius:10px;border:1px solid #32d07f;background:#165a3b;color:#e8fff3;font-weight:800}
-    .confirm.show{display:block}
-
-    .assistant_tray{display:grid;gap:var(--s-2)}
-    .tray_panel{padding:var(--s-3);border:1px solid var(--border);border-radius:12px;background:#0e182d}
-    .hand_strip{display:flex;gap:6px;overflow:auto;padding-bottom:4px}
-    .mini .domino{width:64px;height:84px}
-    .muted{color:var(--muted);font-size:.88rem}
-
-    .tray_toggle{display:none}
-
-    @media (max-width:860px){
-      .tile_grid{grid-template-columns:repeat(auto-fit,minmax(50px,1fr));gap:4px}
-      .tile_btn{min-height:84px}
-      .board_stage{grid-template-columns:1fr}
-      .assistant_tray{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:0 var(--s-3) var(--s-3)}
-      .tray_shell{background:#0a1222;border:1px solid var(--border);border-radius:12px 12px 0 0;max-height:64vh;overflow:auto;transform:translateY(78%);transition:.2s ease}
-      .tray_shell.open{transform:translateY(0)}
-      .tray_toggle{display:block;width:100%;padding:8px;border:0;background:#15233f;color:#c9d7f7;font-weight:700;border-radius:12px 12px 0 0}
-      .layout{padding-bottom:130px}
-    }
+    .cta{margin-top:12px;width:100%;padding:12px;border-radius:10px;border:1px solid #22c55e;background:#14532d;color:#dcfce7;font-weight:800;font-size:1rem;display:none}
+    .cta.show{display:block}
+    @media (max-width:640px){.grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.tile{min-height:96px}}
   </style>
 </head>
 <body>
-  <main class="layout">
-    <section class="command_header">
-      <div>
-        <div class="h-title">Domino Assistant</div>
-        <div class="h-sub">Captura rápida de mano (7 fichas) · tablero centrado</div>
-      </div>
-      <div class="h-meta">
-        <span class="pill" id="counter">Seleccionadas: 0/7</span>
-      </div>
-    </section>
-
-    <section class="board_stage">
-      <article class="board_main">
-        <div class="section-title">Selecciona exactamente 7 fichas</div>
-        <div class="muted" style="margin-bottom:8px">Orden por cabeza (6→0) para escoger más rápido.</div>
-        <div id="grid" class="tile_groups"></div>
-        <button id="confirmCta" class="confirm">✓ Confirmar mano</button>
-      </article>
-
-      <aside class="board_side">
-        <div class="section-title">Checkpoint visual</div>
-        <div class="muted">Arquitectura 3 zonas: command_header, board_stage, assistant_tray</div>
-      </aside>
-    </section>
-
-    <section class="assistant_tray">
-      <button id="trayToggle" class="tray_toggle">Abrir bandeja</button>
-      <div id="trayShell" class="tray_shell open">
-        <div class="tray_panel">
-          <div class="section-title">Mano seleccionada</div>
-          <div id="selectedStrip" class="hand_strip muted">Sin fichas seleccionadas.</div>
-        </div>
-      </div>
-    </section>
+  <main class="app">
+    <div class="title">Selecciona exactamente 7 fichas</div>
+    <div id="counter" class="counter">0 / 7 seleccionadas</div>
+    <div id="grid" class="grid"></div>
+    <button id="confirm" class="cta">✓ Confirmar mano</button>
   </main>
 
   <script>
-    const PIP_MAP={0:[],1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
-    const all=[]; for(let a=0;a<=6;a++) for(let b=a;b<=6;b++) all.push([a,b]);
-    const state={selected:[]};
+    const P={0:[],1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+    const tiles=[]; for(let a=0;a<=6;a++) for(let b=a;b<=6;b++) tiles.push([a,b]);
+    tiles.sort((x,y)=> (y[0]-x[0]) || (y[1]-x[1]));
     const key=t=>`${t[0]}-${t[1]}`;
+    const state={selected:[]};
     const grid=document.getElementById('grid');
     const counter=document.getElementById('counter');
-    const cta=document.getElementById('confirmCta');
-    const strip=document.getElementById('selectedStrip');
-    const trayShell=document.getElementById('trayShell');
-    const trayToggle=document.getElementById('trayToggle');
+    const confirm=document.getElementById('confirm');
 
-    function pips(n){const vis=new Set(PIP_MAP[n]);return `<div class="pips">${Array.from({length:9},(_,i)=>`<span class="pip ${vis.has(i)?'show':''}"></span>`).join('')}</div>`}
-    function face(a,b,mini=false){return `<div class="domino ${mini?'mini':''}"><div class="half top">${pips(a)}</div><div class="half bottom">${pips(b)}</div></div>`}
+    function pips(n){const v=new Set(P[n]);return `<div class="pips">${Array.from({length:9},(_,i)=>`<span class="pip ${v.has(i)?'show':''}"></span>`).join('')}</div>`}
+    function face(a,b){return `<div class="domino"><div class="half top">${pips(a)}</div><div class="half bottom">${pips(b)}</div></div>`}
 
     function render(){
       const set=new Set(state.selected.map(key));
-      const groups=[];
-      for(let head=6; head>=0; head--){
-        const row=all.filter(([a])=>a===head).sort((x,y)=>y[1]-x[1]);
-        groups.push(`<div class="tile_row"><div class="row_label">${head}</div><div class="tile_grid">${row.map(t=>`<button class="tile_btn ${set.has(key(t))?'sel':''}" data-k="${key(t)}">${face(t[0],t[1])}</button>`).join('')}</div></div>`);
-      }
-      grid.innerHTML=groups.join('');
-      [...grid.querySelectorAll('.tile_btn')].forEach(btn=>btn.onclick=()=>{
+      grid.innerHTML=tiles.map(t=>`<button class="tile ${set.has(key(t))?'sel':''}" data-k="${key(t)}">${face(t[0],t[1])}</button>`).join('');
+      [...grid.querySelectorAll('.tile')].forEach(btn=>btn.onclick=()=>{
         const t=btn.dataset.k.split('-').map(Number); const k=key(t); const i=state.selected.findIndex(x=>key(x)===k);
         if(i>=0) state.selected.splice(i,1); else if(state.selected.length<7) state.selected.push(t);
         render();
       });
-      counter.textContent=`Seleccionadas: ${state.selected.length}/7`;
-      cta.classList.toggle('show',state.selected.length===7);
-      strip.innerHTML=state.selected.length?state.selected.map(t=>`<div class="mini">${face(t[0],t[1],true)}</div>`).join(''):'Sin fichas seleccionadas.';
+      counter.textContent=`${state.selected.length} / 7 seleccionadas`;
+      confirm.classList.toggle('show', state.selected.length===7);
     }
-
-    trayToggle.onclick=()=>{trayShell.classList.toggle('open'); trayToggle.textContent=trayShell.classList.contains('open')?'Cerrar bandeja':'Abrir bandeja';};
     render();
   </script>
 </body>
