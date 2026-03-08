@@ -25,10 +25,12 @@
     .pip.show{opacity:1}
     .cta{margin-top:12px;width:100%;padding:12px;border-radius:10px;border:1px solid #22c55e;background:#14532d;color:#dcfce7;font-weight:800;font-size:1rem;display:none}
     .cta.show{display:block}
-    .selected-bar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#0b1220;border-top:1px solid #334155;padding:8px 10px}
+    .selected-bar{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 46px);z-index:30;background:#0b1220;border:1px solid #334155;border-left:0;border-right:0;padding:7px 10px}
     .selected-strip{display:flex;gap:6px;overflow:auto}
-    .chip{padding:6px 8px;border-radius:999px;background:#1e293b;border:1px solid #475569;color:#e2e8f0;font-size:.84rem;white-space:nowrap}
-    .app{padding-bottom:78px}
+    .mini-tile{min-width:44px;height:64px;border:1px solid #475569;background:#1e293b;border-radius:9px;padding:3px;display:grid}
+    .mini-tile .domino{height:100%}
+    .mini-tile.empty{display:grid;place-items:center;color:#94a3b8;font-size:.82rem;min-width:120px}
+    .app{padding-bottom:128px}
     @media (max-width:520px){.pairs{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.options{grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}.tile{min-height:88px;padding:4px}}
   </style>
 </head>
@@ -43,7 +45,7 @@
     <button id="confirm" class="cta">✓ Confirmar mano</button>
   </main>
   <section class="selected-bar">
-    <div id="selectedBar" class="selected-strip"><span class="chip">Sin selección</span></div>
+    <div id="selectedBar" class="selected-strip"><span class="mini-tile empty">Sin selección</span></div>
   </section>
 
   <script>
@@ -77,8 +79,8 @@
       counter.textContent=`${state.selected.length} / 7 seleccionadas`;
       confirm.classList.toggle('show', state.selected.length===7);
       selectedBar.innerHTML = state.selected.length
-        ? state.selected.map((t,i)=>`<span class="chip">${i+1}. ${key(t)}</span>`).join('')
-        : '<span class="chip">Sin selección</span>';
+        ? state.selected.map((t)=>`<span class="mini-tile">${face(t[0],t[1])}</span>`).join('')
+        : '<span class="mini-tile empty">Sin selección</span>';
     }
 
     render();
