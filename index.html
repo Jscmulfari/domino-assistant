@@ -6,23 +6,24 @@
   <title>Domino Assistant</title>
   <style>
     :root{
-      --bg:#08111f;
-      --bg-soft:#0f1b31;
-      --panel:rgba(15,23,42,.9);
-      --panel-strong:rgba(17,29,51,.96);
+      --bg:#07111f;
+      --bg-soft:#0f1d34;
+      --panel:rgba(10,18,32,.9);
+      --panel-strong:rgba(15,27,48,.96);
+      --panel-elevated:rgba(21,37,64,.98);
       --border:rgba(148,163,184,.18);
-      --border-strong:rgba(96,165,250,.28);
-      --text:#e5eefc;
-      --muted:#94a3b8;
-      --accent:#60a5fa;
-      --accent-strong:#2563eb;
-      --success:#22c55e;
-      --success-strong:#166534;
-      --shadow:0 24px 60px rgba(2,6,23,.42);
-      --radius-xl:22px;
-      --radius-lg:18px;
-      --radius-md:14px;
-      --radius-sm:10px;
+      --border-strong:rgba(96,165,250,.34);
+      --text:#e8f0ff;
+      --muted:#9fb0ca;
+      --accent:#7dd3fc;
+      --accent-strong:#3b82f6;
+      --success:#34d399;
+      --success-strong:#065f46;
+      --shadow:0 28px 80px rgba(2,6,23,.46);
+      --radius-xl:28px;
+      --radius-lg:22px;
+      --radius-md:18px;
+      --radius-sm:14px;
     }
 
     *{box-sizing:border-box}
@@ -30,26 +31,39 @@
       margin:0;
       min-height:100vh;
       background:
-        radial-gradient(circle at top, rgba(59,130,246,.18), transparent 32%),
-        radial-gradient(circle at bottom right, rgba(34,197,94,.08), transparent 22%),
-        linear-gradient(180deg, #0b1220 0%, var(--bg) 100%);
+        radial-gradient(circle at top, rgba(56,189,248,.14), transparent 28%),
+        radial-gradient(circle at right, rgba(59,130,246,.18), transparent 30%),
+        linear-gradient(180deg, #08111f 0%, #050b16 100%);
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
 
     .app{
-      max-width:960px;
+      max-width:1160px;
       margin:0 auto;
-      padding:24px 16px 40px;
+      padding:28px 18px 48px;
     }
 
     .hero{
-      margin-bottom:16px;
-      padding:20px 22px;
+      position:relative;
+      overflow:hidden;
+      margin-bottom:18px;
+      padding:28px;
       border:1px solid var(--border);
-      border-radius:var(--radius-xl);
-      background:linear-gradient(180deg, rgba(17,29,51,.92), rgba(11,18,32,.92));
+      border-radius:32px;
+      background:linear-gradient(180deg, rgba(16,29,51,.96), rgba(8,16,29,.96));
       box-shadow:var(--shadow);
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:auto -10% -45% auto;
+      width:320px;
+      height:320px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(125,211,252,.18), transparent 62%);
+      pointer-events:none;
     }
 
     .eyebrow{
@@ -58,39 +72,63 @@
       gap:8px;
       padding:8px 12px;
       border-radius:999px;
-      background:rgba(96,165,250,.1);
-      border:1px solid rgba(96,165,250,.18);
-      color:#bfdbfe;
-      font-size:.82rem;
-      font-weight:700;
-      letter-spacing:.02em;
+      background:rgba(125,211,252,.1);
+      border:1px solid rgba(125,211,252,.2);
+      color:#d7f3ff;
+      font-size:.8rem;
+      font-weight:800;
+      letter-spacing:.04em;
+      text-transform:uppercase;
     }
 
     h1{
-      margin:14px 0 8px;
-      font-size:clamp(1.8rem,4vw,2.7rem);
-      line-height:1.05;
-      letter-spacing:-.03em;
+      margin:16px 0 10px;
+      font-size:clamp(2rem,4.8vw,3.6rem);
+      line-height:1;
+      letter-spacing:-.05em;
+      max-width:11ch;
     }
 
-    .hero p{
-      margin:0;
-      max-width:62ch;
+    .hero-copy{
+      max-width:64ch;
       color:var(--muted);
-      line-height:1.55;
-      font-size:.98rem;
+      font-size:1rem;
+      line-height:1.65;
     }
 
-    .stack{
+    .hero-stats{
       display:grid;
-      gap:16px;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+      margin-top:22px;
     }
+
+    .hero-stat{
+      padding:16px 18px;
+      border-radius:18px;
+      border:1px solid rgba(148,163,184,.14);
+      background:rgba(7,13,24,.45);
+      backdrop-filter:blur(10px);
+    }
+
+    .hero-stat strong{
+      display:block;
+      font-size:1.1rem;
+      margin-bottom:4px;
+    }
+
+    .hero-stat span{
+      color:var(--muted);
+      font-size:.9rem;
+    }
+
+    .stack{display:grid;gap:18px}
 
     .card{
       background:linear-gradient(180deg, var(--panel-strong), var(--panel));
       border:1px solid var(--border);
       border-radius:var(--radius-xl);
-      padding:20px;
+      padding:22px;
       box-shadow:var(--shadow);
       backdrop-filter:blur(14px);
     }
@@ -99,209 +137,399 @@
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap:12px;
-      margin-bottom:12px;
+      gap:16px;
+      margin-bottom:16px;
     }
 
     h2{
-      font-size:1.08rem;
       margin:0 0 6px;
-      letter-spacing:-.02em;
+      font-size:1.16rem;
+      letter-spacing:-.03em;
     }
 
-    .muted{color:var(--muted);font-size:.92rem;line-height:1.45}
+    .muted{color:var(--muted);font-size:.94rem;line-height:1.55}
 
     .status-pill{
-      padding:10px 12px;
+      padding:10px 14px;
       border-radius:999px;
-      border:1px solid rgba(96,165,250,.18);
-      background:rgba(96,165,250,.08);
-      color:#dbeafe;
+      border:1px solid rgba(125,211,252,.24);
+      background:rgba(125,211,252,.08);
+      color:#e0f2fe;
       font-size:.88rem;
-      font-weight:700;
+      font-weight:800;
       white-space:nowrap;
     }
 
-    .grid{
+    .pair-grid{
       display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(54px,1fr));
-      gap:6px;
-      margin-top:10px;
+      grid-template-columns:repeat(auto-fit,minmax(138px,1fr));
+      gap:14px;
+    }
+
+    .pair-card{
+      position:relative;
+      border:1px solid rgba(96,165,250,.16);
+      background:linear-gradient(180deg, rgba(18,31,54,.96), rgba(11,19,33,.98));
+      border-radius:24px;
+      padding:16px;
+      color:inherit;
+      text-align:left;
+      cursor:pointer;
+      transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease,background .16s ease;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 18px 34px rgba(2,6,23,.26);
+    }
+
+    .pair-card:hover{transform:translateY(-2px);border-color:rgba(125,211,252,.42)}
+    .pair-card.active{
+      border-color:rgba(125,211,252,.72);
+      background:linear-gradient(180deg, rgba(31,57,94,.98), rgba(13,24,42,.98));
+      box-shadow:0 0 0 2px rgba(125,211,252,.16),0 22px 44px rgba(14,116,144,.2);
+    }
+
+    .pair-card small{
+      display:block;
+      margin-bottom:10px;
+      color:#bfdbfe;
+      font-size:.78rem;
+      font-weight:800;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+
+    .pair-card strong{
+      display:block;
+      font-size:1.55rem;
+      letter-spacing:-.04em;
+      margin:10px 0 4px;
+    }
+
+    .pair-card span{color:var(--muted);font-size:.9rem}
+
+    .pair-domino{width:62px;height:96px}
+    .pair-domino .domino-face{height:100%}
+
+    .selection-layout{
+      display:grid;
+      grid-template-columns:minmax(270px,320px) minmax(0,1fr);
+      gap:18px;
+      align-items:start;
+    }
+
+    .focus-panel{
+      position:sticky;
+      top:18px;
+      padding:18px;
+      border-radius:24px;
+      background:linear-gradient(180deg, rgba(20,37,65,.98), rgba(9,18,31,.98));
+      border:1px solid rgba(125,211,252,.22);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .focus-label{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      background:rgba(52,211,153,.12);
+      color:#d1fae5;
+      font-size:.78rem;
+      font-weight:800;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+
+    .focus-title{
+      margin:14px 0 6px;
+      font-size:1.8rem;
+      letter-spacing:-.04em;
+    }
+
+    .focus-domino{
+      width:120px;
+      height:176px;
+      margin:18px 0;
+    }
+
+    .focus-meta{
+      display:grid;
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .meta-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
+      border-radius:16px;
+      background:rgba(7,13,24,.5);
+      border:1px solid rgba(148,163,184,.12);
+      color:var(--muted);
+      font-size:.92rem;
+    }
+
+    .meta-row strong{color:var(--text);font-size:.95rem}
+
+    .tile-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+      gap:14px;
     }
 
     .tile-btn{
-      border:1px solid rgba(82,98,122,.92);
-      background:linear-gradient(180deg,#243247,#0f172a);
-      border-radius:14px;
-      padding:5px 4px;
-      min-height:94px;
-      transition:transform .12s ease,border-color .12s ease,box-shadow .12s ease,background .12s ease;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 10px 22px rgba(0,0,0,.24);
+      border:1px solid rgba(82,98,122,.84);
+      background:linear-gradient(180deg, #243247, #0c1628);
+      border-radius:20px;
+      padding:12px;
+      min-height:180px;
+      transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease,background .14s ease;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 16px 28px rgba(0,0,0,.24);
       cursor:pointer;
+      color:inherit;
+      text-align:left;
     }
 
-    .tile-btn:hover{transform:translateY(-1px);border-color:var(--border-strong)}
-    .tile-btn:active{transform:scale(.98)}
+    .tile-btn:hover{transform:translateY(-2px);border-color:var(--border-strong)}
+    .tile-btn:active{transform:scale(.985)}
     .tile-btn.sel{
       border-color:var(--success);
-      background:linear-gradient(180deg,#1a4a32,#113122);
-      box-shadow:0 0 0 2px rgba(34,197,94,.22),0 12px 24px rgba(17,49,34,.38),inset 0 1px 0 rgba(255,255,255,.08);
+      background:linear-gradient(180deg,#144a39,#0d2d24);
+      box-shadow:0 0 0 2px rgba(52,211,153,.2),0 16px 30px rgba(6,95,70,.28),inset 0 1px 0 rgba(255,255,255,.08);
     }
 
-    .domino-face{display:grid;grid-template-rows:1fr 1fr;gap:0;align-items:stretch;height:100%}
+    .tile-domino{height:122px;margin-bottom:12px}
+
+    .tile-caption{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      font-size:.95rem;
+      font-weight:700;
+    }
+
+    .tile-caption span:last-child{color:var(--muted);font-size:.82rem;font-weight:600}
+
+    .domino-face{display:grid;grid-template-rows:1fr 1fr;height:100%}
     .half{min-height:38px;border-radius:0;background:#f8fafc;position:relative;display:grid;place-items:center}
-    .domino-face .half:first-child{border-top-left-radius:10px;border-top-right-radius:10px}
-    .domino-face .half.right{border-top:2px solid #0f172a;border-bottom-left-radius:10px;border-bottom-right-radius:10px}
-    .pips{width:22px;height:22px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr)}
-    .pip{width:5px;height:5px;border-radius:99px;background:#0f172a;place-self:center;opacity:0}
+    .domino-face .half:first-child{border-top-left-radius:14px;border-top-right-radius:14px}
+    .domino-face .half.right{border-top:2px solid #0f172a;border-bottom-left-radius:14px;border-bottom-right-radius:14px}
+    .pips{width:28px;height:28px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr)}
+    .pip{width:6px;height:6px;border-radius:99px;background:#0f172a;place-self:center;opacity:0}
     .show{opacity:1}
 
+    .footer-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-top:18px;
+      flex-wrap:wrap;
+    }
+
+    .selected-strip{display:flex;gap:10px;overflow:auto;padding-top:6px}
+    .selected-mini{
+      min-width:74px;
+      padding:8px;
+      border-radius:18px;
+      background:rgba(7,13,24,.56);
+      border:1px solid rgba(148,163,184,.14);
+    }
+    .selected-mini .domino-face{height:102px}
+
     .cta{
-      margin-top:14px;
       display:none;
       border:1px solid var(--success);
-      background:linear-gradient(135deg,#166534,#15803d);
-      color:#dcfce7;
-      border-radius:14px;
-      padding:12px 14px;
-      font-weight:800;
-      width:100%;
-      box-shadow:0 14px 28px rgba(22,101,52,.26);
-    }
-    .cta.show{display:block}
-
-    .selected-strip{display:flex;gap:8px;overflow:auto;padding-top:6px}
-    .selected-strip .domino-face{min-width:72px}
-
-    #r3fWrap{
-      height:180px;
-      border:1px solid var(--border);
+      background:linear-gradient(135deg,#047857,#10b981);
+      color:#ecfdf5;
       border-radius:16px;
-      overflow:hidden;
-      margin-top:10px;
-      background:linear-gradient(180deg,#0b1220,#09101c);
+      padding:13px 18px;
+      font-weight:900;
+      letter-spacing:.01em;
+      box-shadow:0 16px 28px rgba(4,120,87,.24);
     }
+    .cta.show{display:inline-flex}
 
-    #renderNote{margin-top:8px}
+    @media (max-width:860px){
+      .selection-layout{grid-template-columns:1fr}
+      .focus-panel{position:relative;top:auto}
+      .hero-stats{grid-template-columns:1fr}
+    }
 
     @media (max-width:520px){
       .app{padding:16px 12px 28px}
-      .hero,.card{padding:16px}
-      .grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
-      .tile-btn{min-height:84px;padding:4px 3px;border-radius:12px}
+      .hero,.card{padding:18px}
+      .pair-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .tile-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .tile-btn{min-height:164px;padding:10px}
+      .focus-domino{width:102px;height:152px}
     }
   </style>
 </head>
 <body>
   <div class="app">
     <section class="hero">
-      <div class="eyebrow">Domino Assistant · Mano inicial</div>
-      <h1>Selecciona exactamente 7 fichas</h1>
-      <p>El flujo se mantiene igual: eliges tus fichas en una sola pantalla, revisas la mano seleccionada y confirmas cuando completas las 7.</p>
+      <div class="eyebrow">Domino Assistant · Pair-first flow</div>
+      <h1>Empieza por el par.</h1>
+      <p class="hero-copy">La nueva entrada prioriza grupos por número: primero eliges el par protagonista y después ves únicamente sus 7 fichas disponibles. La jerarquía es más clara, la selección se siente táctil y el grupo activo permanece siempre visible.</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <strong>1. Elige un grupo</strong>
+          <span>Los pares son el hero element y conducen todo el flujo.</span>
+        </div>
+        <div class="hero-stat">
+          <strong>2. Revisa sus 7 fichas</strong>
+          <span>Solo aparecen las combinaciones relacionadas con el grupo activo.</span>
+        </div>
+        <div class="hero-stat">
+          <strong>3. Completa tu mano</strong>
+          <span>La confirmación sigue apareciendo al llegar exactamente a 7 fichas.</span>
+        </div>
+      </div>
     </section>
 
     <div class="stack">
-      <div class="card">
+      <section class="card">
         <div class="section-head">
           <div>
-            <h2>Selección de fichas</h2>
-            <div class="muted">Toca cualquier ficha del set doble-seis para agregarla o quitarla.</div>
+            <h2>Selecciona el grupo principal</h2>
+            <div class="muted">Cada grupo representa un número del doble-seis y abre sus 7 fichas posibles.</div>
           </div>
           <div id="counter" class="status-pill">Seleccionadas: 0/7</div>
         </div>
-        <div id="grid" class="grid"></div>
-        <button id="confirmCta" class="cta">✓ Confirmar mano</button>
-      </div>
+        <div id="pairGrid" class="pair-grid"></div>
+      </section>
 
-      <div class="card">
+      <section class="card">
         <div class="section-head">
           <div>
-            <h2>Vista de mano seleccionada</h2>
-            <div class="muted">La revisión permanece igual, con fallback 2D y vista 3D si WebGL está disponible.</div>
+            <h2>Fichas del grupo activo</h2>
+            <div class="muted">El grupo seleccionado se mantiene a la vista mientras eliges o quitas fichas relacionadas.</div>
+          </div>
+          <div id="groupStatus" class="status-pill">Grupo: 0</div>
+        </div>
+
+        <div class="selection-layout">
+          <aside id="focusPanel" class="focus-panel"></aside>
+          <div>
+            <div id="tileGrid" class="tile-grid"></div>
+            <div class="footer-row">
+              <div>
+                <div class="muted">Mano seleccionada</div>
+                <div id="fallback2d" class="selected-strip"></div>
+              </div>
+              <button id="confirmCta" class="cta">✓ Confirmar mano</button>
+            </div>
           </div>
         </div>
-        <div id="fallback2d" class="selected-strip"></div>
-        <div id="r3fWrap"></div>
-        <div id="renderNote" class="muted">R3F activo si WebGL está disponible; fallback 2D incluido.</div>
-      </div>
+      </section>
     </div>
   </div>
 
   <script>
-    const PIP_MAP={
-      0:[],1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]
-    };
-    const allTiles=[]; for(let a=0;a<=6;a++) for(let b=a;b<=6;b++) allTiles.push([a,b]);
-    const key=t=>`${t[0]}-${t[1]}`;
-    const state={selected:[]};
+    const PIP_MAP={0:[],1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+    const groupValues=Array.from({length:7},(_,n)=>n);
+    const state={activeGroup:3,selected:[]};
 
-    const grid=document.getElementById('grid');
     const counter=document.getElementById('counter');
-    const cta=document.getElementById('confirmCta');
+    const pairGrid=document.getElementById('pairGrid');
+    const tileGrid=document.getElementById('tileGrid');
     const fallback2d=document.getElementById('fallback2d');
+    const focusPanel=document.getElementById('focusPanel');
+    const groupStatus=document.getElementById('groupStatus');
+    const cta=document.getElementById('confirmCta');
+
+    const key=t=>`${t[0]}-${t[1]}`;
+    const normalize=(a,b)=> a<=b ? [a,b] : [b,a];
+    const pairTiles=n=>groupValues.map(v=>normalize(n,v));
 
     function pips(n){
       const visible=new Set(PIP_MAP[n]);
       return `<div class="pips">${Array.from({length:9},(_,i)=>`<span class="pip ${visible.has(i)?'show':''}"></span>`).join('')}</div>`;
     }
-    function face(a,b){
-      return `<div class="domino-face"><div class="half">${pips(a)}</div><div class="half right">${pips(b)}</div></div>`;
+
+    function face(a,b,extraClass=''){
+      return `<div class="domino-face ${extraClass}"><div class="half">${pips(a)}</div><div class="half right">${pips(b)}</div></div>`;
     }
-    function render(){
-      const set=new Set(state.selected.map(key));
-      grid.innerHTML=allTiles.map(t=>`<button class="tile-btn ${set.has(key(t))?'sel':''}" data-t="${key(t)}">${face(t[0],t[1])}</button>`).join('');
-      [...grid.querySelectorAll('.tile-btn')].forEach(btn=>btn.onclick=()=>{
-        const t=btn.dataset.t.split('-').map(Number); const k=key(t);
-        const idx=state.selected.findIndex(x=>key(x)===k);
-        if(idx>=0) state.selected.splice(idx,1); else if(state.selected.length<7) state.selected.push(t);
-        render(); renderFallback(); window.renderR3F?.();
+
+    function renderPairs(){
+      pairGrid.innerHTML=groupValues.map(n=>`
+        <button class="pair-card ${state.activeGroup===n?'active':''}" data-group="${n}">
+          <small>Grupo ${n}</small>
+          <div class="pair-domino">${face(n,n)}</div>
+          <strong>${n}-${n}</strong>
+          <span>Ver sus 7 fichas disponibles</span>
+        </button>
+      `).join('');
+
+      pairGrid.querySelectorAll('.pair-card').forEach(btn=>btn.onclick=()=>{
+        state.activeGroup=Number(btn.dataset.group);
+        render();
       });
+    }
+
+    function renderFocus(){
+      const n=state.activeGroup;
+      const selectedInGroup=state.selected.filter(([a,b])=>a===n||b===n).length;
+      focusPanel.innerHTML=`
+        <div class="focus-label">Grupo activo</div>
+        <div class="focus-title">${n}-${n}</div>
+        <div class="muted">Explora las 7 combinaciones que contienen el valor ${n}. El grupo queda anclado para orientar la selección.</div>
+        <div class="focus-domino">${face(n,n)}</div>
+        <div class="focus-meta">
+          <div class="meta-row"><span>Fichas disponibles</span><strong>7 opciones</strong></div>
+          <div class="meta-row"><span>Seleccionadas en este grupo</span><strong>${selectedInGroup}</strong></div>
+          <div class="meta-row"><span>Progreso total</span><strong>${state.selected.length}/7</strong></div>
+        </div>
+      `;
+      groupStatus.textContent=`Grupo: ${n}`;
+    }
+
+    function renderTiles(){
+      const set=new Set(state.selected.map(key));
+      tileGrid.innerHTML=pairTiles(state.activeGroup).map(t=>{
+        const label=`${t[0]}-${t[1]}`;
+        return `
+          <button class="tile-btn ${set.has(key(t))?'sel':''}" data-t="${key(t)}">
+            <div class="tile-domino">${face(t[0],t[1])}</div>
+            <div class="tile-caption">
+              <span>${label}</span>
+              <span>${set.has(key(t))?'En mano':'Disponible'}</span>
+            </div>
+          </button>
+        `;
+      }).join('');
+
+      tileGrid.querySelectorAll('.tile-btn').forEach(btn=>btn.onclick=()=>{
+        const t=btn.dataset.t.split('-').map(Number);
+        const k=key(t);
+        const idx=state.selected.findIndex(x=>key(x)===k);
+        if(idx>=0) state.selected.splice(idx,1);
+        else if(state.selected.length<7) state.selected.push(t);
+        render();
+      });
+    }
+
+    function renderFallback(){
+      fallback2d.innerHTML = state.selected.map(t=>`<div class="selected-mini">${face(t[0],t[1])}</div>`).join('') || '<span class="muted">Aún no has seleccionado fichas.</span>';
+    }
+
+    function renderFooter(){
       counter.textContent=`Seleccionadas: ${state.selected.length}/7`;
       cta.classList.toggle('show', state.selected.length===7);
     }
-    function renderFallback(){
-      fallback2d.innerHTML = state.selected.map(t=>face(t[0],t[1])).join('') || '<span class="muted">Sin fichas seleccionadas.</span>';
+
+    function render(){
+      renderPairs();
+      renderFocus();
+      renderTiles();
+      renderFallback();
+      renderFooter();
     }
 
-    window.__dominoSelected = () => state.selected;
-    render(); renderFallback();
-  </script>
-
-  <script type="module">
-    const wrap=document.getElementById('r3fWrap');
-    const note=document.getElementById('renderNote');
-    const canWebGL = (()=>{try{const c=document.createElement('canvas'); return !!(c.getContext('webgl')||c.getContext('experimental-webgl'));}catch{return false;}})();
-    if(!canWebGL){ wrap.style.display='none'; note.textContent='WebGL no disponible: usando fallback 2D.'; }
-    else {
-      const React = await import('https://esm.sh/react@18');
-      const ReactDOM = await import('https://esm.sh/react-dom@18/client');
-      const Fiber = await import('https://esm.sh/@react-three/fiber@8.17.10?deps=react@18,react-dom@18,three@0.160.0');
-      const Drei = await import('https://esm.sh/@react-three/drei@9.105.6?deps=@react-three/fiber@8.17.10,react@18,react-dom@18,three@0.160.0');
-
-      function TileMesh({x}){
-        return React.createElement('mesh',{position:[x,0,0]},[
-          React.createElement('boxGeometry',{args:[0.7,1.05,0.08],key:'g'}),
-          React.createElement('meshStandardMaterial',{color:'#f3f4f6',key:'m'})
-        ]);
-      }
-      function Scene(){
-        const selected = (window.__dominoSelected?.() || []).slice(0,7);
-        return React.createElement(React.Fragment,null,
-          React.createElement('ambientLight',{intensity:0.9}),
-          React.createElement('directionalLight',{position:[2,3,2],intensity:1}),
-          selected.map((_,i)=>React.createElement(TileMesh,{x:(i-3)*0.8,key:i})),
-          React.createElement(Drei.OrbitControls,{enablePan:false,enableZoom:false,minPolarAngle:1.2,maxPolarAngle:1.9})
-        );
-      }
-
-      const root = ReactDOM.createRoot(wrap);
-      function renderR3F(){
-        root.render(React.createElement(Fiber.Canvas,{camera:{position:[0,1.2,4]}},React.createElement(Scene)));
-      }
-      window.renderR3F = renderR3F;
-      renderR3F();
-      setInterval(renderR3F,500);
-    }
+    render();
   </script>
 </body>
 </html>
