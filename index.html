@@ -24,10 +24,6 @@
       --success:#22c55e;
       --success-soft:rgba(34,197,94,.12);
       --success-ring:rgba(34,197,94,.2);
-      --warn:#f59e0b;
-      --warn-soft:rgba(245,158,11,.14);
-      --danger:#fb7185;
-      --danger-soft:rgba(251,113,133,.12);
       --button-text:#ffffff;
       --domino-body:#dbe6f5;
       --domino-half:#f8fbff;
@@ -49,117 +45,648 @@
     }
 
     html[data-theme="midnight"]{color-scheme:dark}
+
     html[data-theme="sunrise"]{
       color-scheme:light;
-      --bg:#f6ecde;--bg-alt:#efe2d1;--bg-glow:rgba(249,115,22,.18);--surface:#fff9f2;--surface-soft:#f7ebdd;--surface-strong:#f1decb;--surface-raised:#ebd2b8;--border:rgba(120,53,15,.14);--border-strong:rgba(249,115,22,.36);--text:#3f2618;--muted:#8a634c;--muted-strong:#6f4933;--accent:#ea580c;--accent-soft:rgba(249,115,22,.12);--accent-strong:#c2410c;--success:#16a34a;--success-soft:rgba(34,197,94,.12);--success-ring:rgba(34,197,94,.18);--button-text:#fffaf5;--domino-body:#fff8ef;--domino-half:#fffdf8;--domino-half-alt:#fff2df;--domino-divider:#8a4b22;--domino-pip:#7c3415;--domino-border:rgba(146,64,14,.18);--domino-highlight:rgba(255,251,245,.62);--domino-shadow:0 16px 26px rgba(120,53,15,.12);--domino-inset:inset 0 1px 0 rgba(255,255,255,.8), inset 0 -1px 0 rgba(154,52,18,.06);--domino-face-overlay:linear-gradient(180deg,rgba(255,255,255,.48),transparent 46%,rgba(251,146,60,.06) 100%);--shadow-lg:0 24px 50px rgba(120,53,15,.16);--shadow-md:0 14px 30px rgba(120,53,15,.12);
+      --bg:#f6ecde;
+      --bg-alt:#efe2d1;
+      --bg-glow:rgba(249,115,22,.18);
+      --surface:#fff9f2;
+      --surface-soft:#f7ebdd;
+      --surface-strong:#f1decb;
+      --surface-raised:#ebd2b8;
+      --border:rgba(120,53,15,.14);
+      --border-strong:rgba(249,115,22,.36);
+      --text:#3f2618;
+      --muted:#8a634c;
+      --muted-strong:#6f4933;
+      --accent:#ea580c;
+      --accent-soft:rgba(249,115,22,.12);
+      --accent-strong:#c2410c;
+      --success:#16a34a;
+      --success-soft:rgba(34,197,94,.12);
+      --success-ring:rgba(34,197,94,.18);
+      --button-text:#fffaf5;
+      --domino-body:#fff8ef;
+      --domino-half:#fffdf8;
+      --domino-half-alt:#fff2df;
+      --domino-divider:#8a4b22;
+      --domino-pip:#7c3415;
+      --domino-border:rgba(146,64,14,.18);
+      --domino-highlight:rgba(255,251,245,.62);
+      --domino-shadow:0 16px 26px rgba(120,53,15,.12);
+      --domino-inset:inset 0 1px 0 rgba(255,255,255,.8), inset 0 -1px 0 rgba(154,52,18,.06);
+      --domino-face-overlay:linear-gradient(180deg,rgba(255,255,255,.48),transparent 46%,rgba(251,146,60,.06) 100%);
+      --domino-grain:none;
+      --shadow-lg:0 24px 50px rgba(120,53,15,.16);
+      --shadow-md:0 14px 30px rgba(120,53,15,.12);
     }
+
     html[data-theme="wood"]{
       color-scheme:light;
-      --bg:#2f2118;--bg-alt:#4b3424;--bg-glow:rgba(245,158,11,.16);--surface:#5b3f2b;--surface-soft:#6c4a31;--surface-strong:#7a5437;--surface-raised:#8d6341;--border:rgba(255,231,200,.14);--border-strong:rgba(245,158,11,.42);--text:#f8efdf;--muted:#dbc4a5;--muted-strong:#f5e5cf;--accent:#f2a541;--accent-soft:rgba(242,165,65,.14);--accent-strong:#d48827;--success:#84cc16;--success-soft:rgba(132,204,22,.16);--success-ring:rgba(132,204,22,.22);--button-text:#2f1b08;--domino-body:#8b5b37;--domino-half:#b98557;--domino-half-alt:#9f6d43;--domino-divider:#5d351c;--domino-pip:#2f190c;--domino-border:rgba(57,29,12,.42);--domino-highlight:rgba(255,231,194,.18);--domino-shadow:0 18px 26px rgba(24,12,5,.28);--domino-inset:inset 0 1px 0 rgba(255,235,206,.14), inset 0 -1px 0 rgba(53,28,12,.18);--domino-face-overlay:linear-gradient(180deg,rgba(255,231,194,.12),transparent 42%,rgba(71,38,18,.14) 100%);--domino-grain:linear-gradient(102deg,transparent 0 16%,rgba(79,48,26,.22) 18%,transparent 21%,rgba(62,37,18,.18) 24%,transparent 28%,rgba(79,48,26,.16) 33%,transparent 38%,rgba(58,34,17,.16) 44%,transparent 50%,rgba(90,56,31,.18) 57%,transparent 63%,rgba(68,40,20,.16) 71%,transparent 77%,rgba(89,55,31,.14) 84%,transparent 100%),radial-gradient(circle at 24% 18%,rgba(255,220,176,.12),transparent 26%),radial-gradient(circle at 78% 76%,rgba(62,35,16,.16),transparent 28%);--shadow-lg:0 24px 54px rgba(24,12,5,.34);--shadow-md:0 14px 32px rgba(24,12,5,.24);
+      --bg:#2f2118;
+      --bg-alt:#4b3424;
+      --bg-glow:rgba(245,158,11,.16);
+      --surface:#5b3f2b;
+      --surface-soft:#6c4a31;
+      --surface-strong:#7a5437;
+      --surface-raised:#8d6341;
+      --border:rgba(255,231,200,.14);
+      --border-strong:rgba(245,158,11,.42);
+      --text:#f8efdf;
+      --muted:#dbc4a5;
+      --muted-strong:#f5e5cf;
+      --accent:#f2a541;
+      --accent-soft:rgba(242,165,65,.14);
+      --accent-strong:#d48827;
+      --success:#84cc16;
+      --success-soft:rgba(132,204,22,.16);
+      --success-ring:rgba(132,204,22,.22);
+      --button-text:#2f1b08;
+      --domino-body:#8b5b37;
+      --domino-half:#b98557;
+      --domino-half-alt:#9f6d43;
+      --domino-divider:#5d351c;
+      --domino-pip:#2f190c;
+      --domino-border:rgba(57,29,12,.42);
+      --domino-highlight:rgba(255,231,194,.18);
+      --domino-shadow:0 18px 26px rgba(24,12,5,.28);
+      --domino-inset:inset 0 1px 0 rgba(255,235,206,.14), inset 0 -1px 0 rgba(53,28,12,.18);
+      --domino-face-overlay:linear-gradient(180deg,rgba(255,231,194,.12),transparent 42%,rgba(71,38,18,.14) 100%);
+      --domino-grain:
+        linear-gradient(102deg,transparent 0 16%,rgba(79,48,26,.22) 18%,transparent 21%,rgba(62,37,18,.18) 24%,transparent 28%,rgba(79,48,26,.16) 33%,transparent 38%,rgba(58,34,17,.16) 44%,transparent 50%,rgba(90,56,31,.18) 57%,transparent 63%,rgba(68,40,20,.16) 71%,transparent 77%,rgba(89,55,31,.14) 84%,transparent 100%),
+        radial-gradient(circle at 24% 18%,rgba(255,220,176,.12),transparent 26%),
+        radial-gradient(circle at 78% 76%,rgba(62,35,16,.16),transparent 28%);
+      --shadow-lg:0 24px 54px rgba(24,12,5,.34);
+      --shadow-md:0 14px 32px rgba(24,12,5,.24);
     }
 
     *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% -10%, color-mix(in srgb, var(--bg-glow) 72%, transparent), transparent 36%),radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--bg-glow) 42%, transparent), transparent 28%),linear-gradient(180deg,color-mix(in srgb, var(--bg) 92%, black 8%) 0%,var(--bg-alt) 100%);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:background .3s ease,color .2s ease}
-    .app{width:min(1200px,100%);margin:0 auto;padding:20px 18px 18px}
-    .screen{display:grid;gap:14px}
-    .topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:2px 2px 0}
-    .title-block{display:grid;gap:4px}
-    h1{margin:0;font-size:clamp(1.6rem,3vw,2rem);line-height:1;letter-spacing:-.055em}
-    .subtitle{color:var(--muted);font-size:.9rem;line-height:1.3;max-width:56ch}
-    .topbar-actions{display:flex;align-items:flex-start;gap:12px}
-    .counter,.pill{padding:10px 14px;border-radius:999px;background:linear-gradient(180deg,var(--surface-soft),var(--surface));border:1px solid var(--border);box-shadow:var(--shadow-md);color:var(--muted-strong);font-size:.88rem;font-weight:800;white-space:nowrap;align-self:center}
 
-    .theme-picker{position:relative}
-    .theme-toggle,.theme-option,.pair-btn,.tile-btn,.confirm-btn,.action-btn{appearance:none;border:none;font:inherit;color:inherit;cursor:pointer}
-    .theme-toggle{width:44px;height:44px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(180deg,var(--surface-soft),var(--surface));border:1px solid var(--border);box-shadow:var(--shadow-md);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease}
-    .theme-toggle:hover,.theme-toggle[aria-expanded="true"]{transform:translateY(-1px);border-color:var(--border-strong);box-shadow:0 0 0 1px var(--accent-soft), var(--shadow-md);background:linear-gradient(180deg,var(--surface-strong),var(--surface))}
-    .palette-icon{width:22px;height:22px;fill:none;stroke:var(--accent);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-    .theme-menu{position:absolute;top:calc(100% + 10px);right:0;width:min(300px,calc(100vw - 32px));display:grid;gap:10px;padding:14px;border-radius:22px;background:linear-gradient(180deg,color-mix(in srgb, var(--surface-soft) 96%, white 4%),var(--surface));border:1px solid var(--border);box-shadow:var(--shadow-lg);opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity .18s ease, transform .18s ease;z-index:5;backdrop-filter:blur(10px)}
-    .theme-picker.open .theme-menu{opacity:1;transform:translateY(0);pointer-events:auto}
-    .theme-menu-head,.theme-copy{display:grid;gap:4px}
-    .theme-menu-title{font-size:.8rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-    .theme-menu-note,.theme-desc{font-size:.86rem;color:var(--muted);line-height:1.35}
-    .theme-options{display:grid;gap:10px}
-    .theme-option{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;width:100%;text-align:left;padding:12px;border-radius:18px;background:linear-gradient(180deg,var(--surface-soft),var(--surface));border:1px solid var(--border);transition:transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease}
-    .theme-option:hover{transform:translateY(-1px);border-color:var(--border-strong)}
-    .theme-option.active{border-color:var(--border-strong);box-shadow:0 0 0 1px var(--accent-soft);background:linear-gradient(180deg,var(--surface-strong),var(--surface))}
-    .theme-swatch{width:42px;height:42px;border-radius:14px;border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.16)}
-    .swatch-midnight{background:linear-gradient(135deg,#0f172a,#1d4ed8 55%,#93c5fd)} .swatch-sunrise{background:linear-gradient(135deg,#fff7ed,#fb923c 55%,#7c2d12)} .swatch-wood{background:linear-gradient(135deg,#3f2a1e,#8b5e3c 58%,#f2c078)}
-    .theme-name{font-size:.95rem;font-weight:700;color:var(--text)}
-    .theme-check{font-size:1rem;font-weight:800;color:var(--accent);opacity:0;transform:scale(.9);transition:opacity .16s ease, transform .16s ease}
-    .theme-option.active .theme-check{opacity:1;transform:scale(1)}
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 50% -10%, color-mix(in srgb, var(--bg-glow) 72%, transparent), transparent 36%),
+        radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--bg-glow) 42%, transparent), transparent 28%),
+        linear-gradient(180deg,color-mix(in srgb, var(--bg) 92%, black 8%) 0%,var(--bg-alt) 100%);
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      transition:background .3s ease,color .2s ease;
+    }
 
-    .stack,.game-layout{display:grid;gap:14px 16px;padding:16px;border-radius:var(--radius-xl);background:linear-gradient(180deg,color-mix(in srgb, var(--surface) 90%, transparent),color-mix(in srgb, var(--surface-soft) 86%, transparent));border:1px solid color-mix(in srgb, var(--border) 88%, transparent);box-shadow:var(--shadow-lg);backdrop-filter:blur(10px)}
-    .stack{grid-template-columns:minmax(0,1.02fr) minmax(0,1.38fr);grid-template-areas:"pairs tiles" "tray tiles" "tray confirm";align-items:start}
-    .group,.panel{display:grid;gap:10px;min-width:0}
-    .group-head,.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 2px}
-    .group-title,.panel-title{font-size:.76rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-    .group-note,.panel-note{font-size:.8rem;color:var(--muted)}
-    .group.pairs-group{grid-area:pairs}.group.tiles-group{grid-area:tiles}.tray-shell{grid-area:tray}.confirm-wrap{grid-area:confirm;display:grid;gap:10px;align-self:end}
-    .pair-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-    .tile-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+    .app{
+      width:min(1180px,100%);
+      margin:0 auto;
+      padding:20px 18px 18px;
+    }
 
-    .pair-btn,.tile-btn,.confirm-btn,.mini-tile,.action-btn,.move-option{position:relative;overflow:hidden}
-    .pair-btn::before,.tile-btn::before,.mini-tile::before,.move-option::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.08),transparent 42%);pointer-events:none}
-    .pair-btn{display:grid;place-items:center;gap:8px;padding:12px 10px 11px;border-radius:18px;background:linear-gradient(180deg,var(--surface-soft),var(--surface));border:1px solid var(--border);box-shadow:var(--shadow-md);transition:border-color .18s ease, transform .18s ease, background .18s ease, box-shadow .18s ease}
-    .pair-btn:hover,.tile-btn:hover,.confirm-btn:hover,.action-btn:hover,.move-option:hover{transform:translateY(-1px)}
-    .pair-btn.active{background:linear-gradient(180deg,var(--surface-raised),var(--surface-soft));border-color:var(--border-strong);box-shadow:0 0 0 1px var(--accent-soft), 0 18px 36px rgba(2,6,23,.18)}
-    .pair-label{font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-strong)}
-    .tile-btn{display:grid;gap:8px;justify-items:center;align-content:center;padding:12px 10px;min-height:148px;border-radius:20px;background:linear-gradient(180deg,var(--surface-soft),var(--surface));border:1px solid var(--border);box-shadow:var(--shadow-lg);transition:border-color .18s ease, transform .18s ease, background .18s ease, box-shadow .18s ease}
-    .tile-btn.sel{background:linear-gradient(180deg,var(--success-soft),var(--surface));border-color:color-mix(in srgb, var(--success) 65%, white 10%);box-shadow:0 0 0 1px var(--success-ring), 0 20px 40px rgba(2,6,23,.18)}
-    .tile-btn.disabled{opacity:.42;cursor:not-allowed;transform:none}
-    .tile-name{display:none}
-    .confirm-btn,.action-btn{width:100%;justify-content:center;align-items:center;padding:13px 16px;border-radius:18px;font-weight:800;letter-spacing:-.01em;display:inline-flex;transition:transform .16s ease, box-shadow .16s ease, filter .16s ease}
-    .confirm-btn{background:linear-gradient(180deg,var(--accent),var(--accent-strong));border:1px solid color-mix(in srgb, var(--accent) 62%, white 8%);color:var(--button-text);box-shadow:0 14px 28px color-mix(in srgb, var(--accent-strong) 28%, transparent)}
-    .confirm-btn[disabled],.action-btn[disabled]{opacity:.45;cursor:not-allowed;transform:none;filter:none;box-shadow:none}
-    .action-btn.secondary{background:linear-gradient(180deg,var(--surface-strong),var(--surface));border:1px solid var(--border);color:var(--text);box-shadow:var(--shadow-md)}
-    .action-btn.warn{background:linear-gradient(180deg,var(--warn),#d97706);border:1px solid rgba(255,255,255,.18);color:#fff;box-shadow:0 14px 28px rgba(217,119,6,.24)}
+    .screen{
+      display:grid;
+      gap:14px;
+    }
 
-    .tray-shell,.action-stack{display:grid;gap:10px;min-width:0}
-    .tray{display:flex;align-items:center;gap:10px;overflow-x:auto;padding:12px;min-height:78px;border-radius:20px;background:linear-gradient(180deg,var(--surface-soft),var(--surface));border:1px solid var(--border);box-shadow:var(--shadow-md);scrollbar-width:thin;scrollbar-color:color-mix(in srgb, var(--muted) 65%, transparent) transparent}
-    .tray.empty{color:var(--muted);font-size:.92rem;justify-content:center;border-style:dashed;background:linear-gradient(180deg,color-mix(in srgb, var(--surface) 78%, transparent),color-mix(in srgb, var(--surface-soft) 86%, transparent))}
-    .mini-tile{flex:0 0 auto;width:56px;padding:6px;border-radius:15px;background:linear-gradient(180deg,var(--surface-raised),var(--surface-soft));border:1px solid color-mix(in srgb, var(--border) 92%, white 4%);box-shadow:0 10px 20px rgba(2,6,23,.16)}
+    .topbar{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      padding:2px 2px 0;
+    }
 
-    .domino{width:100%;position:relative;display:grid;grid-template-rows:1fr 1fr;border-radius:14px;overflow:hidden;background:linear-gradient(145deg,color-mix(in srgb, var(--domino-body) 94%, white 6%) 0%,color-mix(in srgb, var(--domino-body) 84%, black 16%) 100%);border:1px solid color-mix(in srgb, var(--domino-border) 82%, white 6%);box-shadow:0 2px 0 rgba(255,255,255,.16) inset, 0 -2px 4px rgba(15,23,42,.08) inset, var(--domino-shadow), var(--domino-inset);isolation:isolate;transform:perspective(600px) rotateX(4deg);transform-origin:center bottom}
-    .domino::before,.domino::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:0}
-    .domino::before{background:var(--domino-grain);opacity:.95;mix-blend-mode:multiply}
-    .domino::after{inset:1px;border-radius:12px;box-shadow:inset 0 1px 0 var(--domino-highlight), inset 0 0 0 1px rgba(255,255,255,.02), inset 0 -10px 18px rgba(15,23,42,.05)}
-    .domino.large{max-width:66px;height:94px}.domino.medium{max-width:50px;height:72px}.domino.small{height:56px}.domino.board{max-width:60px;height:86px}
-    .half{position:relative;z-index:1;display:grid;place-items:center;background:radial-gradient(circle at 28% 22%, rgba(255,255,255,.24), transparent 34%),linear-gradient(180deg,var(--domino-half),var(--domino-half-alt))}
-    .half::after{content:"";position:absolute;inset:0;background:var(--domino-face-overlay);pointer-events:none}.half + .half{border-top:2px solid var(--domino-divider);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
-    .pips{width:26px;height:26px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr)} .pip{width:6px;height:6px;border-radius:999px;background:radial-gradient(circle at 35% 35%, color-mix(in srgb, var(--domino-pip) 76%, white 24%), var(--domino-pip) 72%);box-shadow:0 1px 1px rgba(255,255,255,.14) inset, 0 0 0 1px color-mix(in srgb, var(--domino-pip) 16%, transparent), 0 .5px 1.5px rgba(15,23,42,.18);place-self:center;opacity:0}.pip.show{opacity:1}
+    .title-block{
+      display:grid;
+      gap:4px;
+    }
 
-    .hidden{display:none !important}
-    .setup-screen,.game-screen{display:grid;gap:14px}
-    .game-layout{grid-template-columns:minmax(0,1.2fr) minmax(340px,.8fr);align-items:start}
-    .board-shell,.sidebar{display:grid;gap:14px}
-    .panel{padding:14px;border-radius:24px;background:linear-gradient(180deg,var(--surface-soft),var(--surface));border:1px solid var(--border);box-shadow:var(--shadow-md)}
-    .status-grid,.seat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-    .status-card,.seat-card{padding:12px;border-radius:18px;background:linear-gradient(180deg,var(--surface-strong),var(--surface));border:1px solid var(--border);display:grid;gap:6px}
-    .status-card strong,.seat-card strong{font-size:1rem}
-    .status-card span,.seat-card span,.seat-card small{color:var(--muted)}
-    .seat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .seat-card.active{border-color:var(--border-strong);box-shadow:0 0 0 1px var(--accent-soft)}
-    .seat-card.me{background:linear-gradient(180deg,var(--success-soft),var(--surface));border-color:color-mix(in srgb, var(--success) 55%, transparent)}
-    .seat-card.blocked{background:linear-gradient(180deg,var(--warn-soft),var(--surface))}
-    .board-strip{display:flex;align-items:center;gap:10px;overflow-x:auto;padding-bottom:2px}
-    .board-tile{min-width:72px;display:grid;justify-items:center;gap:8px;padding:10px;border-radius:18px;background:linear-gradient(180deg,var(--surface-strong),var(--surface));border:1px solid var(--border)}
-    .board-meta{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
-    .ends{display:flex;gap:10px;flex-wrap:wrap}
-    .ends .pill{background:linear-gradient(180deg,var(--surface-strong),var(--surface))}
-    .message{padding:12px 14px;border-radius:16px;background:linear-gradient(180deg,var(--accent-soft),var(--surface));border:1px solid var(--border);color:var(--muted-strong);line-height:1.4}
-    .message.warn{background:linear-gradient(180deg,var(--warn-soft),var(--surface))}
-    .message.error{background:linear-gradient(180deg,var(--danger-soft),var(--surface));border-color:rgba(251,113,133,.24)}
-    .move-list{display:grid;gap:10px}
-    .move-option{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 12px;border-radius:18px;background:linear-gradient(180deg,var(--surface-strong),var(--surface));border:1px solid var(--border);box-shadow:var(--shadow-md);text-align:left}
-    .move-copy{display:grid;gap:3px}
-    .move-title{font-weight:800}.move-note{font-size:.82rem;color:var(--muted)}
-    .history{display:grid;gap:8px;max-height:320px;overflow:auto;padding-right:2px}
-    .history-item{padding:10px 12px;border-radius:16px;background:linear-gradient(180deg,var(--surface-strong),var(--surface));border:1px solid var(--border);font-size:.9rem;line-height:1.35}
-    .history-item strong{color:var(--muted-strong)}
+    h1{
+      margin:0;
+      font-size:clamp(1.6rem,3vw,2rem);
+      line-height:1;
+      letter-spacing:-.055em;
+    }
 
-    @media (max-width:980px){.stack,.game-layout{grid-template-columns:1fr}.stack{grid-template-areas:"pairs" "tiles" "confirm" "tray"}.status-grid{grid-template-columns:1fr}.seat-grid{grid-template-columns:1fr 1fr}}
-    @media (max-width:640px){.app{padding:18px 12px 16px}.screen,.setup-screen,.game-screen{gap:12px}.topbar{align-items:flex-start;padding-inline:2px}.topbar-actions{gap:10px}.theme-toggle{width:42px;height:42px;border-radius:14px}.theme-menu{right:-2px;width:min(280px,calc(100vw - 24px));padding:12px;border-radius:20px}.stack,.game-layout{padding:14px;gap:14px;border-radius:24px}.pair-grid,.tile-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.pair-btn{padding:12px 8px 11px;border-radius:17px}.tile-btn{padding:10px 8px;min-height:136px;border-radius:18px}.domino.large{max-width:58px;height:84px}.domino.medium{max-width:46px;height:66px}.domino.small{height:52px}.domino.board{max-width:54px;height:78px}.pips{width:22px;height:22px}.tray{padding:10px;min-height:76px;border-radius:18px}.mini-tile{width:52px;padding:6px;border-radius:14px}.counter{padding:10px 13px;font-size:.88rem}.group-head,.panel-head{align-items:flex-start;flex-direction:column}.seat-grid{grid-template-columns:1fr}}
+    .subtitle{
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.3;
+      max-width:48ch;
+    }
+
+    .topbar-actions{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+    }
+
+    .theme-picker{
+      position:relative;
+    }
+
+    .theme-toggle,
+    .theme-option{
+      appearance:none;
+      border:none;
+      font:inherit;
+      color:inherit;
+      cursor:pointer;
+    }
+
+    .theme-toggle{
+      width:44px;
+      height:44px;
+      display:grid;
+      place-items:center;
+      border-radius:15px;
+      background:linear-gradient(180deg,var(--surface-soft),var(--surface));
+      border:1px solid var(--border);
+      box-shadow:var(--shadow-md);
+      transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .theme-toggle:hover,
+    .theme-toggle[aria-expanded="true"]{
+      transform:translateY(-1px);
+      border-color:var(--border-strong);
+      box-shadow:0 0 0 1px var(--accent-soft), var(--shadow-md);
+      background:linear-gradient(180deg,var(--surface-strong),var(--surface));
+    }
+
+    .palette-icon{
+      width:22px;
+      height:22px;
+      fill:none;
+      stroke:var(--accent);
+      stroke-width:1.9;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .theme-menu{
+      position:absolute;
+      top:calc(100% + 10px);
+      right:0;
+      width:min(300px,calc(100vw - 32px));
+      display:grid;
+      gap:10px;
+      padding:14px;
+      border-radius:22px;
+      background:linear-gradient(180deg,color-mix(in srgb, var(--surface-soft) 96%, white 4%),var(--surface));
+      border:1px solid var(--border);
+      box-shadow:var(--shadow-lg);
+      opacity:0;
+      transform:translateY(-8px);
+      pointer-events:none;
+      transition:opacity .18s ease, transform .18s ease;
+      z-index:5;
+      backdrop-filter:blur(10px);
+    }
+
+    .theme-picker.open .theme-menu{
+      opacity:1;
+      transform:translateY(0);
+      pointer-events:auto;
+    }
+
+    .theme-menu-head{
+      display:grid;
+      gap:4px;
+      padding:0 2px 2px;
+    }
+
+    .theme-menu-title{
+      font-size:.8rem;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+
+    .theme-menu-note{
+      font-size:.86rem;
+      color:var(--muted);
+      line-height:1.35;
+    }
+
+    .theme-options{
+      display:grid;
+      gap:10px;
+    }
+
+    .theme-option{
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      align-items:center;
+      gap:12px;
+      width:100%;
+      text-align:left;
+      padding:12px;
+      border-radius:18px;
+      background:linear-gradient(180deg,var(--surface-soft),var(--surface));
+      border:1px solid var(--border);
+      transition:transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+
+    .theme-option:hover{
+      transform:translateY(-1px);
+      border-color:var(--border-strong);
+    }
+
+    .theme-option.active{
+      border-color:var(--border-strong);
+      box-shadow:0 0 0 1px var(--accent-soft);
+      background:linear-gradient(180deg,var(--surface-strong),var(--surface));
+    }
+
+    .theme-swatch{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.16);
+    }
+
+    .swatch-midnight{background:linear-gradient(135deg,#0f172a,#1d4ed8 55%,#93c5fd)}
+    .swatch-sunrise{background:linear-gradient(135deg,#fff7ed,#fb923c 55%,#7c2d12)}
+    .swatch-wood{background:linear-gradient(135deg,#3f2a1e,#8b5e3c 58%,#f2c078)}
+
+    .theme-copy{
+      display:grid;
+      gap:2px;
+    }
+
+    .theme-name{
+      font-size:.95rem;
+      font-weight:700;
+      color:var(--text);
+    }
+
+    .theme-desc{
+      font-size:.82rem;
+      color:var(--muted);
+      line-height:1.35;
+    }
+
+    .theme-check{
+      font-size:1rem;
+      font-weight:800;
+      color:var(--accent);
+      opacity:0;
+      transform:scale(.9);
+      transition:opacity .16s ease, transform .16s ease;
+    }
+
+    .theme-option.active .theme-check{
+      opacity:1;
+      transform:scale(1);
+    }
+
+    .counter{
+      padding:10px 14px;
+      border-radius:999px;
+      background:linear-gradient(180deg,var(--surface-soft),var(--surface));
+      border:1px solid var(--border);
+      box-shadow:var(--shadow-md);
+      color:var(--muted-strong);
+      font-size:.88rem;
+      font-weight:800;
+      white-space:nowrap;
+      align-self:center;
+    }
+
+    .stack{
+      display:grid;
+      grid-template-columns:minmax(0,1.02fr) minmax(0,1.38fr);
+      grid-template-areas:
+        "pairs tiles"
+        "tray tiles"
+        "tray confirm";
+      align-items:start;
+      gap:14px 16px;
+      padding:16px;
+      border-radius:var(--radius-xl);
+      background:linear-gradient(180deg,color-mix(in srgb, var(--surface) 90%, transparent),color-mix(in srgb, var(--surface-soft) 86%, transparent));
+      border:1px solid color-mix(in srgb, var(--border) 88%, transparent);
+      box-shadow:var(--shadow-lg);
+      backdrop-filter:blur(10px);
+    }
+
+    .group{
+      display:grid;
+      gap:10px;
+      min-width:0;
+    }
+
+    .group-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:0 2px;
+    }
+
+    .group-title{
+      font-size:.76rem;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+
+    .group-note{
+      font-size:.8rem;
+      color:var(--muted);
+    }
+
+    .group.pairs-group{grid-area:pairs}
+    .group.tiles-group{grid-area:tiles}
+    .tray-shell{grid-area:tray}
+    .confirm-btn{grid-area:confirm}
+
+    .pair-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .pair-btn,
+    .tile-btn,
+    .confirm-btn{
+      appearance:none;
+      border:none;
+      font:inherit;
+      color:inherit;
+      cursor:pointer;
+    }
+
+    .pair-btn,
+    .tile-btn,
+    .confirm-btn,
+    .mini-tile{
+      position:relative;
+      overflow:hidden;
+    }
+
+    .pair-btn::before,
+    .tile-btn::before,
+    .mini-tile::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg,rgba(255,255,255,.08),transparent 42%);
+      pointer-events:none;
+    }
+
+    .pair-btn{
+      display:grid;
+      place-items:center;
+      gap:8px;
+      padding:12px 10px 11px;
+      border-radius:18px;
+      background:linear-gradient(180deg,var(--surface-soft),var(--surface));
+      border:1px solid var(--border);
+      box-shadow:var(--shadow-md);
+      transition:border-color .18s ease, transform .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+
+    .pair-btn:hover,.tile-btn:hover,.confirm-btn:hover{transform:translateY(-1px)}
+
+    .pair-btn.active{
+      background:linear-gradient(180deg,var(--surface-raised),var(--surface-soft));
+      border-color:var(--border-strong);
+      box-shadow:0 0 0 1px var(--accent-soft), 0 18px 36px rgba(2,6,23,.18);
+    }
+
+    .pair-label{
+      font-size:.74rem;
+      font-weight:800;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      color:var(--muted-strong);
+    }
+
+    .tile-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .tile-btn{
+      display:grid;
+      gap:8px;
+      justify-items:center;
+      align-content:center;
+      padding:12px 10px;
+      min-height:148px;
+      border-radius:20px;
+      background:linear-gradient(180deg,var(--surface-soft),var(--surface));
+      border:1px solid var(--border);
+      box-shadow:var(--shadow-lg);
+      transition:border-color .18s ease, transform .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+
+    .tile-btn.sel{
+      background:linear-gradient(180deg,var(--success-soft),var(--surface));
+      border-color:color-mix(in srgb, var(--success) 65%, white 10%);
+      box-shadow:0 0 0 1px var(--success-ring), 0 20px 40px rgba(2,6,23,.18);
+    }
+
+    .tile-name{
+      display:none;
+    }
+
+    .confirm-btn{
+      width:100%;
+      justify-content:center;
+      align-items:center;
+      align-self:end;
+      padding:13px 16px;
+      border-radius:18px;
+      background:linear-gradient(180deg,var(--accent),var(--accent-strong));
+      border:1px solid color-mix(in srgb, var(--accent) 62%, white 8%);
+      color:var(--button-text);
+      font-weight:800;
+      letter-spacing:-.01em;
+      box-shadow:0 14px 28px color-mix(in srgb, var(--accent-strong) 28%, transparent);
+      display:none;
+      transition:transform .16s ease, box-shadow .16s ease, filter .16s ease;
+    }
+
+    .confirm-btn:hover{box-shadow:0 20px 40px color-mix(in srgb, var(--accent-strong) 34%, transparent);filter:brightness(1.03)}
+    .confirm-btn.show{display:inline-flex}
+
+    .tray-shell{
+      display:grid;
+      gap:10px;
+      min-width:0;
+    }
+
+    .tray{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      overflow-x:auto;
+      padding:12px;
+      min-height:78px;
+      border-radius:20px;
+      background:linear-gradient(180deg,var(--surface-soft),var(--surface));
+      border:1px solid var(--border);
+      box-shadow:var(--shadow-md);
+      scrollbar-width:thin;
+      scrollbar-color:color-mix(in srgb, var(--muted) 65%, transparent) transparent;
+    }
+
+    .tray::-webkit-scrollbar{height:8px}
+    .tray::-webkit-scrollbar-thumb{background:color-mix(in srgb, var(--muted) 46%, transparent);border-radius:999px}
+
+    .tray.empty{
+      color:var(--muted);
+      font-size:.92rem;
+      justify-content:center;
+      border-style:dashed;
+      background:linear-gradient(180deg,color-mix(in srgb, var(--surface) 78%, transparent),color-mix(in srgb, var(--surface-soft) 86%, transparent));
+    }
+
+    .mini-tile{
+      flex:0 0 auto;
+      width:56px;
+      padding:6px;
+      border-radius:15px;
+      background:linear-gradient(180deg,var(--surface-raised),var(--surface-soft));
+      border:1px solid color-mix(in srgb, var(--border) 92%, white 4%);
+      box-shadow:0 10px 20px rgba(2,6,23,.16);
+      transition:transform .2s ease, opacity .2s ease;
+    }
+
+    .mini-tile.enter{
+      animation:tileIn .24s ease both;
+    }
+
+    .mini-tile.exit{
+      animation:tileOut .2s ease both;
+      pointer-events:none;
+    }
+
+    @keyframes tileIn{
+      from{opacity:0;transform:translateY(8px) scale(.96)}
+      to{opacity:1;transform:translateY(0) scale(1)}
+    }
+
+    @keyframes tileOut{
+      from{opacity:1;transform:translateY(0) scale(1)}
+      to{opacity:0;transform:translateY(-6px) scale(.96)}
+    }
+
+    .domino{
+      width:100%;
+      position:relative;
+      display:grid;
+      grid-template-rows:1fr 1fr;
+      border-radius:14px;
+      overflow:hidden;
+      background:
+        linear-gradient(145deg,color-mix(in srgb, var(--domino-body) 94%, white 6%) 0%,color-mix(in srgb, var(--domino-body) 84%, black 16%) 100%);
+      border:1px solid color-mix(in srgb, var(--domino-border) 82%, white 6%);
+      box-shadow:0 2px 0 rgba(255,255,255,.16) inset, 0 -2px 4px rgba(15,23,42,.08) inset, var(--domino-shadow), var(--domino-inset);
+      isolation:isolate;
+      transform:perspective(600px) rotateX(4deg);
+      transform-origin:center bottom;
+    }
+
+    .domino::before,
+    .domino::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .domino::before{
+      background:var(--domino-grain);
+      opacity:.95;
+      mix-blend-mode:multiply;
+    }
+
+    .domino::after{
+      inset:1px;
+      border-radius:12px;
+      box-shadow:inset 0 1px 0 var(--domino-highlight), inset 0 0 0 1px rgba(255,255,255,.02), inset 0 -10px 18px rgba(15,23,42,.05);
+    }
+
+    .domino.large{max-width:66px;height:94px}
+    .domino.medium{max-width:50px;height:72px}
+    .domino.small{height:56px}
+
+    .half{
+      position:relative;
+      z-index:1;
+      display:grid;
+      place-items:center;
+      background:
+        radial-gradient(circle at 28% 22%, rgba(255,255,255,.24), transparent 34%),
+        linear-gradient(180deg,var(--domino-half),var(--domino-half-alt));
+    }
+
+    .half::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:var(--domino-face-overlay);
+      pointer-events:none;
+    }
+
+    .half + .half{
+      border-top:2px solid var(--domino-divider);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .pips{width:26px;height:26px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr)}
+    .pip{
+      width:6px;
+      height:6px;
+      border-radius:999px;
+      background:radial-gradient(circle at 35% 35%, color-mix(in srgb, var(--domino-pip) 76%, white 24%), var(--domino-pip) 72%);
+      box-shadow:0 1px 1px rgba(255,255,255,.14) inset, 0 0 0 1px color-mix(in srgb, var(--domino-pip) 16%, transparent), 0 .5px 1.5px rgba(15,23,42,.18);
+      place-self:center;
+      opacity:0;
+    }
+    .pip.show{opacity:1}
+
+    @media (max-width:900px){
+      .stack{
+        grid-template-columns:1fr;
+        grid-template-areas:
+          "pairs"
+          "tiles"
+          "confirm"
+          "tray";
+      }
+    }
+
+    @media (max-width:640px){
+      .app{padding:18px 12px 16px}
+      .screen{gap:12px}
+      .topbar{align-items:flex-start;padding-inline:2px}
+      .topbar-actions{gap:10px}
+      .theme-toggle{width:42px;height:42px;border-radius:14px}
+      .theme-menu{right:-2px;width:min(280px,calc(100vw - 24px));padding:12px;border-radius:20px}
+      .stack{padding:14px;gap:14px;border-radius:24px}
+      .pair-grid,.tile-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+      .pair-btn{padding:12px 8px 11px;border-radius:17px;gap:8px}
+      .tile-btn{padding:10px 8px;min-height:136px;border-radius:18px;gap:8px}
+      .domino.large{max-width:58px;height:84px}
+      .domino.medium{max-width:46px;height:66px}
+      .domino.small{height:52px}
+      .pips{width:22px;height:22px}
+      .pair-label{font-size:.72rem}
+      .tray{padding:10px;min-height:76px;border-radius:18px;gap:10px}
+      .mini-tile{width:52px;padding:6px;border-radius:14px}
+      .counter{padding:10px 13px;font-size:.88rem}
+      .confirm-btn{border-radius:18px}
+      .subtitle{font-size:.88rem}
+      .group-head{align-items:flex-start;flex-direction:column}
+    }
   </style>
 </head>
 <body>
@@ -168,7 +695,7 @@
       <div class="topbar">
         <div class="title-block">
           <h1>Domino Assistant</h1>
-          <div id="subtitle" class="subtitle">Build your hand, confirm it, then track a phase-1 engine-driven round from the opening 6-6.</div>
+          <div class="subtitle">Build your hand with a calmer, clearer selection flow.</div>
         </div>
         <div class="topbar-actions">
           <div class="theme-picker" id="themePicker">
@@ -184,7 +711,7 @@
             <div class="theme-menu" id="themeMenu" role="menu" aria-label="Theme options">
               <div class="theme-menu-head">
                 <div class="theme-menu-title">Visual themes</div>
-                <div class="theme-menu-note">Switch the appearance without changing the setup or gameplay flow.</div>
+                <div class="theme-menu-note">Switch the appearance without changing the hand-building flow.</div>
               </div>
               <div id="themeOptions" class="theme-options"></div>
             </div>
@@ -193,144 +720,37 @@
         </div>
       </div>
 
-      <section id="setupScreen" class="setup-screen">
-        <div class="stack">
-          <section class="group pairs-group">
-            <div class="group-head">
-              <div>
-                <div class="group-title">Double selector</div>
-                <div class="group-note">Choose a pair group first, then complete a 7-tile hand.</div>
-              </div>
-            </div>
-            <div id="pairGrid" class="pair-grid"></div>
-          </section>
-
-          <section class="group tiles-group">
-            <div class="group-head">
-              <div>
-                <div class="group-title">Available tiles</div>
-                <div class="group-note">The engine hand must include 6-6 so the opening move can be applied immediately.</div>
-              </div>
-            </div>
-            <div id="tileGrid" class="tile-grid"></div>
-          </section>
-
-          <div class="confirm-wrap">
-            <button id="confirmBtn" class="confirm-btn" disabled>Confirmar mano</button>
-            <div id="setupMessage" class="message warn">Select 7 tiles including 6-6 to start gameplay mode.</div>
+      <div class="stack">
+        <section class="group pairs-group">
+          <div class="group-head">
+            <div class="group-title">Double selector</div>
+            <div class="group-note">Choose the base pair first.</div>
           </div>
+          <div id="pairGrid" class="pair-grid"></div>
+        </section>
 
-          <section class="tray-shell">
-            <div class="group-head">
-              <div class="group-title">Selected tiles</div>
-              <div class="group-note">Your hand will become player 1 in the local engine.</div>
-            </div>
-            <div id="tray" class="tray empty">No tiles selected</div>
-          </section>
-        </div>
-      </section>
-
-      <section id="gameScreen" class="game-screen hidden">
-        <div class="game-layout">
-          <div class="board-shell">
-            <section class="panel">
-              <div class="panel-head">
-                <div>
-                  <div class="panel-title">Live table state</div>
-                  <div class="panel-note">The board, current turn, and legal actions come from the local engine.</div>
-                </div>
-              </div>
-              <div class="status-grid">
-                <div class="status-card">
-                  <span>Current turn</span>
-                  <strong id="turnLabel">—</strong>
-                </div>
-                <div class="status-card">
-                  <span>Opening rule</span>
-                  <strong id="openingLabel">6-6 auto-played</strong>
-                </div>
-                <div class="status-card">
-                  <span>Board ends</span>
-                  <strong id="endsLabel">6 · 6</strong>
-                </div>
-              </div>
-            </section>
-
-            <section class="panel">
-              <div class="panel-head">
-                <div>
-                  <div class="panel-title">Board chain</div>
-                  <div class="panel-note">Simple proof of placement order and orientation.</div>
-                </div>
-              </div>
-              <div id="boardStrip" class="board-strip"></div>
-            </section>
-
-            <section class="panel">
-              <div class="panel-head">
-                <div>
-                  <div class="panel-title">Players</div>
-                  <div class="panel-note">Turn highlight and remaining tile counts update after each move.</div>
-                </div>
-              </div>
-              <div id="seatGrid" class="seat-grid"></div>
-            </section>
-
-            <section class="panel">
-              <div class="panel-head">
-                <div>
-                  <div class="panel-title">Move history</div>
-                  <div class="panel-note">Recent engine events for this hand.</div>
-                </div>
-              </div>
-              <div id="history" class="history"></div>
-            </section>
+        <section class="group tiles-group">
+          <div class="group-head">
+            <div class="group-title">Available tiles</div>
+            <div class="group-note">Select up to seven tiles for your hand.</div>
           </div>
+          <div id="tileGrid" class="tile-grid"></div>
+        </section>
 
-          <aside class="sidebar">
-            <section class="panel">
-              <div class="panel-head">
-                <div>
-                  <div class="panel-title">Your hand</div>
-                  <div class="panel-note">Only engine-legal moves are actionable.</div>
-                </div>
-                <div class="pill">Player 1</div>
-              </div>
-              <div id="playerHand" class="tray"></div>
-            </section>
+        <button id="confirmBtn" class="confirm-btn">Confirmar mano</button>
 
-            <section class="panel">
-              <div class="panel-head">
-                <div>
-                  <div class="panel-title">Available actions</div>
-                  <div class="panel-note">Play a legal tile or record a pass when no legal move exists.</div>
-                </div>
-              </div>
-              <div id="gameMessage" class="message">Waiting for engine state…</div>
-              <div id="moveList" class="move-list"></div>
-              <div class="action-stack">
-                <button id="passBtn" class="action-btn warn" type="button">Record pass</button>
-                <button id="resetBtn" class="action-btn secondary" type="button">Start over</button>
-              </div>
-            </section>
-          </aside>
-        </div>
-      </section>
+        <section class="tray-shell">
+          <div class="group-head">
+            <div class="group-title">Selected tiles</div>
+            <div class="group-note">Your current hand appears here.</div>
+          </div>
+          <div id="tray" class="tray empty">No tiles selected</div>
+        </section>
+      </div>
     </section>
   </main>
 
-  <script type="module">
-    import {
-      SIDES,
-      createDoubleSixSet,
-      createGame,
-      createPlayers,
-      createTile,
-      getLegalMoves,
-      passTurn,
-      playTile,
-    } from './src/domino-engine.js';
-
+  <script>
     const PIP_MAP={0:[],1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
     const values=Array.from({length:7},(_,i)=>i);
     const THEMES=[
@@ -338,288 +758,188 @@
       {id:'sunrise',name:'Sunrise',description:'A warmer light theme with soft contrast.',swatch:'swatch-sunrise'},
       {id:'wood',name:'Wood Table',description:'Rich walnut tones inspired by a polished domino table.',swatch:'swatch-wood'}
     ];
-
     const savedTheme=localStorage.getItem('domino-theme');
-    const state={
-      stage:'setup',
-      activePair:6,
-      selected:[createTile(6,6)],
-      theme:THEMES.some(theme=>theme.id===savedTheme)?savedTheme:'midnight',
-      game:null,
-      players:createPlayers(),
-      userPlayerId:0,
-      lastError:'',
-      lastAction:''
-    };
+    const state={activePair:3,selected:[],theme:THEMES.some(theme=>theme.id===savedTheme)?savedTheme:'midnight'};
 
     const root=document.documentElement;
-    const subtitle=document.getElementById('subtitle');
-    const setupScreen=document.getElementById('setupScreen');
-    const gameScreen=document.getElementById('gameScreen');
     const pairGrid=document.getElementById('pairGrid');
     const tileGrid=document.getElementById('tileGrid');
     const counter=document.getElementById('counter');
     const confirmBtn=document.getElementById('confirmBtn');
-    const setupMessage=document.getElementById('setupMessage');
     const tray=document.getElementById('tray');
     const themePicker=document.getElementById('themePicker');
     const themeToggle=document.getElementById('themeToggle');
     const themeOptions=document.getElementById('themeOptions');
-    const turnLabel=document.getElementById('turnLabel');
-    const endsLabel=document.getElementById('endsLabel');
-    const boardStrip=document.getElementById('boardStrip');
-    const seatGrid=document.getElementById('seatGrid');
-    const history=document.getElementById('history');
-    const playerHand=document.getElementById('playerHand');
-    const moveList=document.getElementById('moveList');
-    const gameMessage=document.getElementById('gameMessage');
-    const passBtn=document.getElementById('passBtn');
-    const resetBtn=document.getElementById('resetBtn');
 
-    const fullSet=createDoubleSixSet();
-    const key=t=>`${t.a ?? t[0]}-${t.b ?? t[1]}`;
-    const normalize=(a,b)=>createTile(a,b);
-    const tileFromKey=tileKey=>{ const [a,b]=tileKey.split('-').map(Number); return createTile(a,b); };
+    const key=t=>`${t[0]}-${t[1]}`;
+    const normalize=(a,b)=>a<=b?[a,b]:[b,a];
     const tilesForPair=n=>values.map(v=>normalize(n,v));
-    const playerName=playerId=>state.players.find(player=>player.id===playerId)?.name.replace('player-','Player ') ?? `Player ${playerId+1}`;
-    const formatTile=tile=>`${tile.a ?? tile[0]}-${tile.b ?? tile[1]}`;
 
-    function setTheme(themeId){ state.theme=themeId; root.dataset.theme=themeId; localStorage.setItem('domino-theme',themeId); renderThemes(); }
-    function openThemeMenu(){ themePicker.classList.add('open'); themeToggle.setAttribute('aria-expanded','true'); }
-    function closeThemeMenu(){ themePicker.classList.remove('open'); themeToggle.setAttribute('aria-expanded','false'); }
-    function toggleThemeMenu(){ themePicker.classList.contains('open')?closeThemeMenu():openThemeMenu(); }
+    function setTheme(themeId){
+      state.theme=themeId;
+      root.dataset.theme=themeId;
+      localStorage.setItem('domino-theme',themeId);
+      renderThemes();
+    }
+
+    function openThemeMenu(){
+      themePicker.classList.add('open');
+      themeToggle.setAttribute('aria-expanded','true');
+    }
+
+    function closeThemeMenu(){
+      themePicker.classList.remove('open');
+      themeToggle.setAttribute('aria-expanded','false');
+    }
+
+    function toggleThemeMenu(){
+      const open=themePicker.classList.contains('open');
+      open?closeThemeMenu():openThemeMenu();
+    }
 
     function renderThemes(){
       themeOptions.innerHTML=THEMES.map(theme=>`
         <button class="theme-option ${state.theme===theme.id?'active':''}" type="button" data-theme="${theme.id}" role="menuitemradio" aria-checked="${state.theme===theme.id}">
           <span class="theme-swatch ${theme.swatch}" aria-hidden="true"></span>
-          <span class="theme-copy"><span class="theme-name">${theme.name}</span><span class="theme-desc">${theme.description}</span></span>
+          <span class="theme-copy">
+            <span class="theme-name">${theme.name}</span>
+            <span class="theme-desc">${theme.description}</span>
+          </span>
           <span class="theme-check" aria-hidden="true">✓</span>
-        </button>`).join('');
-      themeOptions.querySelectorAll('.theme-option').forEach(option=>option.onclick=()=>{ setTheme(option.dataset.theme); closeThemeMenu(); });
+        </button>
+      `).join('');
+
+      themeOptions.querySelectorAll('.theme-option').forEach(option=>{
+        option.onclick=()=>{
+          setTheme(option.dataset.theme);
+          closeThemeMenu();
+        };
+      });
     }
 
-    function pips(n){ const visible=new Set(PIP_MAP[n]); return `<div class="pips">${Array.from({length:9},(_,i)=>`<span class="pip ${visible.has(i)?'show':''}"></span>`).join('')}</div>`; }
-    function domino(a,b,size='medium'){ return `<div class="domino ${size}"><div class="half">${pips(a)}</div><div class="half">${pips(b)}</div></div>`; }
-    function buildMiniTile(tile){ return `<div class="mini-tile" data-key="${key(tile)}">${domino(tile.a,tile.b,'small')}</div>`; }
+    function pips(n){
+      const visible=new Set(PIP_MAP[n]);
+      return `<div class="pips">${Array.from({length:9},(_,i)=>`<span class="pip ${visible.has(i)?'show':''}"></span>`).join('')}</div>`;
+    }
+
+    function domino(a,b,size='medium'){
+      return `<div class="domino ${size}"><div class="half">${pips(a)}</div><div class="half">${pips(b)}</div></div>`;
+    }
 
     function renderPairs(){
       pairGrid.innerHTML=values.map(n=>`
         <button class="pair-btn ${state.activePair===n?'active':''}" data-pair="${n}" aria-label="Double ${n}">
           ${domino(n,n,'medium')}
           <div class="pair-label">Double</div>
-        </button>`).join('');
-      pairGrid.querySelectorAll('.pair-btn').forEach(btn=>btn.onclick=()=>{ state.activePair=Number(btn.dataset.pair); renderSetup(); });
+        </button>
+      `).join('');
+
+      pairGrid.querySelectorAll('.pair-btn').forEach(btn=>{
+        btn.onclick=()=>{
+          state.activePair=Number(btn.dataset.pair);
+          render();
+        };
+      });
     }
 
     function renderTiles(){
       const selectedKeys=new Set(state.selected.map(key));
       tileGrid.innerHTML=tilesForPair(state.activePair).map(tile=>{
         const tileKey=key(tile);
-        const isRequired=tileKey==='6-6';
-        const selected=selectedKeys.has(tileKey);
-        const disabled=state.selected.length>=7 && !selected;
         return `
-          <button class="tile-btn ${selected?'sel':''} ${disabled?'disabled':''}" data-tile="${tileKey}" ${disabled?'disabled':''} aria-label="Tile ${tileKey}">
-            ${domino(tile.a,tile.b,'large')}
-            <div class="tile-name">${tileKey}${isRequired?' required':''}</div>
-          </button>`;
+          <button class="tile-btn ${selectedKeys.has(tileKey)?'sel':''}" data-tile="${tileKey}" aria-label="Tile ${tileKey}">
+            ${domino(tile[0],tile[1],'large')}
+            <div class="tile-name">${tileKey}</div>
+          </button>
+        `;
       }).join('');
 
       tileGrid.querySelectorAll('.tile-btn').forEach(btn=>{
         btn.onclick=()=>{
-          const tile=tileFromKey(btn.dataset.tile);
+          const tile=btn.dataset.tile.split('-').map(Number);
           const tileKey=key(tile);
           const currentIndex=state.selected.findIndex(item=>key(item)===tileKey);
-          if(tileKey==='6-6' && currentIndex>=0) return;
-          if(currentIndex>=0){ state.selected.splice(currentIndex,1); }
-          else if(state.selected.length<7){ state.selected.push(tile); }
-          state.selected.sort((a,b)=>(b.a+b.b)-(a.a+a.b) || b.b-a.b || b.a-a.a);
-          renderSetup();
+
+          if(currentIndex>=0){
+            state.selected.splice(currentIndex,1);
+          }else if(state.selected.length<7){
+            state.selected.push(tile);
+          }
+
+          render();
         };
       });
     }
 
-    function renderTray(){
-      if(!state.selected.length){ tray.className='tray empty'; tray.textContent='No tiles selected'; return; }
-      tray.className='tray';
-      tray.innerHTML=state.selected.map(buildMiniTile).join('');
-    }
-
-    function renderSetup(){
-      renderPairs(); renderTiles(); renderTray();
-      const hasOpening=state.selected.some(tile=>key(tile)==='6-6');
-      const ready=state.selected.length===7 && hasOpening;
+    function renderCounter(){
       counter.textContent=`${state.selected.length} / 7`;
-      confirmBtn.disabled=!ready;
-      setupMessage.className=`message ${ready?'':'warn'}`;
-      setupMessage.textContent=ready
-        ? 'Hand ready. Confirm to auto-open the round with 6-6 and switch into gameplay assistant mode.'
-        : 'Select 7 tiles including 6-6 to start gameplay mode.';
+      confirmBtn.classList.toggle('show', state.selected.length===7);
     }
 
-    function buildHands(playerTiles){
-      const selectedKeys=new Set(playerTiles.map(key));
-      const remainder=fullSet.filter(tile=>!selectedKeys.has(tile.key));
-      return [
-        {playerId:0,tiles:[...playerTiles]},
-        {playerId:1,tiles:remainder.slice(0,7)},
-        {playerId:2,tiles:remainder.slice(7,14)},
-        {playerId:3,tiles:remainder.slice(14,21)},
-      ];
+    function buildMiniTile(tile,extraClass=''){
+      return `<div class="mini-tile ${extraClass}" data-key="${key(tile)}">${domino(tile[0],tile[1],'small')}</div>`;
     }
 
-    function startGame(){
-      state.lastError='';
-      state.lastAction='';
-      const hands=buildHands(state.selected.map(tile=>createTile(tile.a,tile.b)));
-      const game=createGame({players:state.players,hands,startingPlayerId:0});
-      playTile(game,{playerId:0,tile:createTile(6,6)});
-      state.game=game;
-      state.stage='game';
-      render();
-    }
+    function renderTray(){
+      const nextKeys=state.selected.map(key);
+      const previousItems=[...tray.querySelectorAll('.mini-tile')];
+      const previousKeys=new Set(previousItems.map(item=>item.dataset.key));
+      const leavingMarkup=previousItems
+        .filter(item=>!nextKeys.includes(item.dataset.key))
+        .map(item=>item.outerHTML.replace('mini-tile','mini-tile exit'))
+        .join('');
 
-    function describeMove(move){
-      if(move.type==='pass') return `<strong>${playerName(move.playerId)}</strong> passed`;
-      const sideText=move.side==='start' ? 'opened with' : `played on ${move.side}`;
-      return `<strong>${playerName(move.playerId)}</strong> ${sideText} <strong>${move.tile.key}</strong>`;
-    }
-
-    function renderBoard(){
-      const {game}=state;
-      if(!game.board.length){ boardStrip.innerHTML='<div class="message">The engine board is empty.</div>'; return; }
-      boardStrip.innerHTML=game.board.map((entry,index)=>`
-        <div class="board-tile">
-          ${domino(entry.left,entry.right,'board')}
-          <div class="board-meta">${index===0&&entry.side==='start'?'Opening':entry.side} · ${playerName(entry.playerId)}</div>
-        </div>`).join('');
-    }
-
-    function renderSeats(){
-      const {game}=state;
-      seatGrid.innerHTML=state.players.map(player=>{
-        const hand=game.hands.find(entry=>entry.playerId===player.id);
-        const legal=getLegalMoves(game,player.id);
-        const classes=['seat-card'];
-        if(player.id===state.userPlayerId) classes.push('me');
-        if(player.id===game.currentPlayerId) classes.push('active');
-        if(player.id===game.currentPlayerId && !legal.length) classes.push('blocked');
-        return `<div class="${classes.join(' ')}"><span>${playerName(player.id)}</span><strong>${hand.tiles.length} tiles left</strong><small>${player.id===game.currentPlayerId ? (legal.length ? `${legal.length} legal move${legal.length===1?'':'s'}` : 'must pass') : `Team ${player.team+1}`}</small></div>`;
-      }).join('');
-    }
-
-    function renderHistory(){
-      const {game}=state;
-      history.innerHTML=game.moveHistory.slice().reverse().map(move=>`<div class="history-item">${describeMove(move)}</div>`).join('') || '<div class="history-item">No moves recorded.</div>';
-    }
-
-    function renderPlayerHand(){
-      const hand=state.game.hands.find(entry=>entry.playerId===state.userPlayerId);
-      if(!hand.tiles.length){ playerHand.className='tray empty'; playerHand.textContent='Your hand is empty.'; return; }
-      playerHand.className='tray';
-      playerHand.innerHTML=hand.tiles.map(tile=>buildMiniTile(tile)).join('');
-    }
-
-    function renderMoveOptions(){
-      const {game}=state;
-      const isUsersTurn=game.currentPlayerId===state.userPlayerId;
-      const legalMoves=isUsersTurn ? getLegalMoves(game,state.userPlayerId) : [];
-
-      passBtn.disabled=!isUsersTurn || legalMoves.length>0 || game.status!=='in_progress';
-      moveList.innerHTML='';
-
-      if(game.status==='finished'){
-        const winner=game.winner ? `${playerName(game.winner.playerId)} won the hand` : 'Hand complete';
-        gameMessage.className='message';
-        gameMessage.textContent=winner;
-        return;
-      }
-
-      if(!isUsersTurn){
-        gameMessage.className='message';
-        gameMessage.textContent=`Waiting for ${playerName(game.currentPlayerId)}. This phase-1 UI records your actions and shows live engine state.`;
-        return;
-      }
-
-      if(state.lastError){
-        gameMessage.className='message error';
-        gameMessage.textContent=state.lastError;
-      }else if(!legalMoves.length){
-        gameMessage.className='message warn';
-        gameMessage.textContent='No legal move available. Record a pass to advance the engine turn order.';
-      }else{
-        gameMessage.className='message';
-        gameMessage.textContent='Select one of the engine-legal moves below.';
-      }
-
-      moveList.innerHTML=legalMoves.map((move,index)=>`
-        <button class="move-option" type="button" data-index="${index}">
-          ${domino(move.orientation[0],move.orientation[1],'medium')}
-          <span class="move-copy"><span class="move-title">Play ${move.tile.key}</span><span class="move-note">${move.side===null ? 'Opening move' : `Place on ${move.side} end`}</span></span>
-          <span class="pill">${move.side===null?'start':move.side}</span>
-        </button>`).join('');
-
-      moveList.querySelectorAll('.move-option').forEach(button=>button.onclick=()=>{
-        const move=legalMoves[Number(button.dataset.index)];
-        try{
-          state.lastError='';
-          playTile(game,{playerId:state.userPlayerId,tile:move.tile,side:move.side ?? undefined});
-          state.lastAction=`Played ${move.tile.key}`;
-          renderGame();
-        }catch(error){
-          state.lastError=error.message;
-          renderGame();
+      if(!state.selected.length){
+        if(previousItems.length){
+          tray.className='tray';
+          tray.innerHTML=leavingMarkup;
+          setTimeout(()=>{
+            if(state.selected.length===0){
+              tray.className='tray empty';
+              tray.textContent='No tiles selected';
+            }
+          },200);
+        }else{
+          tray.className='tray empty';
+          tray.textContent='No tiles selected';
         }
-      });
-    }
+        return;
+      }
 
-    function renderGame(){
-      const {game}=state;
-      counter.textContent=`${game.hands.find(hand=>hand.playerId===state.userPlayerId).tiles.length} in hand`;
-      subtitle.textContent='Phase-1 gameplay assistant: opening 6-6 applied, turn order and legal moves are coming from the local engine.';
-      turnLabel.textContent=playerName(game.currentPlayerId);
-      endsLabel.textContent=game.ends ? `${game.ends.left} · ${game.ends.right}` : '—';
-      renderBoard(); renderSeats(); renderHistory(); renderPlayerHand(); renderMoveOptions();
+      tray.className='tray';
+
+      const persistentMarkup=state.selected
+        .filter(tile=>previousKeys.has(key(tile)))
+        .map(tile=>buildMiniTile(tile))
+        .join('');
+
+      const enteringMarkup=state.selected
+        .filter(tile=>!previousKeys.has(key(tile)))
+        .map(tile=>buildMiniTile(tile,'enter'))
+        .join('');
+
+      tray.innerHTML=persistentMarkup+enteringMarkup+leavingMarkup;
+
+      setTimeout(()=>{
+        tray.querySelectorAll('.mini-tile.exit').forEach(item=>item.remove());
+      },200);
     }
 
     function render(){
+      renderPairs();
+      renderTiles();
+      renderCounter();
+      renderTray();
       renderThemes();
-      setupScreen.classList.toggle('hidden',state.stage!=='setup');
-      gameScreen.classList.toggle('hidden',state.stage!=='game');
-      if(state.stage==='setup'){
-        subtitle.textContent='Build your hand, confirm it, then track a phase-1 engine-driven round from the opening 6-6.';
-        renderSetup();
-      }else{
-        renderGame();
-      }
     }
 
-    confirmBtn.addEventListener('click',startGame);
-    passBtn.addEventListener('click',()=>{
-      try{
-        state.lastError='';
-        passTurn(state.game,state.userPlayerId);
-        state.lastAction='Passed';
-        renderGame();
-      }catch(error){
-        state.lastError=error.message;
-        renderGame();
-      }
-    });
-    resetBtn.addEventListener('click',()=>{
-      state.stage='setup';
-      state.selected=[createTile(6,6)];
-      state.activePair=6;
-      state.game=null;
-      state.lastError='';
-      state.lastAction='';
-      render();
-    });
-
     themeToggle.addEventListener('click',toggleThemeMenu);
-    document.addEventListener('click',event=>{ if(!themePicker.contains(event.target)) closeThemeMenu(); });
-    document.addEventListener('keydown',event=>{ if(event.key==='Escape') closeThemeMenu(); });
+    document.addEventListener('click',event=>{
+      if(!themePicker.contains(event.target)) closeThemeMenu();
+    });
+    document.addEventListener('keydown',event=>{
+      if(event.key==='Escape') closeThemeMenu();
+    });
 
     setTheme(state.theme);
     render();
