@@ -127,48 +127,50 @@
       margin:0;
       min-height:100vh;
       background:
-        radial-gradient(circle at top, var(--bg-glow), transparent 34%),
-        linear-gradient(180deg,var(--bg) 0%,var(--bg-alt) 100%);
+        radial-gradient(circle at 50% -10%, color-mix(in srgb, var(--bg-glow) 72%, transparent), transparent 36%),
+        radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--bg-glow) 42%, transparent), transparent 28%),
+        linear-gradient(180deg,color-mix(in srgb, var(--bg) 92%, black 8%) 0%,var(--bg-alt) 100%);
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       transition:background .3s ease,color .2s ease;
     }
 
     .app{
-      width:min(860px,100%);
+      width:min(1180px,100%);
       margin:0 auto;
-      padding:38px 20px 30px;
+      padding:20px 18px 18px;
     }
 
     .screen{
       display:grid;
-      gap:22px;
+      gap:14px;
     }
 
     .topbar{
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap:18px;
-      padding:4px 6px 0;
+      gap:14px;
+      padding:2px 2px 0;
     }
 
     .title-block{
       display:grid;
-      gap:8px;
+      gap:4px;
     }
 
     h1{
       margin:0;
-      font-size:clamp(1.8rem,4vw,2.3rem);
+      font-size:clamp(1.6rem,3vw,2rem);
       line-height:1;
       letter-spacing:-.055em;
     }
 
     .subtitle{
       color:var(--muted);
-      font-size:.96rem;
-      line-height:1.4;
+      font-size:.9rem;
+      line-height:1.3;
+      max-width:48ch;
     }
 
     .topbar-actions{
@@ -191,11 +193,11 @@
     }
 
     .theme-toggle{
-      width:48px;
-      height:48px;
+      width:44px;
+      height:44px;
       display:grid;
       place-items:center;
-      border-radius:16px;
+      border-radius:15px;
       background:linear-gradient(180deg,var(--surface-soft),var(--surface));
       border:1px solid var(--border);
       box-shadow:var(--shadow-md);
@@ -340,13 +342,13 @@
     }
 
     .counter{
-      padding:12px 16px;
+      padding:10px 14px;
       border-radius:999px;
       background:linear-gradient(180deg,var(--surface-soft),var(--surface));
       border:1px solid var(--border);
       box-shadow:var(--shadow-md);
       color:var(--muted-strong);
-      font-size:.92rem;
+      font-size:.88rem;
       font-weight:800;
       white-space:nowrap;
       align-self:center;
@@ -354,30 +356,37 @@
 
     .stack{
       display:grid;
-      gap:18px;
-      padding:22px;
+      grid-template-columns:minmax(0,1.02fr) minmax(0,1.38fr);
+      grid-template-areas:
+        "pairs tiles"
+        "tray tiles"
+        "tray confirm";
+      align-items:start;
+      gap:14px 16px;
+      padding:16px;
       border-radius:var(--radius-xl);
-      background:linear-gradient(180deg,color-mix(in srgb, var(--surface) 88%, transparent),color-mix(in srgb, var(--surface-soft) 82%, transparent));
-      border:1px solid color-mix(in srgb, var(--border) 85%, transparent);
+      background:linear-gradient(180deg,color-mix(in srgb, var(--surface) 90%, transparent),color-mix(in srgb, var(--surface-soft) 86%, transparent));
+      border:1px solid color-mix(in srgb, var(--border) 88%, transparent);
       box-shadow:var(--shadow-lg);
-      backdrop-filter:blur(8px);
+      backdrop-filter:blur(10px);
     }
 
     .group{
       display:grid;
-      gap:12px;
+      gap:10px;
+      min-width:0;
     }
 
     .group-head{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:12px;
+      gap:10px;
       padding:0 2px;
     }
 
     .group-title{
-      font-size:.8rem;
+      font-size:.76rem;
       font-weight:800;
       letter-spacing:.12em;
       text-transform:uppercase;
@@ -385,14 +394,19 @@
     }
 
     .group-note{
-      font-size:.84rem;
+      font-size:.8rem;
       color:var(--muted);
     }
+
+    .group.pairs-group{grid-area:pairs}
+    .group.tiles-group{grid-area:tiles}
+    .tray-shell{grid-area:tray}
+    .confirm-btn{grid-area:confirm}
 
     .pair-grid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:14px;
+      gap:10px;
     }
 
     .pair-btn,
@@ -426,9 +440,9 @@
     .pair-btn{
       display:grid;
       place-items:center;
-      gap:10px;
-      padding:16px 12px 14px;
-      border-radius:20px;
+      gap:8px;
+      padding:12px 10px 11px;
+      border-radius:18px;
       background:linear-gradient(180deg,var(--surface-soft),var(--surface));
       border:1px solid var(--border);
       box-shadow:var(--shadow-md);
@@ -444,7 +458,7 @@
     }
 
     .pair-label{
-      font-size:.78rem;
+      font-size:.74rem;
       font-weight:800;
       letter-spacing:.1em;
       text-transform:uppercase;
@@ -454,17 +468,17 @@
     .tile-grid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:16px;
+      gap:12px;
     }
 
     .tile-btn{
       display:grid;
-      gap:10px;
+      gap:8px;
       justify-items:center;
       align-content:center;
-      padding:18px 14px;
-      min-height:186px;
-      border-radius:24px;
+      padding:12px 10px;
+      min-height:148px;
+      border-radius:20px;
       background:linear-gradient(180deg,var(--surface-soft),var(--surface));
       border:1px solid var(--border);
       box-shadow:var(--shadow-lg);
@@ -485,14 +499,15 @@
       width:100%;
       justify-content:center;
       align-items:center;
-      padding:15px 18px;
-      border-radius:20px;
+      align-self:end;
+      padding:13px 16px;
+      border-radius:18px;
       background:linear-gradient(180deg,var(--accent),var(--accent-strong));
       border:1px solid color-mix(in srgb, var(--accent) 62%, white 8%);
       color:var(--button-text);
       font-weight:800;
       letter-spacing:-.01em;
-      box-shadow:0 18px 34px color-mix(in srgb, var(--accent-strong) 30%, transparent);
+      box-shadow:0 14px 28px color-mix(in srgb, var(--accent-strong) 28%, transparent);
       display:none;
       transition:transform .16s ease, box-shadow .16s ease, filter .16s ease;
     }
@@ -502,17 +517,18 @@
 
     .tray-shell{
       display:grid;
-      gap:12px;
+      gap:10px;
+      min-width:0;
     }
 
     .tray{
       display:flex;
       align-items:center;
-      gap:12px;
+      gap:10px;
       overflow-x:auto;
-      padding:14px;
-      min-height:92px;
-      border-radius:24px;
+      padding:12px;
+      min-height:78px;
+      border-radius:20px;
       background:linear-gradient(180deg,var(--surface-soft),var(--surface));
       border:1px solid var(--border);
       box-shadow:var(--shadow-md);
@@ -533,9 +549,9 @@
 
     .mini-tile{
       flex:0 0 auto;
-      width:60px;
-      padding:7px;
-      border-radius:16px;
+      width:56px;
+      padding:6px;
+      border-radius:15px;
       background:linear-gradient(180deg,var(--surface-raised),var(--surface-soft));
       border:1px solid color-mix(in srgb, var(--border) 92%, white 4%);
       box-shadow:0 10px 20px rgba(2,6,23,.16);
@@ -568,10 +584,13 @@
       grid-template-rows:1fr 1fr;
       border-radius:14px;
       overflow:hidden;
-      background:linear-gradient(180deg,var(--domino-body),color-mix(in srgb, var(--domino-body) 82%, black 18%));
-      border:1px solid var(--domino-border);
-      box-shadow:var(--domino-shadow), var(--domino-inset);
+      background:
+        linear-gradient(145deg,color-mix(in srgb, var(--domino-body) 94%, white 6%) 0%,color-mix(in srgb, var(--domino-body) 84%, black 16%) 100%);
+      border:1px solid color-mix(in srgb, var(--domino-border) 82%, white 6%);
+      box-shadow:0 2px 0 rgba(255,255,255,.16) inset, 0 -2px 4px rgba(15,23,42,.08) inset, var(--domino-shadow), var(--domino-inset);
       isolation:isolate;
+      transform:perspective(600px) rotateX(4deg);
+      transform-origin:center bottom;
     }
 
     .domino::before,
@@ -592,19 +611,21 @@
     .domino::after{
       inset:1px;
       border-radius:12px;
-      box-shadow:inset 0 1px 0 var(--domino-highlight), inset 0 0 0 1px rgba(255,255,255,.02);
+      box-shadow:inset 0 1px 0 var(--domino-highlight), inset 0 0 0 1px rgba(255,255,255,.02), inset 0 -10px 18px rgba(15,23,42,.05);
     }
 
-    .domino.large{max-width:74px;height:108px}
-    .domino.medium{max-width:56px;height:82px}
-    .domino.small{height:62px}
+    .domino.large{max-width:66px;height:94px}
+    .domino.medium{max-width:50px;height:72px}
+    .domino.small{height:56px}
 
     .half{
       position:relative;
       z-index:1;
       display:grid;
       place-items:center;
-      background:linear-gradient(180deg,var(--domino-half),var(--domino-half-alt));
+      background:
+        radial-gradient(circle at 28% 22%, rgba(255,255,255,.24), transparent 34%),
+        linear-gradient(180deg,var(--domino-half),var(--domino-half-alt));
     }
 
     .half::after{
@@ -620,39 +641,50 @@
       box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
     }
 
-    .pips{width:28px;height:28px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr)}
+    .pips{width:26px;height:26px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr)}
     .pip{
       width:6px;
       height:6px;
       border-radius:999px;
-      background:var(--domino-pip);
-      box-shadow:0 0 0 1px color-mix(in srgb, var(--domino-pip) 16%, transparent);
+      background:radial-gradient(circle at 35% 35%, color-mix(in srgb, var(--domino-pip) 76%, white 24%), var(--domino-pip) 72%);
+      box-shadow:0 1px 1px rgba(255,255,255,.14) inset, 0 0 0 1px color-mix(in srgb, var(--domino-pip) 16%, transparent), 0 .5px 1.5px rgba(15,23,42,.18);
       place-self:center;
       opacity:0;
     }
     .pip.show{opacity:1}
 
+    @media (max-width:900px){
+      .stack{
+        grid-template-columns:1fr;
+        grid-template-areas:
+          "pairs"
+          "tiles"
+          "confirm"
+          "tray";
+      }
+    }
+
     @media (max-width:640px){
-      .app{padding:24px 12px 18px}
-      .screen{gap:16px}
+      .app{padding:18px 12px 16px}
+      .screen{gap:12px}
       .topbar{align-items:flex-start;padding-inline:2px}
       .topbar-actions{gap:10px}
-      .theme-toggle{width:44px;height:44px;border-radius:14px}
+      .theme-toggle{width:42px;height:42px;border-radius:14px}
       .theme-menu{right:-2px;width:min(280px,calc(100vw - 24px));padding:12px;border-radius:20px}
-      .stack{padding:16px;gap:16px;border-radius:24px}
+      .stack{padding:14px;gap:14px;border-radius:24px}
       .pair-grid,.tile-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
       .pair-btn{padding:12px 8px 11px;border-radius:17px;gap:8px}
-      .tile-btn{padding:12px 8px;min-height:164px;border-radius:20px;gap:8px}
-      .domino.large{max-width:64px;height:94px}
-      .domino.medium{max-width:48px;height:70px}
-      .domino.small{height:56px}
-      .pips{width:24px;height:24px}
+      .tile-btn{padding:10px 8px;min-height:136px;border-radius:18px;gap:8px}
+      .domino.large{max-width:58px;height:84px}
+      .domino.medium{max-width:46px;height:66px}
+      .domino.small{height:52px}
+      .pips{width:22px;height:22px}
       .pair-label{font-size:.72rem}
-      .tray{padding:10px;min-height:80px;border-radius:18px;gap:10px}
-      .mini-tile{width:54px;padding:6px;border-radius:14px}
+      .tray{padding:10px;min-height:76px;border-radius:18px;gap:10px}
+      .mini-tile{width:52px;padding:6px;border-radius:14px}
       .counter{padding:10px 13px;font-size:.88rem}
       .confirm-btn{border-radius:18px}
-      .subtitle{font-size:.9rem}
+      .subtitle{font-size:.88rem}
       .group-head{align-items:flex-start;flex-direction:column}
     }
   </style>
@@ -689,7 +721,7 @@
       </div>
 
       <div class="stack">
-        <section class="group">
+        <section class="group pairs-group">
           <div class="group-head">
             <div class="group-title">Double selector</div>
             <div class="group-note">Choose the base pair first.</div>
@@ -697,7 +729,7 @@
           <div id="pairGrid" class="pair-grid"></div>
         </section>
 
-        <section class="group">
+        <section class="group tiles-group">
           <div class="group-head">
             <div class="group-title">Available tiles</div>
             <div class="group-note">Select up to seven tiles for your hand.</div>
