@@ -3,97 +3,764 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Domino Selector</title>
+  <title>Domino Assistant</title>
   <style>
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#0f172a;color:#e2e8f0}
-    .app{max-width:680px;margin:0 auto;padding:12px}
-    .title{font-size:1.15rem;font-weight:800;margin-bottom:6px}
-    .counter{font-size:1rem;font-weight:700;margin-bottom:10px;color:#93c5fd}
-    .pairs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-    .pair-btn{border:1px solid #475569;background:#1e293b;color:#fff;border-radius:10px;padding:10px;font-weight:700}
-    .pair-btn.active{border-color:#22c55e;background:#14532d}
-    .options{margin-top:10px;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
-    .tile{border:1px solid #475569;background:#1e293b;border-radius:12px;padding:6px;min-height:104px;cursor:pointer;transition:.1s}
-    .tile.sel{border-color:#22c55e;background:#14532d;box-shadow:0 0 0 2px #22c55e55}
-    .tile:active{transform:scale(.98)}
-    .domino{height:100%;display:grid;grid-template-rows:1fr 1fr;gap:0}
-    .half{display:grid;place-items:center;background:#f8fafc}
-    .half.top{border-top-left-radius:8px;border-top-right-radius:8px}
-    .half.bottom{border-top:2px solid #0f172a;border-bottom-left-radius:8px;border-bottom-right-radius:8px}
-    .pips{width:26px;height:26px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr)}
-    .pip{width:6px;height:6px;border-radius:99px;background:#0f172a;opacity:0;place-self:center}
+    :root{
+      --bg:#08111f;
+      --bg-soft:#0f1b31;
+      --surface:rgba(15,23,42,.82);
+      --surface-strong:#13203a;
+      --surface-elevated:#172742;
+      --border:rgba(148,163,184,.18);
+      --border-strong:rgba(96,165,250,.35);
+      --text:#e5eefc;
+      --muted:#93a7c7;
+      --accent:#60a5fa;
+      --accent-strong:#3b82f6;
+      --success:#34d399;
+      --success-strong:#10b981;
+      --warning:#fbbf24;
+      --shadow:0 28px 80px rgba(2,6,23,.45);
+      --radius-xl:28px;
+      --radius-lg:20px;
+      --radius-md:16px;
+      --radius-sm:12px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%}
+    body{
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top, rgba(59,130,246,.18), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(52,211,153,.1), transparent 22%),
+        linear-gradient(180deg, #0b1220 0%, var(--bg) 100%);
+    }
+
+    .shell{
+      width:min(1180px, calc(100vw - 32px));
+      margin:0 auto;
+      padding:32px 0 120px;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:minmax(0,1.3fr) minmax(320px,.9fr);
+      gap:20px;
+      align-items:stretch;
+      margin-bottom:22px;
+    }
+
+    .panel{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius-xl);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(18px);
+    }
+
+    .hero-copy{
+      padding:28px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-copy::after{
+      content:"";
+      position:absolute;
+      inset:auto -40px -90px auto;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(96,165,250,.24), transparent 68%);
+      pointer-events:none;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(96,165,250,.22);
+      background:rgba(96,165,250,.08);
+      color:#bfdbfe;
+      font-size:.84rem;
+      font-weight:700;
+      letter-spacing:.01em;
+      margin-bottom:16px;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(2rem, 4vw, 3.5rem);
+      line-height:1.03;
+      letter-spacing:-.03em;
+    }
+
+    .hero-copy p{
+      margin:14px 0 0;
+      max-width:58ch;
+      color:var(--muted);
+      font-size:1rem;
+      line-height:1.6;
+    }
+
+    .hero-points{
+      margin:20px 0 0;
+      padding:0;
+      list-style:none;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .hero-points li{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:999px;
+      background:rgba(15,27,49,.72);
+      border:1px solid rgba(148,163,184,.14);
+      color:#dbeafe;
+      font-size:.92rem;
+      font-weight:600;
+    }
+
+    .status-card{
+      padding:24px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:18px;
+    }
+
+    .status-label{
+      font-size:.82rem;
+      font-weight:700;
+      color:#bfdbfe;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+    }
+
+    .status-count{
+      font-size:clamp(2.6rem, 8vw, 4.6rem);
+      font-weight:900;
+      line-height:.92;
+      letter-spacing:-.04em;
+    }
+
+    .status-subtitle{
+      color:var(--muted);
+      font-size:.98rem;
+      line-height:1.5;
+    }
+
+    .progress-track{
+      height:14px;
+      border-radius:999px;
+      background:rgba(148,163,184,.12);
+      overflow:hidden;
+      border:1px solid rgba(148,163,184,.08);
+    }
+
+    .progress-fill{
+      height:100%;
+      width:0%;
+      border-radius:inherit;
+      background:linear-gradient(90deg, var(--accent), var(--success));
+      transition:width .25s ease;
+      box-shadow:0 0 24px rgba(96,165,250,.35);
+    }
+
+    .status-meta{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:10px;
+    }
+
+    .pill{
+      padding:12px;
+      border-radius:16px;
+      background:rgba(8,17,31,.55);
+      border:1px solid rgba(148,163,184,.12);
+    }
+
+    .pill strong{
+      display:block;
+      font-size:.82rem;
+      color:#dbeafe;
+      margin-bottom:4px;
+    }
+
+    .pill span{
+      color:var(--muted);
+      font-size:.85rem;
+      line-height:1.35;
+    }
+
+    .workspace{
+      display:grid;
+      grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);
+      gap:20px;
+      align-items:start;
+    }
+
+    .board,
+    .tray{
+      padding:22px;
+    }
+
+    .section-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .section-title{
+      margin:0;
+      font-size:1.2rem;
+      font-weight:800;
+      letter-spacing:-.02em;
+    }
+
+    .section-copy{
+      margin:6px 0 0;
+      color:var(--muted);
+      line-height:1.5;
+      font-size:.95rem;
+    }
+
+    .hint-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+      color:#dbeafe;
+      background:rgba(96,165,250,.1);
+      border:1px solid rgba(96,165,250,.18);
+      border-radius:999px;
+      padding:10px 12px;
+      font-size:.85rem;
+      font-weight:700;
+    }
+
+    .pair-selector{
+      display:grid;
+      grid-template-columns:repeat(7,minmax(0,1fr));
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .pair-btn,
+    .tile,
+    .action-btn{
+      appearance:none;
+      border:none;
+      color:inherit;
+      font:inherit;
+      cursor:pointer;
+    }
+
+    .pair-btn{
+      padding:14px 10px;
+      border-radius:16px;
+      background:rgba(15,27,49,.82);
+      border:1px solid rgba(148,163,184,.14);
+      text-align:left;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease;
+    }
+
+    .pair-btn:hover,
+    .tile:hover,
+    .action-btn:hover{
+      transform:translateY(-1px);
+      border-color:rgba(96,165,250,.34);
+    }
+
+    .pair-btn.active{
+      background:linear-gradient(180deg, rgba(59,130,246,.28), rgba(15,27,49,.92));
+      border-color:rgba(96,165,250,.48);
+      box-shadow:0 14px 28px rgba(37,99,235,.16);
+    }
+
+    .pair-btn span{
+      display:block;
+      color:var(--muted);
+      font-size:.8rem;
+      margin-top:4px;
+    }
+
+    .options-grid{
+      display:grid;
+      grid-template-columns:repeat(7,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .tile{
+      position:relative;
+      min-height:190px;
+      padding:12px;
+      border-radius:22px;
+      border:1px solid rgba(148,163,184,.15);
+      background:linear-gradient(180deg, rgba(23,39,66,.9), rgba(13,24,43,.92));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+      transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease;
+    }
+
+    .tile::before{
+      content:attr(data-label);
+      position:absolute;
+      top:12px;
+      left:12px;
+      font-size:.72rem;
+      font-weight:800;
+      color:#cbd5e1;
+      padding:5px 8px;
+      border-radius:999px;
+      background:rgba(8,17,31,.55);
+      border:1px solid rgba(148,163,184,.12);
+      letter-spacing:.04em;
+    }
+
+    .tile.sel{
+      background:linear-gradient(180deg, rgba(16,185,129,.16), rgba(15,27,49,.95));
+      border-color:rgba(52,211,153,.55);
+      box-shadow:0 18px 32px rgba(16,185,129,.12), inset 0 0 0 1px rgba(52,211,153,.22);
+    }
+
+    .tile.sel::after{
+      content:"✓";
+      position:absolute;
+      top:12px;
+      right:12px;
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:var(--success-strong);
+      color:#052e26;
+      font-weight:900;
+      box-shadow:0 8px 18px rgba(16,185,129,.28);
+    }
+
+    .domino{
+      height:100%;
+      display:grid;
+      gap:0;
+      grid-template-rows:1fr 1fr;
+    }
+
+    .half{
+      display:grid;
+      place-items:center;
+      background:#f8fbff;
+      min-height:0;
+    }
+
+    .half.top{border-radius:18px 18px 0 0}
+    .half.bottom{border-radius:0 0 18px 18px;border-top:4px solid #09101c}
+
+    .pips{
+      width:min(42px, 100%);
+      aspect-ratio:1;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      grid-template-rows:repeat(3,1fr);
+    }
+
+    .pip{
+      width:9px;
+      height:9px;
+      border-radius:50%;
+      background:#08111f;
+      opacity:0;
+      place-self:center;
+    }
+
     .pip.show{opacity:1}
-    .cta{margin-top:12px;width:100%;padding:12px;border-radius:10px;border:1px solid #22c55e;background:#14532d;color:#dcfce7;font-weight:800;font-size:1rem;display:none}
-    .cta.show{display:block}
+
+    .tray-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(92px,1fr));
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .review-tile,
+    .slot{
+      border-radius:18px;
+      padding:10px;
+      min-height:138px;
+      background:rgba(8,17,31,.58);
+      border:1px solid rgba(148,163,184,.14);
+      position:relative;
+    }
+
+    .review-tile{
+      background:linear-gradient(180deg, rgba(19,32,58,.96), rgba(12,21,38,.96));
+      border-color:rgba(96,165,250,.22);
+    }
+
+    .slot{
+      display:grid;
+      place-items:center;
+      color:var(--muted);
+      text-align:center;
+      font-size:.84rem;
+      line-height:1.45;
+      border-style:dashed;
+    }
+
+    .slot strong,
+    .review-tile strong{
+      position:absolute;
+      top:10px;
+      left:10px;
+      font-size:.72rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:#cbd5e1;
+    }
+
+    .review-tile .domino,
+    .slot .domino{
+      height:100%;
+      padding-top:18px;
+    }
+
+    .empty-state,
+    .confirmation-state{
+      margin-top:18px;
+      padding:16px;
+      border-radius:18px;
+      border:1px solid rgba(148,163,184,.14);
+      background:rgba(8,17,31,.45);
+      color:var(--muted);
+      line-height:1.5;
+      font-size:.92rem;
+    }
+
+    .confirmation-state{
+      border-color:rgba(52,211,153,.26);
+      background:linear-gradient(180deg, rgba(16,185,129,.14), rgba(8,17,31,.55));
+      color:#d1fae5;
+      display:none;
+    }
+
+    .tray-footer{
+      margin-top:18px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .action-btn{
+      flex:1 1 180px;
+      min-height:52px;
+      padding:14px 18px;
+      border-radius:16px;
+      border:1px solid rgba(148,163,184,.16);
+      font-weight:800;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease,opacity .18s ease;
+    }
+
+    .action-btn.primary{
+      background:linear-gradient(135deg, var(--accent-strong), #2563eb 48%, #1d4ed8);
+      color:#eff6ff;
+      box-shadow:0 18px 30px rgba(37,99,235,.26);
+    }
+
+    .action-btn.primary.ready{
+      background:linear-gradient(135deg, var(--success), var(--success-strong));
+      box-shadow:0 18px 30px rgba(16,185,129,.26);
+    }
+
+    .action-btn.secondary{
+      background:rgba(15,27,49,.84);
+      color:#dbeafe;
+    }
+
+    .action-btn[disabled]{
+      cursor:not-allowed;
+      opacity:.45;
+      transform:none;
+      box-shadow:none;
+    }
+
     .hidden{display:none !important}
-    .selected-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 42px);z-index:30;background:#0b1220;border:1px solid #334155;border-radius:12px;padding:8px 12px;width:min(680px,96vw)}
-    .selected-strip{display:flex;gap:8px;overflow:auto;justify-content:center}
-    .mini-tile{min-width:54px;height:78px;border:1px solid #475569;background:#1e293b;border-radius:10px;padding:4px;display:grid}
-    .mini-tile .domino{height:100%}
-    .mini-tile.empty{display:grid;place-items:center;color:#94a3b8;font-size:.82rem;min-width:120px}
-    .app{padding-bottom:128px}
-    @media (max-width:520px){.pairs{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.options{grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}.tile{min-height:88px;padding:4px}}
+
+    @media (max-width: 980px){
+      .hero,
+      .workspace{grid-template-columns:1fr}
+      .status-meta{grid-template-columns:repeat(3,minmax(0,1fr))}
+    }
+
+    @media (max-width: 760px){
+      .shell{width:min(100vw - 20px, 1180px);padding-top:20px;padding-bottom:88px}
+      .hero-copy,.status-card,.board,.tray{padding:18px}
+      .pair-selector{grid-template-columns:repeat(4,minmax(0,1fr))}
+      .options-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+      .tile{min-height:156px}
+      .pips{width:34px}
+      .pip{width:8px;height:8px}
+    }
+
+    @media (max-width: 560px){
+      .status-meta{grid-template-columns:1fr}
+      .pair-selector{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .options-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+      .tile{min-height:146px;padding:10px;border-radius:18px}
+      .tile::before{font-size:.68rem;padding:4px 7px}
+      .tray-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .review-tile,.slot{min-height:124px}
+      .action-btn{width:100%}
+    }
   </style>
 </head>
 <body>
-  <main class="app">
-    <div class="title">Selecciona exactamente 7 fichas</div>
-    <div id="counter" class="counter">0 / 7 seleccionadas</div>
+  <main class="shell">
+    <section class="hero">
+      <article class="panel hero-copy">
+        <div class="eyebrow">Domino Assistant · Mano inicial</div>
+        <h1>Arma tu mano de 7 fichas con una vista más clara y rápida.</h1>
+        <p>
+          Selecciona exactamente siete fichas, revisa tu mano en el panel lateral y confirma cuando esté lista.
+          Todo sucede en una sola pantalla, sin pasos extra ni distracciones.
+        </p>
+        <ul class="hero-points">
+          <li>Selección guiada</li>
+          <li>Progreso visible</li>
+          <li>Revisión antes de confirmar</li>
+        </ul>
+      </article>
 
-    <div id="pairs" class="pairs"></div>
-    <div id="options" class="options"></div>
+      <aside class="panel status-card">
+        <div>
+          <div class="status-label">Estado de la mano</div>
+          <div id="statusCount" class="status-count">0/7</div>
+          <p id="statusCopy" class="status-subtitle">Te faltan 7 fichas para poder confirmar.</p>
+        </div>
 
-    <button id="confirm" class="cta">✓ Confirmar mano</button>
+        <div>
+          <div class="progress-track" aria-hidden="true">
+            <div id="progressFill" class="progress-fill"></div>
+          </div>
+        </div>
+
+        <div class="status-meta">
+          <div class="pill">
+            <strong>Objetivo</strong>
+            <span>Completar exactamente 7 fichas.</span>
+          </div>
+          <div class="pill">
+            <strong>Filtro activo</strong>
+            <span id="activePairLabel">Dobles de 0</span>
+          </div>
+          <div class="pill">
+            <strong>Confirmación</strong>
+            <span id="lockLabel">Pendiente</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="workspace">
+      <section class="panel board">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Tablero de selección</h2>
+            <p class="section-copy">Explora por familia y toca una ficha para agregarla o quitarla de tu mano.</p>
+          </div>
+          <div id="boardHint" class="hint-chip">Selecciona 7 fichas para habilitar la confirmación</div>
+        </div>
+
+        <div id="pairs" class="pair-selector" aria-label="Familias de fichas"></div>
+        <div id="options" class="options-grid" aria-live="polite"></div>
+      </section>
+
+      <aside class="panel tray">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Tu mano</h2>
+            <p class="section-copy">Revisa el orden de selección y verifica que tus 7 espacios estén completos.</p>
+          </div>
+          <div id="handBadge" class="hint-chip">0 de 7 listas</div>
+        </div>
+
+        <div id="trayGrid" class="tray-grid"></div>
+        <div id="emptyState" class="empty-state">Aún no hay fichas seleccionadas. Empieza eligiendo cualquier ficha del tablero.</div>
+        <div id="confirmationState" class="confirmation-state">Mano confirmada. La selección quedó bloqueada y lista para revisión.</div>
+
+        <div class="tray-footer">
+          <button id="reset" class="action-btn secondary">Limpiar selección</button>
+          <button id="confirm" class="action-btn primary" disabled>Completa 7 para confirmar</button>
+        </div>
+      </aside>
+    </section>
   </main>
-  <section class="selected-bar">
-    <div id="selectedBar" class="selected-strip"><span class="mini-tile empty">Sin selección</span></div>
-  </section>
 
   <script>
     const P={0:[],1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
     const norm=t=>[Math.min(t[0],t[1]),Math.max(t[0],t[1])];
     const key=t=>{const n=norm(t);return `${n[0]}-${n[1]}`};
     const state={selected:[],activePair:0,locked:false};
+
     const pairs=document.getElementById('pairs');
     const options=document.getElementById('options');
-    const counter=document.getElementById('counter');
+    const progressFill=document.getElementById('progressFill');
+    const statusCount=document.getElementById('statusCount');
+    const statusCopy=document.getElementById('statusCopy');
+    const activePairLabel=document.getElementById('activePairLabel');
+    const lockLabel=document.getElementById('lockLabel');
+    const boardHint=document.getElementById('boardHint');
+    const handBadge=document.getElementById('handBadge');
+    const trayGrid=document.getElementById('trayGrid');
+    const emptyState=document.getElementById('emptyState');
+    const confirmationState=document.getElementById('confirmationState');
     const confirm=document.getElementById('confirm');
-    const selectedBar=document.getElementById('selectedBar');
+    const reset=document.getElementById('reset');
 
-    function pips(n){const v=new Set(P[n]);return `<div class="pips">${Array.from({length:9},(_,i)=>`<span class="pip ${v.has(i)?'show':''}"></span>`).join('')}</div>`}
-    function face(a,b){return `<div class="domino"><div class="half top">${pips(a)}</div><div class="half bottom">${pips(b)}</div></div>`}
-
-    function pairOptions(a){const arr=[];for(let b=0;b<=6;b++)arr.push([a,b]);return arr;}
-
-    function render(){
-      pairs.classList.toggle('hidden', state.locked);
-      options.classList.toggle('hidden', state.locked);
-
-      if (!state.locked) {
-        pairs.innerHTML = Array.from({length:7},(_,a)=>`<button class="pair-btn ${state.activePair===a?'active':''}" data-a="${a}">${a}-${a}</button>`).join('');
-        [...pairs.querySelectorAll('.pair-btn')].forEach(btn=>btn.onclick=()=>{state.activePair=Number(btn.dataset.a);render();});
-
-        const set=new Set(state.selected.map(key));
-        options.innerHTML = pairOptions(state.activePair).map(t=>`<button class="tile ${set.has(key(t))?'sel':''}" data-k="${key(t)}">${face(t[0],t[1])}</button>`).join('');
-        [...options.querySelectorAll('.tile')].forEach(btn=>btn.onclick=()=>{
-          const t=btn.dataset.k.split('-').map(Number); const k=key(t); const i=state.selected.findIndex(x=>key(x)===k);
-          if(i>=0) state.selected.splice(i,1); else if(state.selected.length<7) state.selected.push(t);
-          render();
-        });
-      }
-
-      counter.textContent= state.locked ? `Mano fija: ${state.selected.length}/7` : `${state.selected.length} / 7 seleccionadas`;
-      confirm.classList.toggle('show', state.selected.length===7 && !state.locked);
-      selectedBar.innerHTML = state.selected.length
-        ? state.selected.map((t)=>`<span class="mini-tile">${face(t[0],t[1])}</span>`).join('')
-        : '<span class="mini-tile empty">Sin selección</span>';
+    function pips(n){
+      const v=new Set(P[n]);
+      return `<div class="pips">${Array.from({length:9},(_,i)=>`<span class="pip ${v.has(i)?'show':''}"></span>`).join('')}</div>`;
     }
 
-    confirm.addEventListener('click', () => {
-      if (state.selected.length === 7) {
-        state.locked = true;
+    function face(a,b){
+      return `<div class="domino"><div class="half top">${pips(a)}</div><div class="half bottom">${pips(b)}</div></div>`;
+    }
+
+    function pairOptions(a){
+      const arr=[];
+      for(let b=0;b<=6;b++) arr.push([a,b]);
+      return arr;
+    }
+
+    function tileCard(t, selected=false){
+      const [a,b]=norm(t);
+      return `<button class="tile ${selected?'sel':''}" data-k="${key(t)}" data-label="${a}-${b}" aria-pressed="${selected}">${face(a,b)}</button>`;
+    }
+
+    function trayItem(t, index){
+      const [a,b]=norm(t);
+      return `<div class="review-tile"><strong>Slot ${index+1}</strong>${face(a,b)}</div>`;
+    }
+
+    function emptySlot(index){
+      return `<div class="slot"><strong>Slot ${index+1}</strong><span>Disponible para una ficha más</span></div>`;
+    }
+
+    function renderPairs(){
+      pairs.innerHTML=Array.from({length:7},(_,a)=>`
+        <button class="pair-btn ${state.activePair===a?'active':''}" data-a="${a}">
+          <strong>${a}-${a}</strong>
+          <span>Familia ${a}</span>
+        </button>`).join('');
+
+      [...pairs.querySelectorAll('.pair-btn')].forEach(btn=>{
+        btn.onclick=()=>{
+          if(state.locked) return;
+          state.activePair=Number(btn.dataset.a);
+          render();
+        };
+      });
+    }
+
+    function renderOptions(){
+      const selectedSet=new Set(state.selected.map(key));
+      options.innerHTML=pairOptions(state.activePair)
+        .map(t=>tileCard(t, selectedSet.has(key(t))))
+        .join('');
+
+      [...options.querySelectorAll('.tile')].forEach(btn=>{
+        btn.onclick=()=>{
+          if(state.locked) return;
+          const t=btn.dataset.k.split('-').map(Number);
+          const k=key(t);
+          const i=state.selected.findIndex(x=>key(x)===k);
+
+          if(i>=0){
+            state.selected.splice(i,1);
+          }else if(state.selected.length<7){
+            state.selected.push(t);
+          }
+
+          render();
+        };
+      });
+    }
+
+    function renderTray(){
+      const items=[];
+      for(let i=0;i<7;i++){
+        items.push(state.selected[i] ? trayItem(state.selected[i], i) : emptySlot(i));
+      }
+      trayGrid.innerHTML=items.join('');
+      emptyState.style.display=state.selected.length ? 'none' : 'block';
+      confirmationState.style.display=state.locked ? 'block' : 'none';
+    }
+
+    function renderStatus(){
+      const count=state.selected.length;
+      const remaining=7-count;
+      const ready=count===7;
+      const progress=(count/7)*100;
+
+      statusCount.textContent=`${count}/7`;
+      progressFill.style.width=`${progress}%`;
+      activePairLabel.textContent=`Dobles de ${state.activePair}`;
+      handBadge.textContent=ready ? '7 de 7 listas' : `${count} de 7 listas`;
+
+      if(state.locked){
+        statusCopy.textContent='Tu mano quedó confirmada y la selección está bloqueada.';
+        lockLabel.textContent='Confirmada';
+        boardHint.textContent='Selección cerrada';
+      }else if(ready){
+        statusCopy.textContent='Tu mano está completa. Revísala y confirma cuando quieras.';
+        lockLabel.textContent='Lista para confirmar';
+        boardHint.textContent='Ya puedes confirmar tu mano';
+      }else{
+        statusCopy.textContent=`Te faltan ${remaining} ficha${remaining===1?'':'s'} para poder confirmar.`;
+        lockLabel.textContent='Pendiente';
+        boardHint.textContent='Selecciona 7 fichas para habilitar la confirmación';
+      }
+
+      confirm.disabled=!ready || state.locked;
+      confirm.textContent=state.locked ? 'Mano confirmada' : ready ? 'Confirmar mano' : 'Completa 7 para confirmar';
+      confirm.classList.toggle('ready', ready && !state.locked);
+
+      pairs.classList.toggle('hidden', state.locked);
+      options.classList.toggle('hidden', state.locked);
+      reset.disabled=state.locked || count===0;
+    }
+
+    function render(){
+      renderPairs();
+      if(!state.locked){
+        renderOptions();
+      }else{
+        options.innerHTML='';
+      }
+      renderTray();
+      renderStatus();
+    }
+
+    confirm.addEventListener('click', ()=>{
+      if(state.selected.length===7){
+        state.locked=true;
         render();
       }
+    });
+
+    reset.addEventListener('click', ()=>{
+      if(state.locked) return;
+      state.selected=[];
+      render();
     });
 
     render();
