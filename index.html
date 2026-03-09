@@ -25,6 +25,7 @@
     .pip.show{opacity:1}
     .cta{margin-top:12px;width:100%;padding:12px;border-radius:10px;border:1px solid #22c55e;background:#14532d;color:#dcfce7;font-weight:800;font-size:1rem;display:none}
     .cta.show{display:block}
+    .hidden{display:none !important}
     .selected-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 42px);z-index:30;background:#0b1220;border:1px solid #334155;border-radius:12px;padding:8px 12px;width:min(680px,96vw)}
     .selected-strip{display:flex;gap:8px;overflow:auto;justify-content:center}
     .mini-tile{min-width:54px;height:78px;border:1px solid #475569;background:#1e293b;border-radius:10px;padding:4px;display:grid}
@@ -52,7 +53,7 @@
     const P={0:[],1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
     const norm=t=>[Math.min(t[0],t[1]),Math.max(t[0],t[1])];
     const key=t=>{const n=norm(t);return `${n[0]}-${n[1]}`};
-    const state={selected:[],activePair:0};
+    const state={selected:[],activePair:0,locked:false};
     const pairs=document.getElementById('pairs');
     const options=document.getElementById('options');
     const counter=document.getElementById('counter');
@@ -65,23 +66,35 @@
     function pairOptions(a){const arr=[];for(let b=0;b<=6;b++)arr.push([a,b]);return arr;}
 
     function render(){
-      pairs.innerHTML = Array.from({length:7},(_,a)=>`<button class="pair-btn ${state.activePair===a?'active':''}" data-a="${a}">${a}-${a}</button>`).join('');
-      [...pairs.querySelectorAll('.pair-btn')].forEach(btn=>btn.onclick=()=>{state.activePair=Number(btn.dataset.a);render();});
+      pairs.classList.toggle('hidden', state.locked);
+      options.classList.toggle('hidden', state.locked);
 
-      const set=new Set(state.selected.map(key));
-      options.innerHTML = pairOptions(state.activePair).map(t=>`<button class="tile ${set.has(key(t))?'sel':''}" data-k="${key(t)}">${face(t[0],t[1])}</button>`).join('');
-      [...options.querySelectorAll('.tile')].forEach(btn=>btn.onclick=()=>{
-        const t=btn.dataset.k.split('-').map(Number); const k=key(t); const i=state.selected.findIndex(x=>key(x)===k);
-        if(i>=0) state.selected.splice(i,1); else if(state.selected.length<7) state.selected.push(t);
-        render();
-      });
+      if (!state.locked) {
+        pairs.innerHTML = Array.from({length:7},(_,a)=>`<button class="pair-btn ${state.activePair===a?'active':''}" data-a="${a}">${a}-${a}</button>`).join('');
+        [...pairs.querySelectorAll('.pair-btn')].forEach(btn=>btn.onclick=()=>{state.activePair=Number(btn.dataset.a);render();});
 
-      counter.textContent=`${state.selected.length} / 7 seleccionadas`;
-      confirm.classList.toggle('show', state.selected.length===7);
+        const set=new Set(state.selected.map(key));
+        options.innerHTML = pairOptions(state.activePair).map(t=>`<button class="tile ${set.has(key(t))?'sel':''}" data-k="${key(t)}">${face(t[0],t[1])}</button>`).join('');
+        [...options.querySelectorAll('.tile')].forEach(btn=>btn.onclick=()=>{
+          const t=btn.dataset.k.split('-').map(Number); const k=key(t); const i=state.selected.findIndex(x=>key(x)===k);
+          if(i>=0) state.selected.splice(i,1); else if(state.selected.length<7) state.selected.push(t);
+          render();
+        });
+      }
+
+      counter.textContent= state.locked ? `Mano fija: ${state.selected.length}/7` : `${state.selected.length} / 7 seleccionadas`;
+      confirm.classList.toggle('show', state.selected.length===7 && !state.locked);
       selectedBar.innerHTML = state.selected.length
         ? state.selected.map((t)=>`<span class="mini-tile">${face(t[0],t[1])}</span>`).join('')
         : '<span class="mini-tile empty">Sin selección</span>';
     }
+
+    confirm.addEventListener('click', () => {
+      if (state.selected.length === 7) {
+        state.locked = true;
+        render();
+      }
+    });
 
     render();
   </script>
