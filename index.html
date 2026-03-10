@@ -664,11 +664,11 @@
 
     .hand-panel-head{
       display:flex;
-      justify-content:center;
+      justify-content:space-between;
       align-items:center;
-      gap:10px;
+      gap:12px;
       margin-bottom:14px;
-      text-align:center;
+      text-align:left;
     }
 
     .hand-label{display:none}
@@ -694,6 +694,34 @@
       color:var(--soft);
       white-space:nowrap;
       box-shadow:0 6px 18px rgba(0,0,0,.12);
+    }
+
+    .hand-head-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .hand-confirm-btn{
+      width:auto;
+      min-width:0;
+      height:44px;
+      padding:0 16px;
+      border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      white-space:nowrap;
+      font-size:.9rem;
+      box-shadow:0 10px 24px rgba(56,126,47,.22);
+    }
+
+    .hand-confirm-icon{
+      font-size:1rem;
+      line-height:1;
     }
 
     .hand-tray-wrap{
@@ -947,6 +975,8 @@
       .hand-zone{margin-top:22px}
       .hand-panel{width:100%;padding:14px 14px 10px}
       .hand-panel-head{justify-content:space-between;align-items:center;text-align:left;gap:12px;margin-bottom:12px}
+      .hand-head-actions{width:100%;justify-content:space-between}
+      .hand-confirm-btn{flex:1 1 auto;justify-content:center}
       .hand-tray{min-height:124px;padding:18px 18px 13px;gap:8px;border-radius:22px;justify-content:flex-start}
       .hand-tray:not(.hand-empty) > .hand-tile-wrap:first-child,
       .hand-tray:not(.hand-empty) > .hand-tile-wrap:last-child{margin-inline:0}
@@ -978,6 +1008,8 @@
       .domino.small{width:44px;height:68px}
       .domino.pair-visual{width:38px;height:27px}
       .confirm-btn{height:52px;border-radius:16px}
+      .hand-head-actions{align-items:stretch}
+      .hand-confirm-btn{width:100%;height:46px;padding:0 14px}
       .hand-tray{gap:6px;padding:16px 12px 12px}
       .hand-status,.panel-badge{font-size:.76rem}
       .hand-panel-head{align-items:flex-start}
@@ -1069,7 +1101,13 @@
             <h2 class="hand-title">Mano actual</h2>
             <p class="hand-copy"></p>
           </div>
-          <div id="handStatus" class="hand-status">0 / 7</div>
+          <div class="hand-head-actions">
+            <div id="handStatus" class="hand-status">0 / 7</div>
+            <button id="handConfirmBtn" class="confirm-btn hand-confirm-btn" type="button" aria-label="Confirmar mano desde la bandeja">
+              <span class="hand-confirm-icon" aria-hidden="true">✓</span>
+              <span id="handConfirmLabel">Confirmar</span>
+            </button>
+          </div>
         </div>
         <div id="handTrayWrap" class="hand-tray-wrap">
           <div class="scroll-fade left" aria-hidden="true"></div>
@@ -1105,6 +1143,8 @@
     const counter=document.getElementById('counter');
     const confirmBtn=document.getElementById('confirmBtn');
     const tilesBadge=document.getElementById('tilesBadge');
+    const handConfirmBtn=document.getElementById('handConfirmBtn');
+    const handConfirmLabel=document.getElementById('handConfirmLabel');
     const handTray=document.getElementById('handTray');
     const handTrayWrap=document.getElementById('handTrayWrap');
     const scrollHint=document.getElementById('scrollHint');
@@ -1149,9 +1189,14 @@
       return `<div class="domino ${size} ${orientation==='horizontal'?'pair-visual':''}"><div class="half">${pips(a)}</div><div class="half">${pips(b)}</div></div>`;
     }
 
+    function markHandUnconfirmed(){
+      confirmBtn.dataset.confirmed='false';
+    }
+
     function addTile(tile){
       if(canAddTile(tile)){
         state.selected.push(tile);
+        markHandUnconfirmed();
         return true;
       }
       return false;
@@ -1162,6 +1207,7 @@
       const existingIndex=state.selected.findIndex(item=>key(item)===tileKey);
       if(existingIndex>=0){
         state.selected.splice(existingIndex,1);
+        markHandUnconfirmed();
         return true;
       }
       return false;
@@ -1270,7 +1316,7 @@
         const tile=getComposeTile();
 
         if(canAddTile(tile)){
-          state.selected.push(tile);
+          addTile(tile);
           composeFeedback.className='compose-feedback success';
           composeFeedback.textContent=`Añadida ${key(tile)}.`;
           clearCompose();
@@ -1358,9 +1404,18 @@
     function renderCounter(){
       const count=state.selected.length;
       const ready=count===7;
+      const confirmed=confirmBtn.dataset.confirmed==='true';
       counter.textContent=ready?'Lista para confirmar':`${count} / 7 seleccionadas`;
       handStatus.textContent=`Mano ${count} / 7`;
       confirmBtn.disabled=!ready;
+      handConfirmBtn.disabled=!ready;
+      if(ready && confirmed){
+        confirmBtn.textContent='✓ Mano confirmada';
+        handConfirmLabel.textContent='Confirmada';
+      }else{
+        confirmBtn.textContent='✓ Confirmar mano';
+        handConfirmLabel.textContent='Confirmar';
+      }
       tilesBadge.textContent=state.inputMode==='tiles'?'Toca':'Manual';
     }
 
@@ -1395,6 +1450,13 @@
         `;
       }).join('');
       updateHandTrayAffordance();
+    }
+
+    function confirmHand(){
+      if(state.selected.length===7){
+        confirmBtn.dataset.confirmed='true';
+        renderCounter();
+      }
     }
 
     function render(){
@@ -1432,11 +1494,9 @@
       }
     });
 
-    confirmBtn.addEventListener('click',()=>{
-      if(state.selected.length===7){
-        confirmBtn.textContent='✓ Mano confirmada';
-      }
-    });
+    confirmBtn.dataset.confirmed='false';
+    confirmBtn.addEventListener('click', confirmHand);
+    handConfirmBtn.addEventListener('click', confirmHand);
 
     setTheme(state.theme);
     render();
