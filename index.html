@@ -30,7 +30,9 @@
       --domino-top:#fbf7ef;
       --domino-edge:rgba(123,110,92,.36);
       --domino-line:#877d71;
-      --pip:#665b4f;
+      --pip:#4d4035;
+      --pip-shadow:rgba(255,255,255,.28);
+      --pip-outline:rgba(59,44,31,.18);
       --tray:#1b263b;
       --tray-border:rgba(218,229,247,.12);
       --shadow:rgba(0,0,0,.22);
@@ -48,7 +50,7 @@
       --wood-domino-top:#efc893;
       --wood-domino-bottom:#bb8552;
       --wood-domino-line:#7e5535;
-      --wood-pip:#4a2d19;
+      --wood-pip:#3c220f;
       --wood-domino-edge:rgba(91,54,29,.58);
       --hero-glow:rgba(117,160,255,.08);
       --danger:#ff9f9f;
@@ -297,18 +299,6 @@
       color:var(--muted);
       font-size:.88rem;
       line-height:1.4;
-    }
-
-    .panel-badge{
-      flex:0 0 auto;
-      padding:6px 10px;
-      border-radius:999px;
-      background:rgba(255,255,255,.03);
-      border:1px solid rgba(255,255,255,.06);
-      color:var(--soft);
-      font-size:.78rem;
-      font-weight:700;
-      white-space:nowrap;
     }
 
     .mode-panel{
@@ -575,13 +565,13 @@
     }
 
     .half-domino .pips{
-      width:20px;
-      height:20px;
+      width:24px;
+      height:24px;
     }
 
     .half-domino .pip{
-      width:4px;
-      height:4px;
+      width:5px;
+      height:5px;
     }
 
     .confirm-btn{
@@ -880,15 +870,16 @@
     .domino.small{width:48px;height:76px}
     .domino.pair-visual{width:46px;height:32px;grid-template-columns:1fr 1fr;grid-template-rows:none;border-radius:9px}
     .domino.pair-visual .half + .half{border-top:none;border-left:2px solid var(--domino-line)}
-    .domino.pair-visual .pips{width:12px;height:12px}
-    .domino.pair-visual .pip{width:2.8px;height:2.8px}
+    .domino.pair-visual .pips{width:16px;height:16px}
+    .domino.pair-visual .pip{width:3.6px;height:3.6px}
 
     .half{
       display:grid;
       place-items:center;
       background:
-        radial-gradient(circle at 28% 22%, rgba(255,255,255,.48), transparent 26%),
-        linear-gradient(180deg, #faf6ec, var(--domino));
+        radial-gradient(circle at 28% 22%, rgba(255,255,255,.5), transparent 24%),
+        linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,0) 28%),
+        linear-gradient(180deg, #fffdf8, var(--domino));
     }
 
     html[data-theme="wood"] .domino,
@@ -910,26 +901,29 @@
     .half + .half{border-top:2px solid var(--domino-line)}
 
     .pips{
-      width:24px;
-      height:24px;
+      width:28px;
+      height:28px;
       display:grid;
       grid-template-columns:repeat(3,1fr);
       grid-template-rows:repeat(3,1fr);
     }
 
-    .domino.small .pips{width:17px;height:17px}
+    .domino.small .pips{width:20px;height:20px}
 
     .pip{
-      width:5px;
-      height:5px;
+      width:6px;
+      height:6px;
       border-radius:50%;
-      background:var(--pip);
-      box-shadow:0 .5px 0 rgba(255,255,255,.25) inset;
+      background:radial-gradient(circle at 35% 35%, color-mix(in srgb, var(--pip) 84%, white 16%), var(--pip) 62%);
+      box-shadow:
+        0 0 0 1px var(--pip-outline),
+        0 .6px 0 var(--pip-shadow) inset,
+        0 1px 2px rgba(0,0,0,.18);
       place-self:center;
       opacity:0;
     }
 
-    .domino.small .pip{width:3.7px;height:3.7px}
+    .domino.small .pip{width:4.8px;height:4.8px}
     .pip.show{opacity:1}
 
     @media (max-width:820px){
@@ -1000,7 +994,7 @@
       .hand-head-actions{align-items:stretch}
       .hand-confirm-btn{width:100%;height:40px;padding:0 12px}
       .hand-tray{gap:5px;padding:10px 2px 4px}
-      .hand-status,.panel-badge{font-size:.74rem}
+      .hand-status{font-size:.74rem}
       .hand-panel-head{align-items:flex-start}
       .hand-tray-wrap::before{top:80px}
       .scroll-fade{top:96px}
@@ -1031,7 +1025,6 @@
               <p class="panel-copy">Elige dos mitades.</p>
               <p id="counter" class="counter">Empieza a seleccionar</p>
             </div>
-            <div class="panel-badge">Auto</div>
           </div>
 
           <div class="compose-shell">
@@ -1083,7 +1076,7 @@
     const themes=['midnight','wood'];
     const savedTheme=localStorage.getItem('domino-theme');
     const state={
-      selected:[[1,4],[2,3],[1,2],[3,6],[4,6],[2,5],[3,5]],
+      selected:[],
       theme:themes.includes(savedTheme)?savedTheme:'midnight',
       compose:{first:null,second:null},
       handConfirmed:false
