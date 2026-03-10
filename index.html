@@ -624,7 +624,7 @@
 
     .hand-zone{
       width:min(980px, calc(100vw - 28px));
-      margin-top:52px;
+      margin-top:40px;
       position:relative;
       z-index:1;
       display:grid;
@@ -636,7 +636,7 @@
       justify-content:space-between;
       align-items:center;
       gap:12px;
-      margin-bottom:14px;
+      margin-bottom:10px;
       text-align:left;
     }
 
@@ -644,9 +644,10 @@
 
     .hand-title{
       margin:0;
-      font-size:.92rem;
-      font-weight:700;
+      font-size:1rem;
+      font-weight:800;
       letter-spacing:-.03em;
+      color:var(--soft);
     }
 
     .hand-copy{
@@ -663,6 +664,13 @@
       color:var(--soft);
       white-space:nowrap;
       box-shadow:0 4px 12px rgba(0,0,0,.1);
+    }
+
+    .hand-head-copy{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
     }
 
     .hand-head-actions{
@@ -696,14 +704,14 @@
     .hand-tray-wrap{
       position:relative;
       width:min(100%, 900px);
-      padding:16px 18px 12px;
-      border-radius:26px;
+      padding:12px 14px 10px;
+      border-radius:24px;
       border:1px solid color-mix(in srgb, var(--tray-border) 82%, transparent);
       background:
-        radial-gradient(circle at 50% 0%, rgba(255,255,255,.08), transparent 34%),
-        linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,0) 34%),
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,.07), transparent 32%),
+        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,0) 30%),
         linear-gradient(180deg, color-mix(in srgb, var(--tray) 94%, white 6%), var(--tray));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.08), inset 0 -1px 0 rgba(0,0,0,.16), 0 18px 42px rgba(0,0,0,.16);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08), inset 0 -1px 0 rgba(0,0,0,.16), 0 16px 34px rgba(0,0,0,.14);
       overflow:visible;
     }
 
@@ -712,7 +720,7 @@
       position:absolute;
       left:10%;
       right:10%;
-      top:52px;
+      top:44px;
       height:1px;
       background:linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
       pointer-events:none;
@@ -738,8 +746,8 @@
 
     .scroll-fade{
       position:absolute;
-      top:68px;
-      bottom:12px;
+      top:56px;
+      bottom:10px;
       width:26px;
       border-radius:14px;
       pointer-events:none;
@@ -764,7 +772,7 @@
     }
 
     .scroll-hint{
-      margin:6px 10px 0;
+      margin:4px 10px 0;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -791,17 +799,17 @@
     }
 
     .hand-tray{
-      min-height:146px;
+      min-height:108px;
       width:100%;
-      border-radius:20px;
+      border-radius:18px;
       border:none;
       background:transparent;
       box-shadow:none;
       display:flex;
       align-items:flex-end;
       justify-content:center;
-      gap:10px;
-      padding:18px 18px 8px;
+      gap:8px;
+      padding:6px 10px 4px;
       overflow-x:auto;
       overflow-y:hidden;
       scrollbar-width:none;
@@ -837,15 +845,16 @@
       transform-origin:center bottom;
       transition:transform .16s ease, filter .16s ease;
       padding:0;
-      margin-inline:-1px;
+      margin-inline:0;
       background:none;
       border:none;
-      filter:drop-shadow(0 12px 18px rgba(0,0,0,.14));
+      filter:drop-shadow(0 8px 14px rgba(0,0,0,.12));
+      transform:none;
     }
 
-    .hand-tile-wrap:nth-child(odd){transform:translateY(0) rotate(-.6deg)}
-    .hand-tile-wrap:nth-child(even){transform:translateY(-2px) rotate(.6deg)}
-    .hand-tile-wrap:hover{transform:translateY(-6px) scale(1.03)}
+    .hand-tile-wrap:nth-child(odd),
+    .hand-tile-wrap:nth-child(even){transform:none}
+    .hand-tile-wrap:hover{transform:translateY(-3px)}
     .hand-tile-wrap:focus-visible{
       outline:2px solid var(--accent-second-border);
       outline-offset:4px;
@@ -858,7 +867,7 @@
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,.72),
         inset 0 -2px 5px rgba(78,49,24,.1),
-        0 12px 20px rgba(0,0,0,.16);
+        0 8px 14px rgba(0,0,0,.12);
     }
 
     .domino{
@@ -987,13 +996,14 @@
       .pair-btn{min-height:52px;border-radius:15px}
       .domino.large{width:56px;height:88px}
       .tile-btn{min-height:118px;padding:7px 5px;border-radius:18px}
-      .hand-zone{margin-top:28px}
-      .hand-tray-wrap{width:100%;padding:13px 12px 10px;border-radius:22px}
-      .hand-tray-wrap::before{top:54px}
-      .hand-panel-head{justify-content:space-between;align-items:center;text-align:left;gap:10px;margin-bottom:12px}
+      .hand-zone{margin-top:24px}
+      .hand-tray-wrap{width:100%;padding:12px 10px 8px;border-radius:22px}
+      .hand-tray-wrap::before{top:48px}
+      .hand-panel-head{justify-content:space-between;align-items:center;text-align:left;gap:10px;margin-bottom:10px}
+      .hand-head-copy{width:100%;justify-content:space-between}
       .hand-head-actions{width:100%;justify-content:space-between}
       .hand-confirm-btn{flex:1 1 auto;justify-content:center;height:36px;padding:0 12px}
-      .hand-tray{min-height:126px;padding:14px 6px 6px;gap:8px;justify-content:flex-start}
+      .hand-tray{min-height:108px;padding:4px 4px 2px;gap:8px;justify-content:flex-start}
       .hand-tray:not(.hand-empty) > .hand-tile-wrap:first-child,
       .hand-tray:not(.hand-empty) > .hand-tile-wrap:last-child{margin-inline:0}
       .half-grid{grid-template-columns:repeat(4, minmax(0, 1fr))}
@@ -1001,7 +1011,7 @@
       .compose-choice{min-width:40px;min-height:40px}
       .half-btn{min-height:80px}
       .scroll-hint{justify-content:flex-start}
-      .scroll-fade{top:72px;bottom:12px}
+      .scroll-fade{top:66px;bottom:10px}
       .scroll-fade.left{left:11px}
       .scroll-fade.right{right:11px}
     }
@@ -1030,11 +1040,12 @@
       .confirm-btn{height:52px;border-radius:16px}
       .hand-head-actions{align-items:stretch}
       .hand-confirm-btn{width:100%;height:40px;padding:0 12px}
-      .hand-tray{gap:5px;padding:10px 2px 4px}
+      .hand-tray{gap:6px;padding:4px 2px 2px}
       .hand-status{font-size:.74rem}
       .hand-panel-head{align-items:flex-start}
-      .hand-tray-wrap::before{top:80px}
-      .scroll-fade{top:96px}
+      .hand-head-copy{align-items:flex-start;gap:8px}
+      .hand-tray-wrap::before{top:78px}
+      .scroll-fade{top:92px}
     }
   </style>
 </head>
@@ -1058,8 +1069,7 @@
         <section id="valuesPanel" class="panel" aria-labelledby="valuesTitle">
           <div class="panel-head">
             <div>
-              <h2 id="valuesTitle" class="panel-title">Manual</h2>
-              <p class="panel-copy">Elige dos mitades.</p>
+              <h2 id="valuesTitle" class="panel-title">Selecciona tus fichas</h2>
               <p id="counter" class="counter">Empieza a seleccionar</p>
             </div>
           </div>
@@ -1067,7 +1077,7 @@
           <div class="compose-shell">
             <section class="compose-card" aria-labelledby="halfSelectorTitle">
               <div class="compose-card-head">
-                <h3 id="halfSelectorTitle" class="compose-label">Mitades</h3>
+                <h3 id="halfSelectorTitle" class="compose-label">Valores</h3>
                 <div class="compose-choice-row" aria-label="Selección actual">
                   <div id="firstHalfChoice" class="compose-choice empty" aria-label="Primera mitad pendiente"><span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">Primera mitad pendiente</span></div>
                   <div id="secondHalfChoice" class="compose-choice empty" aria-label="Segunda mitad pendiente"><span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">Segunda mitad pendiente</span></div>
@@ -1085,13 +1095,11 @@
     <section class="hand-zone" aria-label="Mano de dominó seleccionada">
       <div id="handTrayWrap" class="hand-tray-wrap">
         <div class="hand-panel-head">
-          <div>
-            <div class="hand-label" aria-hidden="true">Tu mano</div>
+          <div class="hand-head-copy">
             <h2 class="hand-title">Tu mano</h2>
-            <p class="hand-copy"></p>
+            <div id="handStatus" class="hand-status">0 / 7</div>
           </div>
           <div class="hand-head-actions">
-            <div id="handStatus" class="hand-status">0 / 7</div>
             <button id="handConfirmBtn" class="confirm-btn hand-confirm-btn" type="button" aria-label="Confirmar mano desde la bandeja">
               <span class="hand-confirm-icon" aria-hidden="true">✓</span>
               <span id="handConfirmLabel">Confirmar</span>
