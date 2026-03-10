@@ -316,13 +316,27 @@
     .mode-summary{
       display:flex;
       align-items:center;
-      gap:8px;
+      justify-content:space-between;
+      gap:10px;
       flex-wrap:wrap;
       margin-bottom:12px;
+      padding:10px 12px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+    }
+
+    .mode-summary-copy{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+      min-width:0;
     }
 
     .mode-badge,
-    .mode-guidance{
+    .mode-guidance,
+    .mode-edit-btn{
       display:inline-flex;
       align-items:center;
       min-height:32px;
@@ -343,6 +357,18 @@
       background:var(--accent-first-soft);
       border-color:var(--accent-first-border);
       color:var(--text);
+    }
+
+    .mode-edit-btn{
+      background:transparent;
+      color:var(--soft);
+      transition:border-color .14s ease, background .14s ease, transform .14s ease;
+    }
+
+    .mode-edit-btn:hover{
+      transform:translateY(-1px);
+      border-color:rgba(255,255,255,.18);
+      background:rgba(255,255,255,.05);
     }
 
     .flow-locked{display:none}
@@ -1114,6 +1140,7 @@
       .hand-tray:not(.hand-empty) > .hand-tile-wrap:last-child{margin-inline:0}
       .half-grid{grid-template-columns:repeat(4, minmax(0, 1fr))}
       .mode-control{width:100%;min-width:0}
+      .mode-summary{align-items:flex-start}
       .compose-choice{min-width:40px;min-height:40px}
       .half-btn{min-height:80px}
       .scroll-hint{justify-content:flex-start}
@@ -1463,9 +1490,22 @@
         return;
       }
 
-      modeSummary.innerHTML=state.isFirstHand
-        ? '<span class="mode-badge">Primera mano</span><span class="mode-guidance">Abre con 6-6</span>'
-        : '<span class="mode-badge">No es primera mano</span>';
+      const guidance=state.isFirstHand
+        ? '<span class="mode-guidance">Si tienes la 6-6 en tu mano, inclúyela para abrir.</span>'
+        : '';
+
+      modeSummary.innerHTML=`
+        <div class="mode-summary-copy">
+          <span class="mode-badge">${state.isFirstHand ? 'Primera mano' : 'No es primera mano'}</span>
+          ${guidance}
+        </div>
+        <button id="editFirstHandBtn" class="mode-edit-btn" type="button" aria-label="Cambiar respuesta de primera mano">Cambiar respuesta</button>
+      `;
+
+      document.getElementById('editFirstHandBtn')?.addEventListener('click',()=>{
+        state.isFirstHand=null;
+        render();
+      });
     }
 
     function chooseFirstHand(isFirstHand){
