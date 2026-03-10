@@ -1601,7 +1601,7 @@
       document.getElementById('editFirstHandBtn')?.addEventListener('click',()=>{ state.isFirstHand=null; state.phase='build_hand'; render(); });
     }
 
-    function chooseFirstHand(isFirstHand){ state.isFirstHand=isFirstHand; state.phase='build_hand'; render(); }
+    function chooseFirstHand(isFirstHand){ state.isFirstHand=isFirstHand; state.phase='build_hand'; state.openingSelection={tile:null,player:null}; render(); }
 
     function renderCounter(){
       const count=state.selected.length;
@@ -1648,6 +1648,13 @@
     }
 
     function handleOpeningSeatChoice(seat){
+      state.openingSelection.player=seat;
+      renderOpening();
+    }
+
+    function submitFirstHandOpening(){
+      const seat=state.openingSelection.player;
+      if(!seat) return;
       if(seat==='self' && state.selected.some(tile=>key(tile)==='6-6')){
         removeTile([6,6]);
       }
@@ -1686,8 +1693,10 @@
       openingPanel.classList.toggle('hidden', state.phase!=='opening_context');
       if(state.phase!=='opening_context') return;
       if(state.isFirstHand){
-        openingContent.innerHTML=`<div class="opening-stack"><div class="opening-note"><strong>Salida obligatoria</strong><p>En primera mano la mesa siempre arranca con la 6-6. Solo marca quién abrió.</p><div class="mini-board-chain">${domino(6,6,'small','horizontal')}</div></div><section class="opening-step" aria-labelledby="openingPlayerStepTitle"><div><h3 id="openingPlayerStepTitle" class="opening-step-title">¿Quién abrió la mano?</h3><p class="opening-player-prompt">Si fuiste tú, se asume automáticamente la 6-6.</p></div><div class="seat-grid">${['self','left','partner','right'].map(seat=>`<button class="seat-btn" type="button" data-opening-seat="${seat}"><strong>${SEAT_LABELS[seat]}</strong><small>${seat==='self'?'Se registra 6-6 automáticamente':'Abrió con 6-6'}</small></button>`).join('')}</div></section></div>`;
+        const selectedPlayer=state.openingSelection.player;
+        openingContent.innerHTML=`<div class="opening-stack"><div class="opening-note"><strong>Salida obligatoria</strong><p>En primera mano la mesa siempre arranca con la 6-6. Primero marca quién abrió y luego confirma.</p><div class="mini-board-chain">${domino(6,6,'small','horizontal')}</div></div><section class="opening-step" aria-labelledby="openingPlayerStepTitle"><div><h3 id="openingPlayerStepTitle" class="opening-step-title">1. ¿Quién abrió la mano?</h3><p class="opening-player-prompt">Selecciona el jugador para resaltarlo antes de guardar la apertura.</p></div><div class="seat-grid">${['self','left','partner','right'].map(seat=>`<button class="seat-btn ${selectedPlayer===seat?'active':''}" type="button" data-opening-seat="${seat}" aria-pressed="${selectedPlayer===seat}"><strong>${SEAT_LABELS[seat]}</strong><small>${seat==='self'?'Si confirmas esta opción, se registrará tu 6-6.':'Abrió con 6-6'}</small></button>`).join('')}</div></section><div class="opening-actions"><button id="submitFirstHandOpeningBtn" class="confirm-btn opening-action-btn" type="button" ${selectedPlayer?'':'disabled'}>Confirmar apertura</button></div></div>`;
         openingContent.querySelectorAll('[data-opening-seat]').forEach(btn=>btn.addEventListener('click',()=>handleOpeningSeatChoice(btn.dataset.openingSeat)));
+        document.getElementById('submitFirstHandOpeningBtn')?.addEventListener('click', submitFirstHandOpening);
         return;
       }
       const selectedTile=state.openingSelection.tile;
