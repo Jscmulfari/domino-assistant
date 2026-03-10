@@ -841,11 +841,18 @@
       align-items:flex-end;
       transform-origin:center bottom;
       transition:transform .14s ease, filter .14s ease;
-      padding-bottom:2px;
+      padding:0 0 2px;
+      background:none;
+      border:none;
     }
 
     .hand-tile-wrap:nth-child(odd){transform:translateY(-2px)}
     .hand-tile-wrap:hover{transform:translateY(-6px) scale(1.02)}
+    .hand-tile-wrap:focus-visible{
+      outline:2px solid var(--accent-second-border);
+      outline-offset:4px;
+      border-radius:16px;
+    }
 
     .hand-tile-wrap .domino.small{
       display:grid;
@@ -1260,6 +1267,13 @@
         return;
       }
 
+      if(state.compose.second===null && state.compose.first===value){
+        clearCompose();
+        composeFeedback.textContent='Selección cancelada.';
+        renderCompose();
+        return;
+      }
+
       state.compose.second=value;
       const tile=getComposeTile();
 
@@ -1377,11 +1391,14 @@
       }
 
       handTray.className='hand-tray';
-      handTray.innerHTML=state.selected.map(tile=>`
-        <div class="hand-tile-wrap">
-          ${domino(tile[0],tile[1],'small')}
-        </div>
-      `).join('');
+      handTray.innerHTML=state.selected.map(tile=>{
+        const tileKey=key(tile);
+        return `
+          <button class="hand-tile-wrap" type="button" data-hand-tile="${tileKey}" aria-label="Quitar ficha ${tileKey}">
+            ${domino(tile[0],tile[1],'small')}
+          </button>
+        `;
+      }).join('');
       updateHandTrayAffordance();
     }
 
@@ -1406,6 +1423,17 @@
 
     handTray.addEventListener('scroll', updateHandTrayAffordance, {passive:true});
     window.addEventListener('resize', updateHandTrayAffordance);
+
+    handTray.addEventListener('click',event=>{
+      const button=event.target.closest('[data-hand-tile]');
+      if(!button) return;
+      const tile=button.dataset.handTile.split('-').map(Number);
+      const tileKey=key(tile);
+      if(window.confirm(`¿Quitar la ficha ${tileKey} de tu mano?`)){
+        removeTile(tile);
+        render();
+      }
+    });
 
     confirmBtn.addEventListener('click',()=>{
       if(state.selected.length===7){
