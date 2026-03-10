@@ -245,8 +245,7 @@
     html[data-theme="wood"] .theme-picker,
     html[data-theme="wood"] .pair-btn,
     html[data-theme="wood"] .tile-btn,
-    html[data-theme="wood"] .hand-tray,
-    html[data-theme="wood"] .hand-panel,
+    html[data-theme="wood"] .hand-tray-wrap,
     html[data-theme="wood"] .hero,
     html[data-theme="wood"] .panel,
     html[data-theme="wood"] .mode-toggle,
@@ -642,26 +641,6 @@
       justify-items:center;
     }
 
-    .hand-panel{
-      width:min(100%, 920px);
-      padding:18px 18px 14px;
-      background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:28px;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
-      overflow:visible;
-      position:relative;
-    }
-
-    .hand-panel::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius:inherit;
-      background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,0) 28%);
-      pointer-events:none;
-    }
-
     .hand-panel-head{
       display:flex;
       justify-content:space-between;
@@ -726,8 +705,15 @@
 
     .hand-tray-wrap{
       position:relative;
-      width:100%;
-      padding:6px 0 4px;
+      width:min(100%, 920px);
+      padding:18px 18px 14px;
+      border-radius:30px;
+      border:1px solid color-mix(in srgb, var(--tray-border) 78%, transparent);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,0) 34%),
+        linear-gradient(180deg, color-mix(in srgb, var(--tray) 94%, white 6%), var(--tray));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08), inset 0 -1px 0 rgba(0,0,0,.16);
+      overflow:visible;
     }
 
     .hand-tray-wrap::before{
@@ -735,7 +721,7 @@
       position:absolute;
       left:10%;
       right:10%;
-      top:8px;
+      top:66px;
       height:1px;
       background:linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
       pointer-events:none;
@@ -761,8 +747,8 @@
 
     .scroll-fade{
       position:absolute;
-      top:14px;
-      bottom:8px;
+      top:88px;
+      bottom:18px;
       width:34px;
       border-radius:18px;
       pointer-events:none;
@@ -772,12 +758,12 @@
     }
 
     .scroll-fade.left{
-      left:6px;
+      left:18px;
       background:linear-gradient(90deg, color-mix(in srgb, var(--tray) 94%, black 6%), rgba(0,0,0,0));
     }
 
     .scroll-fade.right{
-      right:6px;
+      right:18px;
       background:linear-gradient(270deg, color-mix(in srgb, var(--tray) 94%, black 6%), rgba(0,0,0,0));
     }
 
@@ -787,7 +773,7 @@
     }
 
     .scroll-hint{
-      margin:10px 6px 0;
+      margin:8px 14px 0;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -816,22 +802,20 @@
     .hand-tray{
       min-height:150px;
       width:100%;
-      border-radius:30px;
-      border:1px solid color-mix(in srgb, var(--tray-border) 78%, transparent);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,0) 34%),
-        linear-gradient(180deg, color-mix(in srgb, var(--tray) 94%, white 6%), var(--tray));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.08), inset 0 -1px 0 rgba(0,0,0,.16);
+      border-radius:22px;
+      border:none;
+      background:transparent;
+      box-shadow:none;
       display:flex;
       align-items:flex-end;
       justify-content:center;
       gap:10px;
-      padding:26px 32px 16px;
+      padding:26px 14px 6px;
       overflow-x:auto;
       overflow-y:hidden;
       scrollbar-width:none;
       -ms-overflow-style:none;
-      scroll-padding-inline:32px;
+      scroll-padding-inline:14px;
     }
 
     .hand-tray::-webkit-scrollbar{display:none}
@@ -842,7 +826,8 @@
       color:rgba(255,255,255,.64);
       font-size:.96rem;
       text-align:center;
-      border-style:dashed;
+      border:1px dashed rgba(255,255,255,.16);
+      background:rgba(255,255,255,.02);
     }
 
     .hand-tray:not(.hand-empty) > .hand-tile-wrap:first-child{
@@ -960,7 +945,7 @@
       .shell{padding:10px;border-radius:22px}
       .hero,
       .panel,
-      .hand-panel{border-radius:20px}
+      .hand-tray-wrap{border-radius:20px}
       .hero{flex-direction:column;align-items:stretch}
       .hero-actions{align-items:flex-start}
       .theme-picker{justify-content:center}
@@ -973,11 +958,12 @@
       .domino.large{width:56px;height:88px}
       .tile-btn{min-height:118px;padding:7px 5px;border-radius:18px}
       .hand-zone{margin-top:22px}
-      .hand-panel{width:100%;padding:14px 14px 10px}
+      .hand-tray-wrap{width:100%;padding:14px 14px 10px}
+      .hand-tray-wrap::before{top:64px}
       .hand-panel-head{justify-content:space-between;align-items:center;text-align:left;gap:12px;margin-bottom:12px}
       .hand-head-actions{width:100%;justify-content:space-between}
       .hand-confirm-btn{flex:1 1 auto;justify-content:center}
-      .hand-tray{min-height:124px;padding:18px 18px 13px;gap:8px;border-radius:22px;justify-content:flex-start}
+      .hand-tray{min-height:124px;padding:18px 4px 6px;gap:8px;justify-content:flex-start}
       .hand-tray:not(.hand-empty) > .hand-tile-wrap:first-child,
       .hand-tray:not(.hand-empty) > .hand-tile-wrap:last-child{margin-inline:0}
       .half-grid{grid-template-columns:repeat(4, minmax(0, 1fr))}
@@ -985,6 +971,9 @@
       .compose-choice{min-width:40px;min-height:40px}
       .half-btn{min-height:80px}
       .scroll-hint{justify-content:flex-start}
+      .scroll-fade{top:86px;bottom:16px}
+      .scroll-fade.left{left:14px}
+      .scroll-fade.right{right:14px}
     }
 
     @media (max-width:560px){
@@ -1010,9 +999,11 @@
       .confirm-btn{height:52px;border-radius:16px}
       .hand-head-actions{align-items:stretch}
       .hand-confirm-btn{width:100%;height:46px;padding:0 14px}
-      .hand-tray{gap:6px;padding:16px 12px 12px}
+      .hand-tray{gap:6px;padding:16px 2px 6px}
       .hand-status,.panel-badge{font-size:.76rem}
       .hand-panel-head{align-items:flex-start}
+      .hand-tray-wrap::before{top:84px}
+      .scroll-fade{top:104px}
     }
   </style>
 </head>
@@ -1093,11 +1084,11 @@
     </section>
 
     <section class="hand-zone" aria-label="Mano de dominó seleccionada">
-      <div class="hand-panel">
+      <div id="handTrayWrap" class="hand-tray-wrap">
         <div class="hand-panel-head">
           <div>
             <div class="hand-label" aria-hidden="true">Tu mano</div>
-            <h2 class="hand-title">Mano actual</h2>
+            <h2 class="hand-title">Tu mano</h2>
             <p class="hand-copy"></p>
           </div>
           <div class="hand-head-actions">
@@ -1108,12 +1099,10 @@
             </button>
           </div>
         </div>
-        <div id="handTrayWrap" class="hand-tray-wrap">
-          <div class="scroll-fade left" aria-hidden="true"></div>
-          <div class="scroll-fade right" aria-hidden="true"></div>
-          <div id="handTray" class="hand-tray hand-empty">Tus fichas aparecerán aquí</div>
-          <div id="scrollHint" class="scroll-hint" aria-hidden="true">Desliza la bandeja para ver más fichas</div>
-        </div>
+        <div class="scroll-fade left" aria-hidden="true"></div>
+        <div class="scroll-fade right" aria-hidden="true"></div>
+        <div id="handTray" class="hand-tray hand-empty">Tus fichas aparecerán aquí</div>
+        <div id="scrollHint" class="scroll-hint" aria-hidden="true">Desliza la bandeja para ver más fichas</div>
       </div>
     </section>
   </main>
@@ -1405,7 +1394,7 @@
       const ready=count===7;
       const confirmed=state.handConfirmed;
       counter.textContent=ready ? (confirmed ? 'Mano confirmada' : 'Lista para confirmar') : `${count} / 7 seleccionadas`;
-      handStatus.textContent=confirmed ? `Mano confirmada · ${count} / 7` : `Mano ${count} / 7`;
+      handStatus.textContent=confirmed ? `Confirmada · ${count} / 7` : `${count} / 7`;
       handConfirmBtn.disabled=!ready;
       handConfirmBtn.setAttribute('aria-pressed', String(confirmed));
       if(ready && confirmed){
