@@ -29,6 +29,55 @@
       --tray:#3d4561;
       --tray-border:rgba(214,222,238,.3);
       --shadow:rgba(0,0,0,.22);
+      --wood-top:#7a573a;
+      --wood-mid:#5a3c28;
+      --wood-bottom:#392417;
+      --wood-panel:#7b5639;
+      --wood-panel-bottom:#66452f;
+      --wood-panel-border:rgba(250,228,196,.24);
+      --wood-tray:#4b3121;
+      --wood-tray-border:rgba(238,214,186,.24);
+      --wood-shadow:rgba(16,8,3,.3);
+      --wood-grain:linear-gradient(100deg, rgba(255,231,203,.08) 0%, rgba(255,231,203,0) 14%, rgba(70,42,22,.16) 20%, rgba(255,231,203,0) 29%, rgba(58,35,18,.2) 36%, rgba(255,231,203,0) 44%, rgba(91,56,31,.18) 53%, rgba(255,231,203,0) 62%, rgba(71,42,20,.18) 72%, rgba(255,231,203,0) 82%, rgba(109,68,38,.14) 100%);
+    }
+
+    html[data-theme="midnight"]{
+      --bg-top:#4b5268;
+      --bg-mid:#39415a;
+      --bg-bottom:#2c344d;
+      --text:#f5f7fb;
+      --muted:#d9deeb;
+      --pair:#596178;
+      --pair-bottom:#50576d;
+      --pair-border:rgba(225,232,246,.34);
+      --tile-frame:rgba(70,78,103,.38);
+      --tile-border:rgba(225,232,246,.18);
+      --tile-selected:rgba(121,218,108,.14);
+      --tray:#3d4561;
+      --tray-border:rgba(214,222,238,.3);
+      --shadow:rgba(0,0,0,.22);
+    }
+
+    html[data-theme="wood"]{
+      --bg-top:var(--wood-top);
+      --bg-mid:var(--wood-mid);
+      --bg-bottom:var(--wood-bottom);
+      --text:#f8f2e8;
+      --muted:#ead9c4;
+      --pair:var(--wood-panel);
+      --pair-bottom:var(--wood-panel-bottom);
+      --pair-border:var(--wood-panel-border);
+      --tile-frame:rgba(118,82,57,.34);
+      --tile-border:rgba(250,228,196,.16);
+      --tile-selected:rgba(132,195,96,.12);
+      --tray:var(--wood-tray);
+      --tray-border:var(--wood-tray-border);
+      --shadow:var(--wood-shadow);
+      --domino:#f2e7d5;
+      --domino-top:#fbf7ee;
+      --domino-edge:rgba(111,82,55,.44);
+      --domino-line:#806850;
+      --pip:#5c4533;
     }
 
     *{box-sizing:border-box}
@@ -41,6 +90,15 @@
       background:
         radial-gradient(circle at 50% -14%, rgba(255,255,255,.07), transparent 28%),
         linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 34%, var(--bg-bottom) 100%);
+      transition:background .2s ease,color .2s ease;
+    }
+
+    html[data-theme="wood"] body{
+      background:
+        radial-gradient(circle at 50% -18%, rgba(255,241,220,.08), transparent 26%),
+        linear-gradient(180deg, rgba(255,231,203,.06), rgba(255,231,203,0) 24%),
+        var(--wood-grain),
+        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 34%, var(--bg-bottom) 100%);
     }
 
     .app{
@@ -48,7 +106,7 @@
       display:flex;
       flex-direction:column;
       align-items:center;
-      padding:76px 16px 26px;
+      padding:68px 16px 26px;
     }
 
     .board{
@@ -56,9 +114,15 @@
       align-self:center;
     }
 
-    .cluster{
-      width:min(596px, 100%);
+    .top-row{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:6px;
     }
+
+    .title-wrap{min-width:0}
 
     .title{
       margin:0 0 8px;
@@ -86,6 +150,48 @@
       cursor:pointer;
     }
 
+    .theme-toggle{
+      flex:0 0 auto;
+      height:36px;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:0 11px;
+      border-radius:999px;
+      background:linear-gradient(180deg, var(--pair), var(--pair-bottom));
+      border:1px solid var(--pair-border);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 1px 5px rgba(0,0,0,.08);
+      font-size:.84rem;
+      font-weight:700;
+    }
+
+    .theme-toggle::before{
+      content:"";
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:linear-gradient(180deg,#f4f7ff,#b8c2d8);
+      box-shadow:0 0 0 1px rgba(255,255,255,.28), 0 1px 2px rgba(0,0,0,.18);
+      flex:0 0 auto;
+    }
+
+    html[data-theme="wood"] .theme-toggle::before{
+      background:linear-gradient(180deg,#f4d8b6,#a66a38);
+    }
+
+    html[data-theme="wood"] .theme-toggle,
+    html[data-theme="wood"] .pair-btn,
+    html[data-theme="wood"] .tile-btn,
+    html[data-theme="wood"] .hand-tray{
+      background-image:
+        linear-gradient(180deg, rgba(255,231,203,.08), rgba(255,231,203,0) 42%),
+        var(--wood-grain),
+        linear-gradient(180deg, color-mix(in srgb, var(--pair) 96%, white 4%), var(--pair-bottom));
+      background-blend-mode:screen, multiply, normal;
+    }
+
+    .theme-toggle:hover{transform:translateY(-1px)}
+
     .pair-grid{
       display:grid;
       grid-template-columns:repeat(4, minmax(0, 1fr));
@@ -98,20 +204,22 @@
       border-radius:10px;
       background:linear-gradient(180deg, var(--pair), var(--pair-bottom));
       border:1px solid var(--pair-border);
-      color:#f8fbff;
-      font-size:.98rem;
-      font-weight:700;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 1px 5px rgba(0,0,0,.08);
       transition:transform .14s ease, background .14s ease, border-color .14s ease, box-shadow .14s ease;
+      display:grid;
+      place-items:center;
+      padding:3px;
     }
 
-    .pair-btn:hover{transform:translateY(-1px)}
+    .pair-btn:hover,.tile-btn:hover{transform:translateY(-1px)}
 
     .pair-btn.active{
       background:linear-gradient(180deg, #86df78, var(--green-2));
       border-color:var(--green-border);
       box-shadow:inset 0 1px 0 rgba(255,255,255,.24), 0 0 0 2px var(--green-shadow);
     }
+
+    .pair-btn .domino{transform:scale(.75)}
 
     .tiles-row{
       display:grid;
@@ -130,8 +238,6 @@
       place-items:center;
       transition:transform .14s ease, border-color .14s ease, box-shadow .14s ease, background .14s ease;
     }
-
-    .tile-btn:hover{transform:translateY(-1px)}
 
     .tile-btn.selected{
       background:var(--tile-selected);
@@ -163,12 +269,25 @@
       position:relative;
     }
 
+    .hand-zone::before{
+      content:"";
+      position:absolute;
+      left:7%;
+      right:7%;
+      top:-2px;
+      height:1px;
+      background:rgba(255,255,255,.14);
+      opacity:.55;
+      border-radius:999px;
+      pointer-events:none;
+    }
+
     .hand-zone::after{
       content:"";
       position:absolute;
       left:10%;
       right:10%;
-      bottom:0;
+      bottom:-1px;
       height:18px;
       border-radius:50%;
       background:radial-gradient(circle, rgba(0,0,0,.18) 0%, rgba(0,0,0,.1) 44%, transparent 76%);
@@ -177,17 +296,23 @@
     }
 
     .hand-tray{
-      min-height:86px;
+      min-height:90px;
       border-radius:13px;
       border:1px solid var(--tray-border);
-      background:linear-gradient(180deg, rgba(72,81,111,.78), rgba(57,66,94,.82));
+      background:linear-gradient(180deg, color-mix(in srgb, var(--tray) 88%, white 8%), var(--tray));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 8px 22px var(--shadow);
       display:flex;
       align-items:flex-end;
       justify-content:center;
-      padding:10px 12px 8px;
-      overflow:hidden;
+      gap:8px;
+      padding:11px 14px 8px;
+      overflow-x:auto;
+      overflow-y:hidden;
+      scrollbar-width:none;
+      -ms-overflow-style:none;
     }
+
+    .hand-tray::-webkit-scrollbar{display:none}
 
     .hand-empty{
       align-items:center;
@@ -197,11 +322,17 @@
 
     .hand-tile-wrap{
       flex:0 0 auto;
-      margin-left:-3px;
+      display:flex;
+      justify-content:center;
+      align-items:flex-end;
       transform-origin:center bottom;
+      transition:transform .14s ease, filter .14s ease;
     }
 
-    .hand-tile-wrap:first-child{margin-left:0}
+    .hand-tile-wrap .domino.small{
+      display:grid;
+      place-items:stretch;
+    }
 
     .domino{
       display:grid;
@@ -214,7 +345,11 @@
     }
 
     .domino.large{width:64px;height:98px}
-    .domino.small{width:36px;height:56px}
+    .domino.small{width:34px;height:54px}
+    .domino.pair-visual{width:40px;height:28px;grid-template-columns:1fr 1fr;grid-template-rows:none;border-radius:8px}
+    .domino.pair-visual .half + .half{border-top:none;border-left:2px solid var(--domino-line)}
+    .domino.pair-visual .pips{width:12px;height:12px}
+    .domino.pair-visual .pip{width:2.8px;height:2.8px}
 
     .half{
       display:grid;
@@ -251,7 +386,7 @@
 
     @media (max-width:700px){
       .app{padding-top:54px}
-      .board,.cluster{width:min(560px, calc(100vw - 24px))}
+      .board{width:min(560px, calc(100vw - 24px))}
       .domino.large{width:56px;height:88px}
       .tile-btn{min-height:114px}
       .confirm-btn{margin-bottom:72px}
@@ -260,26 +395,34 @@
 
     @media (max-width:560px){
       .app{padding:36px 12px 18px}
-      .board,.cluster{width:100%}
+      .board{width:100%}
       .title{font-size:1.18rem}
       .counter{font-size:.93rem;margin-bottom:12px}
+      .top-row{gap:8px}
+      .theme-toggle{height:34px;padding:0 10px;font-size:.78rem}
       .pair-grid{gap:7px}
-      .pair-btn{height:38px;font-size:.88rem}
+      .pair-btn{height:38px}
       .tiles-row{gap:6px}
       .domino.large{width:44px;height:76px}
       .tile-btn{min-height:96px;padding:3px;border-radius:12px}
       .confirm-btn{height:46px;font-size:.97rem;margin-bottom:40px}
       .hand-zone{width:min(396px, calc(100vw - 20px))}
-      .hand-tray{min-height:78px;padding:9px 10px 7px}
-      .domino.small{width:30px;height:47px}
+      .hand-tray{min-height:80px;padding:9px 10px 7px;gap:5px}
+      .domino.small{width:28px;height:44px}
+      .domino.pair-visual{width:34px;height:24px}
     }
   </style>
 </head>
 <body>
   <main class="app">
-    <section class="board cluster">
-      <h1 class="title">Selecciona exactamente 7 fichas</h1>
-      <p id="counter" class="counter">0 / 7 seleccionadas</p>
+    <section class="board">
+      <div class="top-row">
+        <div class="title-wrap">
+          <h1 class="title">Selecciona exactamente 7 fichas</h1>
+          <p id="counter" class="counter">Hand ready to build</p>
+        </div>
+        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch page style">🌗 Estilo</button>
+      </div>
       <div id="pairGrid" class="pair-grid"></div>
       <div id="tilesRow" class="tiles-row"></div>
       <button id="confirmBtn" class="confirm-btn" type="button">✓ Confirmar mano</button>
@@ -293,30 +436,47 @@
   <script>
     const PIP_MAP={0:[],1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
     const values=Array.from({length:7},(_,i)=>i);
-    const state={activePair:3,selected:[[1,4],[2,3],[1,2],[3,6],[4,6],[2,5],[3,5]]};
+    const themes=['midnight','wood'];
+    const savedTheme=localStorage.getItem('domino-theme');
+    const state={
+      activePair:3,
+      selected:[[1,4],[2,3],[1,2],[3,6],[4,6],[2,5],[3,5]],
+      theme:themes.includes(savedTheme)?savedTheme:'midnight'
+    };
 
+    const root=document.documentElement;
     const pairGrid=document.getElementById('pairGrid');
     const tilesRow=document.getElementById('tilesRow');
     const counter=document.getElementById('counter');
     const confirmBtn=document.getElementById('confirmBtn');
     const handTray=document.getElementById('handTray');
+    const themeToggle=document.getElementById('themeToggle');
 
     const key=tile=>`${tile[0]}-${tile[1]}`;
     const normalize=(a,b)=>a<=b?[a,b]:[b,a];
     const tilesForPair=n=>values.map(v=>normalize(n,v));
+
+    function setTheme(theme){
+      state.theme=theme;
+      root.dataset.theme=theme;
+      localStorage.setItem('domino-theme', theme);
+      themeToggle.textContent=theme==='wood'?'🪵 Madera':'🌙 Noche';
+    }
 
     function pips(n){
       const visible=new Set(PIP_MAP[n]);
       return `<div class="pips">${Array.from({length:9},(_,i)=>`<span class="pip ${visible.has(i)?'show':''}"></span>`).join('')}</div>`;
     }
 
-    function domino(a,b,size='large'){
-      return `<div class="domino ${size}"><div class="half">${pips(a)}</div><div class="half">${pips(b)}</div></div>`;
+    function domino(a,b,size='large',orientation='vertical'){
+      return `<div class="domino ${size} ${orientation==='horizontal'?'pair-visual':''}"><div class="half">${pips(a)}</div><div class="half">${pips(b)}</div></div>`;
     }
 
     function renderPairs(){
       pairGrid.innerHTML=values.map(n=>`
-        <button class="pair-btn ${state.activePair===n?'active':''}" type="button" data-pair="${n}">${n}-${n}</button>
+        <button class="pair-btn ${state.activePair===n?'active':''}" type="button" data-pair="${n}" aria-label="Par ${n}-${n}">
+          ${domino(n,n,'pair-visual','horizontal')}
+        </button>
       `).join('');
 
       pairGrid.querySelectorAll('.pair-btn').forEach(btn=>{
@@ -356,7 +516,7 @@
     }
 
     function renderCounter(){
-      counter.textContent=`${state.selected.length} / 7 seleccionadas`;
+      counter.textContent=state.selected.length===7?'Hand complete':'Hand ready to build';
       confirmBtn.disabled=state.selected.length!==7;
     }
 
@@ -368,19 +528,11 @@
       }
 
       handTray.className='hand-tray';
-      const total=state.selected.length;
-      const center=(total-1)/2;
-
-      handTray.innerHTML=state.selected.map((tile,index)=>{
-        const distance=index-center;
-        const angle=distance*2.4;
-        const lift=Math.abs(distance)*1.1;
-        return `
-          <div class="hand-tile-wrap" style="transform:translateY(${lift}px) rotate(${angle}deg)">
-            ${domino(tile[0],tile[1],'small')}
-          </div>
-        `;
-      }).join('');
+      handTray.innerHTML=state.selected.map(tile=>`
+        <div class="hand-tile-wrap">
+          ${domino(tile[0],tile[1],'small')}
+        </div>
+      `).join('');
     }
 
     function render(){
@@ -390,12 +542,17 @@
       renderHand();
     }
 
+    themeToggle.addEventListener('click',()=>{
+      setTheme(state.theme==='midnight'?'wood':'midnight');
+    });
+
     confirmBtn.addEventListener('click',()=>{
       if(state.selected.length===7){
         confirmBtn.textContent='✓ Mano confirmada';
       }
     });
 
+    setTheme(state.theme);
     render();
   </script>
 </body>
