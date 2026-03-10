@@ -448,15 +448,9 @@
       gap:16px;
     }
 
-    .compose-stage{
-      display:grid;
-      grid-template-columns:repeat(2, minmax(0, 1fr));
-      gap:12px;
-    }
-
     .compose-card{
       display:grid;
-      gap:12px;
+      gap:14px;
       padding:14px;
       border-radius:18px;
       border:1px solid rgba(255,255,255,.08);
@@ -484,6 +478,13 @@
       font-size:.82rem;
       font-weight:600;
       line-height:1.35;
+    }
+
+    .compose-choice-row{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
     }
 
     .compose-choice{
@@ -930,7 +931,6 @@
       .domino.large{width:56px;height:88px}
       .tile-btn{min-height:118px;padding:7px 5px;border-radius:18px}
       .hand-tray{min-height:112px;padding:14px 14px 12px}
-      .compose-stage{grid-template-columns:1fr}
       .half-grid{grid-template-columns:repeat(4, minmax(0, 1fr))}
       .compose-preview-row{align-items:flex-start}
       .mode-control{width:100%;min-width:0}
@@ -1033,41 +1033,31 @@
           <div class="panel-head">
             <div>
               <h2 id="valuesTitle" class="panel-title">Componer ficha</h2>
-              <p class="panel-copy">Primero elige una mitad, luego la otra. La ficha completa aparece al momento.</p>
+              <p class="panel-copy">Toca un valor y luego otro en el mismo grupo. Si repites el mismo, se forma un doble.</p>
             </div>
-            <div class="panel-badge">Mitades visuales</div>
+            <div class="panel-badge">Selector único</div>
           </div>
 
           <div class="compose-shell">
-            <div class="compose-stage">
-              <section class="compose-card" aria-labelledby="firstHalfTitle">
-                <div class="compose-card-head">
-                  <div>
-                    <h3 id="firstHalfTitle" class="compose-label">Primera mitad</h3>
-                    <span class="compose-step">Paso 1 · Elige el lado inicial</span>
-                  </div>
-                  <div id="firstHalfChoice" class="compose-choice empty">Sin elegir</div>
+            <section class="compose-card" aria-labelledby="halfSelectorTitle">
+              <div class="compose-card-head">
+                <div>
+                  <h3 id="halfSelectorTitle" class="compose-label">Mitades de la ficha</h3>
+                  <span class="compose-step">Paso 1 · Elige una mitad · Paso 2 · Toca otra en el mismo lugar</span>
                 </div>
-                <div id="firstHalfGrid" class="half-grid" role="list" aria-label="Opciones para la primera mitad"></div>
-              </section>
-
-              <section class="compose-card" aria-labelledby="secondHalfTitle">
-                <div class="compose-card-head">
-                  <div>
-                    <h3 id="secondHalfTitle" class="compose-label">Segunda mitad</h3>
-                    <span class="compose-step">Paso 2 · Completa la ficha</span>
-                  </div>
-                  <div id="secondHalfChoice" class="compose-choice empty">Sin elegir</div>
+                <div class="compose-choice-row" aria-label="Selección actual">
+                  <div id="firstHalfChoice" class="compose-choice empty">Primera: —</div>
+                  <div id="secondHalfChoice" class="compose-choice empty">Segunda: —</div>
                 </div>
-                <div id="secondHalfGrid" class="half-grid" role="list" aria-label="Opciones para la segunda mitad"></div>
-              </section>
-            </div>
+              </div>
+              <div id="sharedHalfGrid" class="half-grid" role="list" aria-label="Opciones para componer la ficha"></div>
+            </section>
 
             <div class="compose-preview-row">
               <div id="composePreview" class="compose-preview empty">Sin vista previa</div>
               <div class="compose-preview-copy">
                 <p class="compose-preview-title">Ficha resultante</p>
-                <p id="composePreviewText" class="compose-preview-text">Selecciona dos mitades para ver la ficha completa.</p>
+                <p id="composePreviewText" class="compose-preview-text">Selecciona dos mitades en el mismo panel para ver la ficha completa.</p>
               </div>
             </div>
 
@@ -1134,8 +1124,7 @@
     const heroCount=document.getElementById('heroCount');
     const activePairLabel=document.getElementById('activePairLabel');
     const handStatus=document.getElementById('handStatus');
-    const firstHalfGrid=document.getElementById('firstHalfGrid');
-    const secondHalfGrid=document.getElementById('secondHalfGrid');
+    const sharedHalfGrid=document.getElementById('sharedHalfGrid');
     const firstHalfChoice=document.getElementById('firstHalfChoice');
     const secondHalfChoice=document.getElementById('secondHalfChoice');
     const composePreview=document.getElementById('composePreview');
@@ -1280,16 +1269,38 @@
       });
     }
 
-    function renderHalfGrid(container, selectedValue, onSelect, labelPrefix){
-      container.innerHTML=values.map(value=>`
-        <button class="half-btn ${selectedValue===value?'active':''}" type="button" data-value="${value}" aria-label="${labelPrefix} ${valueLabels[value]}">
-          ${halfDomino(value)}
-          <span class="half-name">${valueLabels[value]}</span>
-        </button>
-      `).join('');
+    function selectComposeHalf(value){
+      if(state.compose.first===null){
+        state.compose.first=value;
+      }else if(state.compose.second===null){
+        state.compose.second=value;
+      }else{
+        state.compose.first=state.compose.second;
+        state.compose.second=value;
+      }
+      renderCompose();
+    }
 
-      container.querySelectorAll('.half-btn').forEach(btn=>{
-        btn.onclick=()=>onSelect(Number(btn.dataset.value));
+    function renderHalfGrid(){
+      const first=state.compose.first;
+      const second=state.compose.second;
+
+      sharedHalfGrid.innerHTML=values.map(value=>{
+        const isFirst=first===value;
+        const isSecond=second===value;
+        const selectedCount=(isFirst?1:0)+(isSecond?1:0);
+        const activeClass=selectedCount?'active':'';
+        const badge=selectedCount===2?' · doble':selectedCount===1?' · elegido':'';
+        return `
+          <button class="half-btn ${activeClass}" type="button" data-value="${value}" aria-label="Valor ${valueLabels[value]}${badge}">
+            ${halfDomino(value)}
+            <span class="half-name">${valueLabels[value]}${badge}</span>
+          </button>
+        `;
+      }).join('');
+
+      sharedHalfGrid.querySelectorAll('.half-btn').forEach(btn=>{
+        btn.onclick=()=>selectComposeHalf(Number(btn.dataset.value));
       });
     }
 
@@ -1298,19 +1309,11 @@
       const status=getComposeStatus(tile);
       const hasDraft=state.compose.first!==null || state.compose.second!==null;
 
-      renderHalfGrid(firstHalfGrid, state.compose.first, value=>{
-        state.compose.first=value;
-        renderCompose();
-      }, 'Primera mitad');
+      renderHalfGrid();
 
-      renderHalfGrid(secondHalfGrid, state.compose.second, value=>{
-        state.compose.second=value;
-        renderCompose();
-      }, 'Segunda mitad');
-
-      firstHalfChoice.textContent=state.compose.first===null?'Sin elegir':valueLabels[state.compose.first];
+      firstHalfChoice.textContent=state.compose.first===null?`Primera: —`:`Primera: ${valueLabels[state.compose.first]}`;
       firstHalfChoice.classList.toggle('empty', state.compose.first===null);
-      secondHalfChoice.textContent=state.compose.second===null?'Sin elegir':valueLabels[state.compose.second];
+      secondHalfChoice.textContent=state.compose.second===null?`Segunda: —`:`Segunda: ${valueLabels[state.compose.second]}`;
       secondHalfChoice.classList.toggle('empty', state.compose.second===null);
 
       clearComposeBtn.disabled=!hasDraft;
@@ -1319,8 +1322,10 @@
       composePreview.classList.toggle('empty', !tile);
       composePreview.innerHTML=tile ? domino(tile[0],tile[1],'large') : 'Sin vista previa';
       composePreviewText.textContent=tile
-        ? `Resultado: ${valueLabels[state.compose.first]} + ${valueLabels[state.compose.second]} → ${valueLabels[tile[0]]}-${valueLabels[tile[1]]}.`
-        : 'Selecciona dos mitades para ver la ficha completa.';
+        ? `Resultado: ${valueLabels[state.compose.first]} + ${valueLabels[state.compose.second]} → ficha ${tile[0]}-${tile[1]}.`
+        : state.compose.first===null
+          ? 'Selecciona la primera mitad para empezar.'
+          : 'Ahora toca la segunda mitad en el mismo panel para completar la ficha.';
 
       composeFeedback.className=`compose-feedback${status.tone==='error'?' error':status.tone==='success'?' success':''}`;
       composeFeedback.textContent=status.message;
@@ -1394,6 +1399,7 @@
     addComposeBtn.addEventListener('click',()=>{
       const tile=getComposeTile();
       if(addTile(tile)){
+        clearCompose();
         render();
       }else{
         renderCompose();
