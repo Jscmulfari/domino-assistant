@@ -171,8 +171,7 @@
     }
 
     .app > .board:first-of-type{order:1}
-    #openingPanel,
-    #gamePanel{order:2}
+    #openingPanel{order:2}
     #handZone{
       order:3;
       margin-top:auto;
@@ -1111,8 +1110,7 @@
 
     .hidden{display:none !important}
 
-    .opening-stack,
-    .game-stack{
+    .opening-stack{
       display:grid;
       gap:14px;
     }
@@ -1416,15 +1414,6 @@
       <div id="openingContent"></div>
     </section>
 
-    <section id="gamePanel" class="board panel hidden" aria-labelledby="gameTitle">
-      <div class="panel-head">
-        <div>
-          <h2 id="gameTitle" class="panel-title">Seguimiento de la partida</h2>
-          <p class="panel-copy">Resumen público de la mesa y tu mano restante.</p>
-        </div>
-      </div>
-      <div id="gameContent"></div>
-    </section>
   </main>
 
   <script>
@@ -1443,11 +1432,6 @@
       phase:'build_hand',
       opener:null,
       openingTile:null,
-      boardChain:[],
-      boardEnds:null,
-      players:{},
-      currentTurn:null,
-      moveHistory:[],
       openingSelection:{tile:null,player:null}
     };
 
@@ -1473,8 +1457,6 @@
     const composeFeedback=document.getElementById('composeFeedback');
     const openingPanel=document.getElementById('openingPanel');
     const openingContent=document.getElementById('openingContent');
-    const gamePanel=document.getElementById('gamePanel');
-    const gameContent=document.getElementById('gameContent');
 
     const key=tile=>`${tile[0]}-${tile[1]}`;
     const normalize=(a,b)=>a<=b?[a,b]:[b,a];
@@ -1482,13 +1464,6 @@
     const isDuplicate=tile=>getSelectedKeys().has(key(tile));
     const handFull=()=>state.selected.length>=7;
     const canAddTile=tile=>Boolean(tile) && !isDuplicate(tile) && !handFull();
-    const nextSeat=seat=>({self:'left',left:'partner',partner:'right',right:'self'})[seat] || 'self';
-    const createPlayers=()=>({
-      self:{seat:'self',label:SEAT_LABELS.self,remaining:7,opened:false,lastAction:'Sin jugadas',isCurrentTurn:false},
-      left:{seat:'left',label:SEAT_LABELS.left,remaining:7,opened:false,lastAction:'Sin jugadas',isCurrentTurn:false},
-      partner:{seat:'partner',label:SEAT_LABELS.partner,remaining:7,opened:false,lastAction:'Sin jugadas',isCurrentTurn:false},
-      right:{seat:'right',label:SEAT_LABELS.right,remaining:7,opened:false,lastAction:'Sin jugadas',isCurrentTurn:false}
-    });
 
     function halfDomino(value){
       return `<div class="half-domino" aria-hidden="true">${pips(value)}</div>`;
@@ -1620,7 +1595,7 @@
       modeSummary.classList.toggle('flow-locked', !answered);
       gatePanel.classList.toggle('hidden', answered);
       if(!answered){ modeSummary.innerHTML=''; return; }
-      const phaseLabel={build_hand:'Arma tu mano',hand_confirmed:'Mano confirmada',opening_context:'Apertura',game_tracking:'Seguimiento'}[state.phase] || 'Arma tu mano';
+      const phaseLabel={build_hand:'Arma tu mano',hand_confirmed:'Mano confirmada',opening_context:'Apertura'}[state.phase] || 'Arma tu mano';
       const guidance=state.isFirstHand ? '<span class="mode-guidance">Si tienes la 6-6 en tu mano, inclúyela para abrir.</span>' : '<span class="mode-guidance">Luego indicarás qué ficha abrió la mesa.</span>';
       modeSummary.innerHTML=`<div class="mode-summary-copy"><span class="mode-badge">${state.isFirstHand ? 'Primera mano' : 'No es primera mano'}</span><span class="mode-badge">${phaseLabel}</span>${guidance}</div><button id="editFirstHandBtn" class="mode-edit-btn" type="button" aria-label="Cambiar respuesta de primera mano">Cambiar respuesta</button>`;
       document.getElementById('editFirstHandBtn')?.addEventListener('click',()=>{ state.isFirstHand=null; state.phase='build_hand'; render(); });
@@ -1663,26 +1638,21 @@
 
     function startOpeningContext(){ state.phase='opening_context'; render(); }
 
-    function initializeGame({openingTile, opener}){
-      const players=createPlayers();
-      const tileKey=key(openingTile);
+    function finalizeOpening({openingTile, opener}){
       state.handConfirmed=true;
-      players[opener].opened=true;
-      players[opener].lastAction=`Abrió con ${tileKey}`;
-      players[opener].remaining=opener==='self' ? Math.max(0, state.selected.length) : 6;
-      state.players=players;
       state.opener=opener;
       state.openingTile=openingTile;
-      state.boardChain=[openingTile];
-      state.boardEnds={left:openingTile[0],right:openingTile[1]};
-      state.moveHistory=[{player:opener,tile:openingTile,action:`Abrió con ${tileKey}`}];
-      state.currentTurn=nextSeat(opener);
-      Object.values(state.players).forEach(player=>{ player.isCurrentTurn=player.seat===state.currentTurn; if(player.seat!==opener){ player.lastAction='Esperando siguiente jugada'; } });
-      state.phase='game_tracking';
+      state.phase='hand_confirmed';
+      openingPanel.classList.add('hidden');
       render();
     }
 
-    function handleOpeningSeatChoice(seat){ initializeGame({openingTile:[6,6],opener:seat}); }
+    function handleOpeningSeatChoice(seat){
+      if(seat==='self' && state.selected.some(tile=>key(tile)==='6-6')){
+        removeTile([6,6]);
+      }
+      finalizeOpening({openingTile:[6,6],opener:seat});
+    }
     function handleOpeningTileChoice(tileKey){
       const changed=state.openingSelection.tile!==tileKey;
       state.openingSelection.tile=tileKey;
@@ -1701,7 +1671,7 @@
         if(!hasTile){ window.alert('Si la jugaste tú, esa ficha debe estar en tu mano.'); return; }
         removeTile(tile);
       }
-      initializeGame({openingTile:tile,opener:player});
+      finalizeOpening({openingTile:tile,opener:player});
     }
 
     function confirmHand(){
@@ -1715,41 +1685,24 @@
     function renderOpening(){
       openingPanel.classList.toggle('hidden', state.phase!=='opening_context');
       if(state.phase!=='opening_context') return;
-      const hasDoubleSix=state.selected.some(tile=>key(tile)==='6-6');
       if(state.isFirstHand){
-        if(hasDoubleSix){
-          openingContent.innerHTML=`<div class="opening-stack"><div class="opening-note"><strong>Salida obligatoria</strong><p>Tienes la 6-6 en tu mano, así que abres tú la partida con esa ficha.</p><div class="mini-board-chain">${domino(6,6,'small','horizontal')}</div></div><div class="opening-actions"><button id="continueSelfOpenBtn" class="confirm-btn opening-action-btn" type="button">Continuar al seguimiento</button></div></div>`;
-          document.getElementById('continueSelfOpenBtn')?.addEventListener('click',()=>{ removeTile([6,6]); initializeGame({openingTile:[6,6],opener:'self'}); });
-          return;
-        }
-        openingContent.innerHTML=`<div class="opening-stack"><div class="opening-note"><strong>Salida obligatoria</strong><p>En primera mano la mesa siempre arranca con la 6-6. Indica quién la abrió.</p><div class="mini-board-chain">${domino(6,6,'small','horizontal')}</div></div><div class="seat-grid">${['left','partner','right'].map(seat=>`<button class="seat-btn" type="button" data-opening-seat="${seat}"><strong>${SEAT_LABELS[seat]}</strong><small>Abrió con 6-6</small></button>`).join('')}</div></div>`;
+        openingContent.innerHTML=`<div class="opening-stack"><div class="opening-note"><strong>Salida obligatoria</strong><p>En primera mano la mesa siempre arranca con la 6-6. Solo marca quién abrió.</p><div class="mini-board-chain">${domino(6,6,'small','horizontal')}</div></div><section class="opening-step" aria-labelledby="openingPlayerStepTitle"><div><h3 id="openingPlayerStepTitle" class="opening-step-title">¿Quién abrió la mano?</h3><p class="opening-player-prompt">Si fuiste tú, se asume automáticamente la 6-6.</p></div><div class="seat-grid">${['self','left','partner','right'].map(seat=>`<button class="seat-btn" type="button" data-opening-seat="${seat}"><strong>${SEAT_LABELS[seat]}</strong><small>${seat==='self'?'Se registra 6-6 automáticamente':'Abrió con 6-6'}</small></button>`).join('')}</div></section></div>`;
         openingContent.querySelectorAll('[data-opening-seat]').forEach(btn=>btn.addEventListener('click',()=>handleOpeningSeatChoice(btn.dataset.openingSeat)));
         return;
       }
       const selectedTile=state.openingSelection.tile;
       const selectedPlayer=state.openingSelection.player;
       const tileOptions=values.flatMap(a=>values.filter(b=>b>=a).map(b=>[a,b]));
-      openingContent.innerHTML=`<div class="opening-stack"><div class="opening-note"><strong>No es primera mano</strong><p>Registra la ficha que ya se jugó y después quién la puso en la mesa.</p></div><section class="opening-step" aria-labelledby="openingTileStepTitle"><div><h3 id="openingTileStepTitle" class="opening-step-title">1. Elige la ficha jugada</h3><p class="opening-step-copy">Usa el mismo gesto de selección de la mano: toca una ficha para marcarla.</p></div><div class="opening-tile-grid">${tileOptions.map(tile=>{ const tileK=key(tile); const active=tileK===selectedTile?'selected':''; const inHand=state.selected.some(item=>key(item)===tileK); return `<button class="hand-tile-wrap opening-tile-btn ${active}" type="button" data-opening-tile="${tileK}" aria-pressed="${tileK===selectedTile}">${domino(tile[0],tile[1],'small')}<small>${tileK}${inHand?' · en tu mano':''}</small></button>`; }).join('')}</div></section>${selectedTile?`<section class="opening-step" aria-labelledby="openingPlayerStepTitle"><div><h3 id="openingPlayerStepTitle" class="opening-step-title">2. ¿Quién jugó ${selectedTile}?</h3><p class="opening-player-prompt">Selecciona el jugador que colocó la ficha elegida.</p></div><div class="seat-grid">${['self','left','partner','right'].map(seat=>`<button class="seat-btn ${selectedPlayer===seat?'active':''}" type="button" data-opening-player="${seat}"><strong>${SEAT_LABELS[seat]}</strong><small>${seat==='self'?'Si eliges esta opción, la ficha se quitará de tu mano.':'Información pública de apertura'}</small></button>`).join('')}</div></section>`:''}<div class="opening-actions"><button id="submitOpeningBtn" class="confirm-btn opening-action-btn" type="button" ${selectedTile && selectedPlayer?'':'disabled'}>Iniciar seguimiento</button></div></div>`;
+      openingContent.innerHTML=`<div class="opening-stack"><div class="opening-note"><strong>No es primera mano</strong><p>Registra la ficha que ya se jugó y después quién la puso en la mesa.</p></div><section class="opening-step" aria-labelledby="openingTileStepTitle"><div><h3 id="openingTileStepTitle" class="opening-step-title">1. Elige la ficha jugada</h3><p class="opening-step-copy">Usa el mismo gesto de selección de la mano: toca una ficha para marcarla.</p></div><div class="opening-tile-grid">${tileOptions.map(tile=>{ const tileK=key(tile); const active=tileK===selectedTile?'selected':''; const inHand=state.selected.some(item=>key(item)===tileK); return `<button class="hand-tile-wrap opening-tile-btn ${active}" type="button" data-opening-tile="${tileK}" aria-pressed="${tileK===selectedTile}">${domino(tile[0],tile[1],'small')}<small>${tileK}${inHand?' · en tu mano':''}</small></button>`; }).join('')}</div></section>${selectedTile?`<section class="opening-step" aria-labelledby="openingPlayerStepTitle"><div><h3 id="openingPlayerStepTitle" class="opening-step-title">2. ¿Quién jugó ${selectedTile}?</h3><p class="opening-player-prompt">Selecciona el jugador que colocó la ficha elegida.</p></div><div class="seat-grid">${['self','left','partner','right'].map(seat=>`<button class="seat-btn ${selectedPlayer===seat?'active':''}" type="button" data-opening-player="${seat}"><strong>${SEAT_LABELS[seat]}</strong><small>${seat==='self'?'Si eliges esta opción, la ficha se quitará de tu mano.':'Información pública de apertura'}</small></button>`).join('')}</div></section>`:''}<div class="opening-actions"><button id="submitOpeningBtn" class="confirm-btn opening-action-btn" type="button" ${selectedTile && selectedPlayer?'':'disabled'}>Guardar apertura</button></div></div>`;
       openingContent.querySelectorAll('[data-opening-tile]').forEach(btn=>btn.addEventListener('click',()=>handleOpeningTileChoice(btn.dataset.openingTile)));
       openingContent.querySelectorAll('[data-opening-player]').forEach(btn=>btn.addEventListener('click',()=>handleOpeningPlayerChoice(btn.dataset.openingPlayer)));
       document.getElementById('submitOpeningBtn')?.addEventListener('click', submitNonFirstOpening);
     }
 
-    function renderGameTracking(){
-      gamePanel.classList.toggle('hidden', state.phase!=='game_tracking');
-      if(state.phase!=='game_tracking') return;
-      const lastMove=state.moveHistory.at(-1);
-      const playerCards=['left','partner','right'].map(seat=>{
-        const player=state.players[seat];
-        return `<article class="player-card ${player.isCurrentTurn?'current-turn':''} ${player.opened?'opened':''}"><strong>${player.label}</strong><div class="player-meta"><span class="tag">Fichas restantes: ${player.remaining}</span><span class="tag">Abrió: ${player.opened?'Sí':'No'}</span><span>${player.lastAction}</span>${player.isCurrentTurn?'<span class="tag">Turno actual</span>':''}</div></article>`;
-      }).join('');
-      gameContent.innerHTML=`<div class="game-stack"><div class="summary-grid"><div class="summary-chip"><small>Apertura</small><span>${key(state.openingTile)}</span></div><div class="summary-chip"><small>Extremos</small><span>${state.boardEnds.left} · ${state.boardEnds.right}</span></div><div class="summary-chip"><small>Última jugada</small><span>${lastMove ? `${SEAT_LABELS[lastMove.player]} · ${key(lastMove.tile)}` : 'Sin jugadas'}</span></div><div class="summary-chip"><small>Turno actual</small><span>${SEAT_LABELS[state.currentTurn]}</span></div></div><div class="mini-board"><strong>Resumen de la mesa</strong><div class="mini-board-chain">${state.boardChain.map(tile=>domino(tile[0],tile[1],'small','horizontal')).join('')}</div></div><div class="my-hand-card"><strong>Mi mano restante</strong><div class="mini-board-chain my-hand-row">${state.selected.length?state.selected.map(tile=>domino(tile[0],tile[1],'small')).join(''):'<span class="game-note">Ya no quedan fichas registradas en tu mano.</span>'}</div><p class="game-note">Te quedan ${state.selected.length} fichas registradas.</p></div><div><strong>Contexto de otros jugadores</strong><div class="player-grid">${playerCards}</div></div></div>`;
-    }
-
     function render(){
       renderFirstHandStatus();
       if(state.isFirstHand===null) return;
-      renderCompose(); renderCounter(); renderHand(); renderOpening(); renderGameTracking();
+      renderCompose(); renderCounter(); renderHand(); renderOpening();
     }
 
     themePicker.addEventListener('click',event=>{ const chip=event.target.closest('.theme-chip'); if(!chip) return; setTheme(chip.dataset.themeOption); });
@@ -1765,7 +1718,6 @@
     firstHandYesBtn.addEventListener('click',()=>chooseFirstHand(true));
     firstHandNoBtn.addEventListener('click',()=>chooseFirstHand(false));
     setTheme(state.theme);
-    state.players=createPlayers();
     render();
   </script>
 </body>
