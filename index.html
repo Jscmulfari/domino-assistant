@@ -1333,7 +1333,7 @@
   <main class="app">
     <section class="board">
       <div class="shell">
-        <div class="hero hero-minimal">
+        <div class="hero hero-minimal hidden">
           <div class="hero-actions">
             <div class="theme-picker" role="group" aria-label="Seleccionar tema visual">
               <button class="theme-chip active" type="button" data-theme-option="midnight" aria-label="Tema noche"></button>
@@ -1342,15 +1342,17 @@
           </div>
         </div>
 
-        <section id="gatePanel" class="panel gate-panel" aria-labelledby="gateTitle">
-          <div class="panel-head">
-            <div>
-              <h2 id="gateTitle" class="panel-title">¿Eres mano?</h2>
-            </div>
-          </div>
+        <section id="startPanel" class="panel gate-panel" aria-label="Menú inicial">
           <div class="gate-actions">
-            <button id="firstHandYesBtn" class="gate-btn" type="button">Sí</button>
-            <button id="firstHandNoBtn" class="gate-btn" type="button">No</button>
+            <button id="newGameBtn" class="gate-btn" type="button">Juego nuevo</button>
+            <button id="continueGameBtn" class="gate-btn" type="button">Continuar juego</button>
+          </div>
+        </section>
+
+        <section id="pointsPanel" class="panel gate-panel flow-locked" aria-label="Puntos objetivo">
+          <div class="gate-actions">
+            <button id="points70Btn" class="gate-btn" type="button">70</button>
+            <button id="points100Btn" class="gate-btn" type="button">100</button>
           </div>
         </section>
 
@@ -1411,14 +1413,18 @@
       theme:themes.includes(savedTheme)?savedTheme:'midnight',
       compose:{first:null,second:null},
       handConfirmed:false,
-      isFirstHand:null,
-      phase:'build_hand'
+      phase:'start_menu',
+      startMode:null,
+      targetPoints:null
     };
 
     const root=document.documentElement;
-    const gatePanel=document.getElementById('gatePanel');
-    const firstHandYesBtn=document.getElementById('firstHandYesBtn');
-    const firstHandNoBtn=document.getElementById('firstHandNoBtn');
+    const startPanel=document.getElementById('startPanel');
+    const newGameBtn=document.getElementById('newGameBtn');
+    const continueGameBtn=document.getElementById('continueGameBtn');
+    const pointsPanel=document.getElementById('pointsPanel');
+    const points70Btn=document.getElementById('points70Btn');
+    const points100Btn=document.getElementById('points100Btn');
     const valuesPanel=document.getElementById('valuesPanel');
     const handZone=document.getElementById('handZone');
     const handConfirmBtn=document.getElementById('handConfirmBtn');
@@ -1540,15 +1546,34 @@
       secondHalfChoice.innerHTML=`<span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">${state.compose.second===null?'Segunda mitad pendiente':`Segunda mitad: ${valueLabels[state.compose.second]}`}</span>`;
     }
 
-    function renderFirstHandStatus(){
-      const answered=state.isFirstHand!==null;
-      valuesPanel.classList.toggle('flow-locked', !answered);
-      handZone.classList.toggle('flow-locked', !answered);
-      gatePanel.classList.toggle('hidden', answered);
-      themePicker.classList.toggle('hidden', answered);
+    function renderFlow(){
+      const atStart=state.phase==='start_menu';
+      const atPoints=state.phase==='points_menu';
+      const atBuilder=state.phase==='build_hand' || state.phase==='hand_confirmed';
+      startPanel.classList.toggle('hidden', !atStart);
+      pointsPanel.classList.toggle('flow-locked', !atPoints);
+      valuesPanel.classList.toggle('flow-locked', !atBuilder);
+      handZone.classList.toggle('flow-locked', !atBuilder);
     }
 
-    function chooseFirstHand(isFirstHand){ state.isFirstHand=isFirstHand; state.phase='build_hand'; render(); }
+    function startNewGame(){
+      state.startMode='new';
+      state.targetPoints=null;
+      state.phase='points_menu';
+      render();
+    }
+
+    function continueGame(){
+      state.startMode='continue';
+      state.phase='build_hand';
+      render();
+    }
+
+    function chooseTargetPoints(points){
+      state.targetPoints=points;
+      state.phase='build_hand';
+      render();
+    }
 
     function renderCounter(){
       const count=state.selected.length;
@@ -1590,8 +1615,8 @@
     }
 
     function render(){
-      renderFirstHandStatus();
-      if(state.isFirstHand===null) return;
+      renderFlow();
+      if(state.phase!=='build_hand' && state.phase!=='hand_confirmed') return;
       renderCompose();
       renderCounter();
       renderHand();
@@ -1607,8 +1632,10 @@
       if(window.confirm(`¿Quitar la ficha ${key(tile)} de tu mano?`)){ removeTile(tile); render(); }
     });
     handConfirmBtn.addEventListener('click', confirmHand);
-    firstHandYesBtn.addEventListener('click',()=>chooseFirstHand(true));
-    firstHandNoBtn.addEventListener('click',()=>chooseFirstHand(false));
+    newGameBtn.addEventListener('click', startNewGame);
+    continueGameBtn.addEventListener('click', continueGame);
+    points70Btn.addEventListener('click',()=>chooseTargetPoints(70));
+    points100Btn.addEventListener('click',()=>chooseTargetPoints(100));
     setTheme(state.theme);
     render();
   </script>
