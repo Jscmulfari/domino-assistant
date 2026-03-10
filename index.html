@@ -282,6 +282,71 @@
 
     .panel.hidden{display:none}
 
+    .gate-panel{
+      display:grid;
+      gap:14px;
+    }
+
+    .gate-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .gate-btn{
+      flex:1 1 220px;
+      min-height:50px;
+      padding:12px 14px;
+      border-radius:14px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--soft);
+      text-align:left;
+      font-weight:800;
+      letter-spacing:-.01em;
+      transition:border-color .14s ease, background .14s ease, transform .14s ease;
+    }
+
+    .gate-btn:hover{
+      transform:translateY(-1px);
+      border-color:rgba(255,255,255,.18);
+      background:rgba(255,255,255,.05);
+    }
+
+    .mode-summary{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+
+    .mode-badge,
+    .mode-guidance{
+      display:inline-flex;
+      align-items:center;
+      min-height:32px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.1);
+      font-size:.8rem;
+      font-weight:800;
+      letter-spacing:-.01em;
+    }
+
+    .mode-badge{
+      background:rgba(255,255,255,.05);
+      color:var(--soft);
+    }
+
+    .mode-guidance{
+      background:var(--accent-first-soft);
+      border-color:var(--accent-first-border);
+      color:var(--text);
+    }
+
+    .flow-locked{display:none}
+
     .panel-head{
       display:flex;
       align-items:flex-end;
@@ -1019,6 +1084,8 @@
     }
 
     @media (max-width:680px){
+      .gate-actions{flex-direction:column;}
+      .gate-btn{width:100%;}
       .app{padding:20px 10px 20px}
       .shell{padding:10px;border-radius:22px}
       .hero,
@@ -1105,7 +1172,22 @@
           </div>
         </header>
 
-        <section id="valuesPanel" class="panel" aria-labelledby="valuesTitle">
+        <section id="gatePanel" class="panel gate-panel" aria-labelledby="gateTitle">
+          <div class="panel-head">
+            <div>
+              <h2 id="gateTitle" class="panel-title">¿Es primera mano?</h2>
+              <p class="panel-copy">Confirma este punto antes de armar la mano.</p>
+            </div>
+          </div>
+          <div class="gate-actions">
+            <button id="firstHandYesBtn" class="gate-btn" type="button">Sí, es primera mano</button>
+            <button id="firstHandNoBtn" class="gate-btn" type="button">No, no es primera mano</button>
+          </div>
+        </section>
+
+        <div id="modeSummary" class="mode-summary flow-locked" aria-live="polite"></div>
+
+        <section id="valuesPanel" class="panel flow-locked" aria-labelledby="valuesTitle">
           <div class="panel-head">
             <div>
               <h2 id="valuesTitle" class="panel-title">Selecciona tus fichas</h2>
@@ -1131,7 +1213,7 @@
       </div>
     </section>
 
-    <section class="hand-zone" aria-label="Mano de dominó seleccionada">
+    <section id="handZone" class="hand-zone flow-locked" aria-label="Mano de dominó seleccionada">
       <div id="handTrayWrap" class="hand-tray-wrap">
         <div class="hand-panel-head">
           <div class="hand-head-copy">
@@ -1163,10 +1245,17 @@
       selected:[],
       theme:themes.includes(savedTheme)?savedTheme:'midnight',
       compose:{first:null,second:null},
-      handConfirmed:false
+      handConfirmed:false,
+      isFirstHand:null
     };
 
     const root=document.documentElement;
+    const gatePanel=document.getElementById('gatePanel');
+    const firstHandYesBtn=document.getElementById('firstHandYesBtn');
+    const firstHandNoBtn=document.getElementById('firstHandNoBtn');
+    const modeSummary=document.getElementById('modeSummary');
+    const valuesPanel=document.getElementById('valuesPanel');
+    const handZone=document.getElementById('handZone');
     const counter=document.getElementById('counter');
     const handConfirmBtn=document.getElementById('handConfirmBtn');
     const handConfirmLabel=document.getElementById('handConfirmLabel');
@@ -1362,6 +1451,28 @@
       }
     }
 
+    function renderFirstHandStatus(){
+      const answered=state.isFirstHand!==null;
+      valuesPanel.classList.toggle('flow-locked', !answered);
+      handZone.classList.toggle('flow-locked', !answered);
+      modeSummary.classList.toggle('flow-locked', !answered);
+      gatePanel.classList.toggle('hidden', answered);
+
+      if(!answered){
+        modeSummary.innerHTML='';
+        return;
+      }
+
+      modeSummary.innerHTML=state.isFirstHand
+        ? '<span class="mode-badge">Primera mano</span><span class="mode-guidance">Abre con 6-6</span>'
+        : '<span class="mode-badge">No es primera mano</span>';
+    }
+
+    function chooseFirstHand(isFirstHand){
+      state.isFirstHand=isFirstHand;
+      render();
+    }
+
     function renderCounter(){
       const count=state.selected.length;
       const ready=count===7;
@@ -1418,6 +1529,10 @@
     }
 
     function render(){
+      renderFirstHandStatus();
+      if(state.isFirstHand===null){
+        return;
+      }
       renderCompose();
       renderCounter();
       renderHand();
@@ -1444,6 +1559,8 @@
     });
 
     handConfirmBtn.addEventListener('click', confirmHand);
+    firstHandYesBtn.addEventListener('click',()=>chooseFirstHand(true));
+    firstHandNoBtn.addEventListener('click',()=>chooseFirstHand(false));
 
     setTheme(state.theme);
     render();
