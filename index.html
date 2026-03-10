@@ -633,7 +633,7 @@
 
     .hand-zone{
       width:min(920px, calc(100vw - 28px));
-      margin-top:18px;
+      margin-top:30px;
       position:relative;
       z-index:1;
       display:grid;
@@ -654,7 +654,7 @@
       justify-content:center;
       align-items:center;
       gap:10px;
-      margin-bottom:12px;
+      margin-bottom:10px;
       text-align:center;
     }
 
@@ -662,9 +662,10 @@
 
     .hand-title{
       margin:0;
-      font-size:1rem;
+      font-size:.96rem;
       font-weight:700;
       letter-spacing:-.03em;
+      color:var(--soft);
     }
 
     .hand-copy{
@@ -672,20 +673,19 @@
     }
 
     .hand-status{
-      padding:6px 10px;
-      border-radius:999px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.07);
-      font-size:.79rem;
-      font-weight:700;
-      color:var(--soft);
+      font-size:.96rem;
+      font-weight:800;
+      letter-spacing:-.03em;
+      color:var(--text);
       white-space:nowrap;
     }
 
     .hand-tray-wrap{
       position:relative;
       width:100%;
-      padding:6px 0 6px;
+      max-width:780px;
+      padding:8px 0 6px;
+      margin:0 auto;
     }
 
     .hand-tray-wrap::before{
@@ -783,13 +783,13 @@
       display:flex;
       align-items:flex-end;
       justify-content:center;
-      gap:14px;
-      padding:18px 28px 14px;
+      gap:12px;
+      padding:18px 24px 12px;
       overflow-x:auto;
       overflow-y:hidden;
       scrollbar-width:none;
       -ms-overflow-style:none;
-      scroll-padding-inline:28px;
+      scroll-padding-inline:24px;
     }
 
     .hand-tray::-webkit-scrollbar{display:none}
@@ -819,14 +819,13 @@
       transform-origin:center bottom;
       transition:transform .14s ease, filter .14s ease;
       padding:0 0 2px;
-      margin-inline:-2px;
+      margin-inline:0;
       background:none;
       border:none;
+      transform:translateY(0);
     }
 
-    .hand-tile-wrap:nth-child(odd){transform:translateY(-3px) rotate(-1.25deg)}
-    .hand-tile-wrap:nth-child(even){transform:translateY(0) rotate(1.25deg)}
-    .hand-tile-wrap:hover{transform:translateY(-7px) scale(1.03)}
+    .hand-tile-wrap:hover{transform:translateY(-5px)}
     .hand-tile-wrap:focus-visible{
       outline:2px solid var(--accent-second-border);
       outline-offset:4px;
@@ -932,6 +931,7 @@
       .tile-btn{min-height:118px;padding:7px 5px;border-radius:18px}
       .hand-panel{width:100%}
       .hand-panel-head{justify-content:space-between;text-align:left}
+      .hand-tray-wrap{max-width:100%}
       .hand-tray{min-height:118px;padding:15px 18px 13px;gap:10px;border-radius:22px;justify-content:flex-start}
       .hand-tray:not(.hand-empty) > .hand-tile-wrap:first-child,
       .hand-tray:not(.hand-empty) > .hand-tile-wrap:last-child{margin-inline:0}
@@ -1052,7 +1052,7 @@
             <h2 class="hand-title">Mano</h2>
             <p class="hand-copy"></p>
           </div>
-          <div id="handStatus" class="hand-status">0 / 7</div>
+          <div id="handStatus" class="hand-status">Mano · 0/7</div>
         </div>
         <div id="handTrayWrap" class="hand-tray-wrap">
           <div class="scroll-fade left" aria-hidden="true"></div>
@@ -1075,7 +1075,9 @@
       selected:[[1,4],[2,3],[1,2],[3,6],[4,6],[2,5],[3,5]],
       theme:themes.includes(savedTheme)?savedTheme:'midnight',
       inputMode:'tiles',
-      compose:{first:null,second:null}
+      compose:{first:null,second:null},
+      composeFeedbackLock:false,
+      composeFeedbackTimer:null
     };
 
     const root=document.documentElement;
@@ -1156,6 +1158,19 @@
 
     function clearCompose(){
       state.compose={first:null,second:null};
+    }
+
+    function setComposeFeedback(message='',tone='muted',persist=false){
+      state.composeFeedbackLock=persist;
+      composeFeedback.className=`compose-feedback${tone==='error'?' error':tone==='success'?' success':''}`;
+      composeFeedback.textContent=message;
+    }
+
+    function clearComposeFeedbackTimer(){
+      if(state.composeFeedbackTimer){
+        window.clearTimeout(state.composeFeedbackTimer);
+        state.composeFeedbackTimer=null;
+      }
     }
 
     function setInputMode(mode){
@@ -1239,18 +1254,17 @@
     }
 
     function selectComposeHalf(value){
-      composeFeedback.textContent='';
-      composeFeedback.className='compose-feedback';
+      clearComposeFeedbackTimer();
+      setComposeFeedback();
 
-      if(state.compose.first===null){
-        state.compose.first=value;
+      if(state.compose.first!==null && state.compose.second!==null){
+        state.compose={first:value,second:null};
         renderCompose();
         return;
       }
 
-      if(state.compose.second===null && state.compose.first===value){
-        clearCompose();
-        composeFeedback.textContent='Selección cancelada.';
+      if(state.compose.first===null){
+        state.compose.first=value;
         renderCompose();
         return;
       }
@@ -1260,16 +1274,19 @@
 
       if(canAddTile(tile)){
         state.selected.push(tile);
-        composeFeedback.className='compose-feedback success';
-        composeFeedback.textContent=`Añadida ${key(tile)}.`;
-        clearCompose();
+        setComposeFeedback(`Añadida ${key(tile)}.`,'success',true);
         render();
+        state.composeFeedbackTimer=window.setTimeout(()=>{
+          clearCompose();
+          setComposeFeedback();
+          renderCompose();
+          state.composeFeedbackTimer=null;
+        },700);
         return;
       }
 
       const status=getComposeStatus(tile);
-      composeFeedback.className=`compose-feedback${status.tone==='error'?' error':''}`;
-      composeFeedback.textContent=status.message;
+      setComposeFeedback(status.message,status.tone,true);
       renderCompose();
       renderCounter();
       renderHand();
@@ -1333,7 +1350,7 @@
       secondHalfChoice.setAttribute('aria-label', state.compose.second===null ? 'Segunda mitad pendiente' : `Segunda mitad: ${valueLabels[state.compose.second]}`);
       secondHalfChoice.innerHTML=`<span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">${state.compose.second===null?'Segunda mitad pendiente':`Segunda mitad: ${valueLabels[state.compose.second]}`}</span>`;
 
-      if(!composeFeedback.textContent || !composeFeedback.classList.contains('success')){
+      if(!state.composeFeedbackLock){
         composeFeedback.className=`compose-feedback${status.tone==='error'?' error':status.tone==='success'?' success':''}`;
         composeFeedback.textContent=status.message;
       }
@@ -1343,7 +1360,7 @@
       const count=state.selected.length;
       const ready=count===7;
       counter.textContent=ready?'Lista para confirmar':`${count} / 7 seleccionadas`;
-      handStatus.textContent=`${count} / 7`;
+      handStatus.textContent=`Mano · ${count}/7`;
       confirmBtn.disabled=!ready;
       tilesBadge.textContent=state.inputMode==='tiles'?'Toca':'Manual';
     }
