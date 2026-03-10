@@ -275,7 +275,7 @@
       box-shadow:none;
     }
 
-    .panel.hidden{display:none}
+    .panel.hidden,.hidden{display:none}
 
     .panel-head{
       display:flex;
@@ -612,6 +612,19 @@
     .compose-feedback.error{color:var(--danger)}
     .compose-feedback.success{color:var(--soft)}
 
+    .compose-actions{
+      display:grid;
+      gap:10px;
+    }
+
+    .compose-add-btn{
+      width:100%;
+    }
+
+    .confirm-wrap{
+      margin-top:14px;
+    }
+
     .sr-only{
       position:absolute;
       width:1px;
@@ -644,11 +657,11 @@
 
     .hand-panel{
       width:min(100%, 920px);
-      padding:18px 18px 14px;
-      background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:28px;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+      padding:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.014));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:30px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
       overflow:visible;
       position:relative;
     }
@@ -664,24 +677,24 @@
 
     .hand-panel-head{
       display:flex;
-      justify-content:center;
-      align-items:center;
-      gap:10px;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
       margin-bottom:14px;
-      text-align:center;
     }
-
-    .hand-label{display:none}
 
     .hand-title{
       margin:0;
-      font-size:1rem;
-      font-weight:700;
+      font-size:1.05rem;
+      font-weight:800;
       letter-spacing:-.03em;
     }
 
     .hand-copy{
-      display:none;
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:.88rem;
+      line-height:1.35;
     }
 
     .hand-status{
@@ -693,13 +706,13 @@
       font-weight:800;
       color:var(--soft);
       white-space:nowrap;
-      box-shadow:0 6px 18px rgba(0,0,0,.12);
+      box-shadow:none;
     }
 
     .hand-tray-wrap{
       position:relative;
       width:100%;
-      padding:6px 0 4px;
+      padding:4px 0 2px;
     }
 
     .hand-tray-wrap::before{
@@ -945,8 +958,8 @@
       .domino.large{width:56px;height:88px}
       .tile-btn{min-height:118px;padding:7px 5px;border-radius:18px}
       .hand-zone{margin-top:22px}
-      .hand-panel{width:100%;padding:14px 14px 10px}
-      .hand-panel-head{justify-content:space-between;align-items:center;text-align:left;gap:12px;margin-bottom:12px}
+      .hand-panel{width:100%;padding:14px}
+      .hand-panel-head{justify-content:space-between;align-items:flex-start;text-align:left;gap:12px;margin-bottom:12px}
       .hand-tray{min-height:124px;padding:18px 18px 13px;gap:8px;border-radius:22px;justify-content:flex-start}
       .hand-tray:not(.hand-empty) > .hand-tile-wrap:first-child,
       .hand-tray:not(.hand-empty) > .hand-tile-wrap:last-child{margin-inline:0}
@@ -1031,7 +1044,9 @@
             <div id="tilesBadge" class="panel-badge">Toca</div>
           </div>
           <div id="tilesRow" class="tiles-row"></div>
-          <button id="confirmBtn" class="confirm-btn" type="button">✓ Confirmar mano</button>
+          <div id="confirmWrap" class="confirm-wrap hidden">
+            <button id="confirmBtn" class="confirm-btn" type="button">✓ Confirmar mano</button>
+          </div>
         </section>
 
         <section id="valuesPanel" class="panel hidden" aria-labelledby="valuesTitle">
@@ -1040,7 +1055,7 @@
               <h2 id="valuesTitle" class="panel-title">Manual</h2>
               <p class="panel-copy">Elige dos mitades.</p>
             </div>
-            <div class="panel-badge">Auto</div>
+            <div class="panel-badge">Manual</div>
           </div>
 
           <div class="compose-shell">
@@ -1055,7 +1070,10 @@
               <div id="sharedHalfGrid" class="half-grid" role="list" aria-label="Opciones para componer la ficha"></div>
             </section>
 
-            <p id="composeFeedback" class="compose-feedback" aria-live="polite"></p>
+            <div class="compose-actions">
+              <button id="addTileBtn" class="confirm-btn compose-add-btn" type="button">✓ Añadir ficha</button>
+              <p id="composeFeedback" class="compose-feedback" aria-live="polite"></p>
+            </div>
           </div>
         </section>
       </div>
@@ -1065,9 +1083,8 @@
       <div class="hand-panel">
         <div class="hand-panel-head">
           <div>
-            <div class="hand-label" aria-hidden="true">Tu mano</div>
-            <h2 class="hand-title">Mano actual</h2>
-            <p class="hand-copy"></p>
+            <h2 class="hand-title">Tu mano</h2>
+            <p class="hand-copy">Completa 7 fichas y confirma cuando esté lista.</p>
           </div>
           <div id="handStatus" class="hand-status">0 / 7</div>
         </div>
@@ -1092,7 +1109,9 @@
       selected:[[1,4],[2,3],[1,2],[3,6],[4,6],[2,5],[3,5]],
       theme:themes.includes(savedTheme)?savedTheme:'midnight',
       inputMode:'tiles',
-      compose:{first:null,second:null}
+      compose:{first:null,second:null},
+      handConfirmed:false,
+      composeMessage:''
     };
 
     const root=document.documentElement;
@@ -1104,6 +1123,7 @@
     const tilesRow=document.getElementById('tilesRow');
     const counter=document.getElementById('counter');
     const confirmBtn=document.getElementById('confirmBtn');
+    const confirmWrap=document.getElementById('confirmWrap');
     const tilesBadge=document.getElementById('tilesBadge');
     const handTray=document.getElementById('handTray');
     const handTrayWrap=document.getElementById('handTrayWrap');
@@ -1116,6 +1136,7 @@
     const firstHalfChoice=document.getElementById('firstHalfChoice');
     const secondHalfChoice=document.getElementById('secondHalfChoice');
     const composeFeedback=document.getElementById('composeFeedback');
+    const addTileBtn=document.getElementById('addTileBtn');
 
     const key=tile=>`${tile[0]}-${tile[1]}`;
     const normalize=(a,b)=>a<=b?[a,b]:[b,a];
@@ -1149,9 +1170,14 @@
       return `<div class="domino ${size} ${orientation==='horizontal'?'pair-visual':''}"><div class="half">${pips(a)}</div><div class="half">${pips(b)}</div></div>`;
     }
 
+    function markHandChanged(){
+      state.handConfirmed=false;
+    }
+
     function addTile(tile){
       if(canAddTile(tile)){
         state.selected.push(tile);
+        markHandChanged();
         return true;
       }
       return false;
@@ -1162,6 +1188,7 @@
       const existingIndex=state.selected.findIndex(item=>key(item)===tileKey);
       if(existingIndex>=0){
         state.selected.splice(existingIndex,1);
+        markHandChanged();
         return true;
       }
       return false;
@@ -1173,6 +1200,10 @@
 
     function clearCompose(){
       state.compose={first:null,second:null};
+    }
+
+    function setComposeMessage(message=''){
+      state.composeMessage=message;
     }
 
     function setInputMode(mode){
@@ -1203,7 +1234,7 @@
       if(isDuplicate(tile)){
         return {tone:'error',message:`${key(tile)} ya está en tu mano.`};
       }
-      return {tone:'success',message:`Se añadirá ${key(tile)} al tocar esta segunda mitad.`};
+      return {tone:'success',message:`Lista para añadir ${key(tile)}.`};
     }
 
     function renderMode(){
@@ -1256,39 +1287,54 @@
     }
 
     function selectComposeHalf(value){
-      composeFeedback.textContent='';
-      composeFeedback.className='compose-feedback';
+      if(state.compose.first===value){
+        state.compose.first=null;
+        setComposeMessage('');
+        renderCompose();
+        return;
+      }
+
+      if(state.compose.second===value){
+        state.compose.second=null;
+        setComposeMessage('');
+        renderCompose();
+        return;
+      }
 
       if(state.compose.first===null){
         state.compose.first=value;
+        setComposeMessage('');
         renderCompose();
         return;
       }
 
       if(state.compose.second===null){
         state.compose.second=value;
-        const tile=getComposeTile();
+        setComposeMessage('');
+        renderCompose();
+        return;
+      }
 
-        if(canAddTile(tile)){
-          state.selected.push(tile);
-          composeFeedback.className='compose-feedback success';
-          composeFeedback.textContent=`Añadida ${key(tile)}.`;
-          clearCompose();
-          render();
-          return;
-        }
+      state.compose={first:value,second:null};
+      setComposeMessage('');
+      renderCompose();
+    }
 
-        const status=getComposeStatus(tile);
-        composeFeedback.className=`compose-feedback${status.tone==='error'?' error':''}`;
-        composeFeedback.textContent=status.message;
+    function handleComposeAdd(){
+      const tile=getComposeTile();
+      const status=getComposeStatus(tile);
+      if(!canAddTile(tile)){
+        setComposeMessage(status.message);
         renderCompose();
         renderCounter();
         renderHand();
         return;
       }
 
-      state.compose={first:value,second:null};
-      renderCompose();
+      addTile(tile);
+      setComposeMessage(`Añadida ${key(tile)}.`);
+      clearCompose();
+      render();
     }
 
     function renderHalfGrid(){
@@ -1349,18 +1395,26 @@
       secondHalfChoice.setAttribute('aria-label', state.compose.second===null ? 'Segunda mitad pendiente' : `Segunda mitad: ${valueLabels[state.compose.second]}`);
       secondHalfChoice.innerHTML=`<span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">${state.compose.second===null?'Segunda mitad pendiente':`Segunda mitad: ${valueLabels[state.compose.second]}`}</span>`;
 
-      if(!composeFeedback.textContent || !composeFeedback.classList.contains('success')){
-        composeFeedback.className=`compose-feedback${status.tone==='error'?' error':status.tone==='success'?' success':''}`;
-        composeFeedback.textContent=status.message;
-      }
+      const feedbackMessage=state.composeMessage || status.message;
+      const feedbackTone=state.composeMessage
+        ? (state.composeMessage.startsWith('Añadida') ? 'success' : status.tone==='error' ? 'error' : 'muted')
+        : status.tone;
+
+      composeFeedback.className=`compose-feedback${feedbackTone==='error'?' error':feedbackTone==='success'?' success':''}`;
+      composeFeedback.textContent=feedbackMessage;
+      addTileBtn.disabled=!canAddTile(tile);
     }
 
     function renderCounter(){
       const count=state.selected.length;
       const ready=count===7;
-      counter.textContent=ready?'Lista para confirmar':`${count} / 7 seleccionadas`;
-      handStatus.textContent=`Mano ${count} / 7`;
-      confirmBtn.disabled=!ready;
+      counter.textContent=ready
+        ? (state.handConfirmed?'Mano confirmada':'Lista para confirmar')
+        : `${count} / 7 seleccionadas`;
+      handStatus.textContent=`${count} / 7`;
+      confirmWrap.classList.toggle('hidden', !ready);
+      confirmBtn.disabled=!ready || state.handConfirmed;
+      confirmBtn.textContent=state.handConfirmed?'✓ Mano confirmada':'✓ Confirmar mano';
       tilesBadge.textContent=state.inputMode==='tiles'?'Toca':'Manual';
     }
 
@@ -1432,9 +1486,12 @@
       }
     });
 
+    addTileBtn.addEventListener('click', handleComposeAdd);
+
     confirmBtn.addEventListener('click',()=>{
       if(state.selected.length===7){
-        confirmBtn.textContent='✓ Mano confirmada';
+        state.handConfirmed=true;
+        renderCounter();
       }
     });
 
