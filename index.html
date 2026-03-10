@@ -454,13 +454,13 @@
 
     .compose-shell{
       display:grid;
-      gap:16px;
+      gap:12px;
     }
 
     .compose-card{
       display:grid;
-      gap:14px;
-      padding:14px;
+      gap:12px;
+      padding:12px;
       border-radius:18px;
       border:1px solid rgba(255,255,255,.08);
       background:rgba(255,255,255,.03);
@@ -468,25 +468,16 @@
 
     .compose-card-head{
       display:flex;
-      align-items:flex-start;
+      align-items:center;
       justify-content:space-between;
       gap:12px;
     }
 
     .compose-label{
-      font-size:.84rem;
-      font-weight:700;
+      font-size:.92rem;
+      font-weight:800;
       color:var(--soft);
-      letter-spacing:.01em;
-    }
-
-    .compose-step{
-      display:block;
-      margin-top:4px;
-      color:var(--muted);
-      font-size:.82rem;
-      font-weight:600;
-      line-height:1.35;
+      letter-spacing:-.01em;
     }
 
     .compose-choice-row{
@@ -497,16 +488,15 @@
     }
 
     .compose-choice{
-      min-width:74px;
-      padding:7px 10px;
+      min-width:44px;
+      min-height:44px;
+      padding:0 10px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.08);
       background:rgba(255,255,255,.03);
       color:var(--soft);
-      font-size:.8rem;
-      font-weight:800;
-      text-align:center;
-      white-space:nowrap;
+      display:grid;
+      place-items:center;
     }
 
     .compose-choice.empty{
@@ -531,6 +521,19 @@
       color:var(--text);
     }
 
+    .compose-choice-dot{
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      background:currentColor;
+      opacity:.94;
+      box-shadow:0 0 0 1px rgba(255,255,255,.14) inset;
+    }
+
+    .compose-choice.empty .compose-choice-dot{
+      opacity:.4;
+    }
+
     .half-grid{
       display:grid;
       grid-template-columns:repeat(4, minmax(0, 1fr));
@@ -538,15 +541,13 @@
     }
 
     .half-btn{
-      min-height:104px;
-      padding:10px 8px;
+      min-height:88px;
+      padding:8px;
       border-radius:16px;
       border:1px solid var(--tile-border);
       background:var(--tile-frame);
       display:grid;
-      justify-items:center;
-      align-content:center;
-      gap:8px;
+      place-items:center;
       transition:border-color .14s ease, box-shadow .14s ease, background .14s ease, transform .14s ease;
       position:relative;
       overflow:hidden;
@@ -584,41 +585,29 @@
         var(--tile-frame);
     }
 
-    .half-btn-slot{
+    .half-btn-marker{
       position:absolute;
-      top:8px;
-      left:8px;
-      min-width:26px;
-      height:22px;
-      padding:0 8px;
-      border-radius:999px;
+      inset:auto auto 8px 8px;
       display:inline-flex;
+      gap:5px;
       align-items:center;
-      justify-content:center;
-      font-size:.68rem;
-      font-weight:900;
-      letter-spacing:.04em;
-      text-transform:uppercase;
-      color:#08111d;
-      background:rgba(255,255,255,.88);
-      box-shadow:0 2px 8px rgba(0,0,0,.12);
+      pointer-events:none;
     }
 
-    .half-btn-slot.first{background:var(--accent-first);}
-    .half-btn-slot.second{background:var(--accent-second); color:#06101d;}
-    .half-btn-slot.double{background:var(--accent-double);}
-
-    .half-btn-hint{
-      font-size:.72rem;
-      font-weight:700;
-      color:var(--muted);
-      line-height:1.2;
-      text-align:center;
+    .half-btn-dot{
+      width:9px;
+      height:9px;
+      border-radius:50%;
+      box-shadow:0 0 0 1px rgba(255,255,255,.2) inset, 0 2px 6px rgba(0,0,0,.18);
     }
+
+    .half-btn-dot.first{background:var(--accent-first)}
+    .half-btn-dot.second{background:var(--accent-second)}
+    .half-btn-dot.double{background:var(--accent-double)}
 
     .half-domino{
-      width:48px;
-      height:64px;
+      width:44px;
+      height:60px;
       border-radius:12px;
       border:1px solid var(--domino-edge);
       background:linear-gradient(180deg, var(--domino-top), var(--domino));
@@ -638,17 +627,10 @@
       height:4px;
     }
 
-    .half-name{
-      font-size:.8rem;
-      font-weight:800;
-      color:var(--soft);
-      letter-spacing:-.01em;
-    }
-
     .compose-preview-row{
       display:flex;
       align-items:center;
-      gap:14px;
+      gap:12px;
       flex-wrap:wrap;
       padding:12px 14px;
       border-radius:16px;
@@ -669,28 +651,33 @@
 
     .compose-preview.empty{
       color:var(--muted);
-      font-size:.9rem;
+      font-size:.84rem;
       text-align:center;
-      line-height:1.45;
+      line-height:1.35;
     }
 
     .compose-preview-copy{
       display:grid;
       gap:4px;
       min-width:0;
+      flex:1 1 180px;
     }
 
     .compose-preview-title{
       margin:0;
-      font-size:.94rem;
+      font-size:.82rem;
       font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--muted);
     }
 
     .compose-preview-text{
       margin:0;
-      color:var(--muted);
-      font-size:.9rem;
-      line-height:1.45;
+      color:var(--soft);
+      font-size:.92rem;
+      line-height:1.35;
+      font-weight:700;
     }
 
     .compose-actions{
@@ -737,12 +724,25 @@
     .compose-feedback{
       min-height:20px;
       margin:0;
-      font-size:.9rem;
+      font-size:.86rem;
       color:var(--muted);
+      font-weight:700;
     }
 
     .compose-feedback.error{color:var(--danger)}
     .compose-feedback.success{color:var(--soft)}
+
+    .sr-only{
+      position:absolute;
+      width:1px;
+      height:1px;
+      padding:0;
+      margin:-1px;
+      overflow:hidden;
+      clip:rect(0,0,0,0);
+      white-space:nowrap;
+      border:0;
+    }
 
     .confirm-btn{
       width:100%;
@@ -1017,6 +1017,8 @@
       .half-grid{grid-template-columns:repeat(4, minmax(0, 1fr))}
       .compose-preview-row{align-items:flex-start}
       .mode-control{width:100%;min-width:0}
+      .compose-choice{min-width:40px;min-height:40px}
+      .half-btn{min-height:80px}
     }
 
     @media (max-width:560px){
@@ -1034,8 +1036,8 @@
       .pair-grid,.tiles-row,.half-grid{gap:8px}
       .pair-btn{min-height:52px;border-radius:14px}
       .tile-btn{min-height:114px;padding:6px 4px;border-radius:16px}
-      .half-btn{min-height:82px;padding:8px 6px;border-radius:14px}
-      .half-domino{width:42px;height:56px}
+      .half-btn{min-height:74px;padding:6px;border-radius:14px}
+      .half-domino{width:38px;height:52px}
       .domino.large{width:52px;height:82px}
       .domino.small{width:34px;height:54px}
       .domino.pair-visual{width:38px;height:27px}
@@ -1044,6 +1046,7 @@
       .hand-status,.panel-badge{font-size:.76rem}
       .compose-actions{flex-direction:column;align-items:stretch}
       .compose-action,.compose-clear{width:100%}
+      .compose-preview-row{padding:10px 12px}
     }
   </style>
 </head>
@@ -1080,7 +1083,6 @@
           <div class="mode-row">
             <div>
               <h2 id="inputModeTitle" class="panel-title">Modo de entrada</h2>
-              <p class="panel-copy">Cambia entre selección directa o composición visual por mitades.</p>
             </div>
             <div id="modeControl" class="mode-control" role="tablist" aria-label="Modo de entrada">
               <button class="mode-toggle active" type="button" data-mode="tiles" role="tab" aria-selected="true">Fichas</button>
@@ -1116,37 +1118,33 @@
           <div class="panel-head">
             <div>
               <h2 id="valuesTitle" class="panel-title">Componer ficha</h2>
-              <p class="panel-copy">La primera y la segunda mitad se marcan distinto. Si repites el mismo valor, se marca como doble; con un tercer toque se reemplaza solo la segunda mitad.</p>
+              <p class="panel-copy">Toca dos mitades para añadir la ficha.</p>
             </div>
-            <div class="panel-badge">Selector único</div>
+            <div class="panel-badge">Auto</div>
           </div>
 
           <div class="compose-shell">
             <section class="compose-card" aria-labelledby="halfSelectorTitle">
               <div class="compose-card-head">
-                <div>
-                  <h3 id="halfSelectorTitle" class="compose-label">Mitades de la ficha</h3>
-                  <span class="compose-step">Paso 1 · Elige la primera mitad · Paso 2 · Elige la segunda · Paso 3 · Si quieres corregir, toca la ranura que falta</span>
-                </div>
+                <h3 id="halfSelectorTitle" class="compose-label">Mitades</h3>
                 <div class="compose-choice-row" aria-label="Selección actual">
-                  <div id="firstHalfChoice" class="compose-choice empty">Primera: —</div>
-                  <div id="secondHalfChoice" class="compose-choice empty">Segunda: —</div>
+                  <div id="firstHalfChoice" class="compose-choice empty" aria-label="Primera mitad pendiente"><span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">Primera mitad pendiente</span></div>
+                  <div id="secondHalfChoice" class="compose-choice empty" aria-label="Segunda mitad pendiente"><span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">Segunda mitad pendiente</span></div>
                 </div>
               </div>
               <div id="sharedHalfGrid" class="half-grid" role="list" aria-label="Opciones para componer la ficha"></div>
             </section>
 
             <div class="compose-preview-row">
-              <div id="composePreview" class="compose-preview empty">Sin vista previa</div>
+              <div id="composePreview" class="compose-preview empty">Toca una mitad</div>
               <div class="compose-preview-copy">
-                <p class="compose-preview-title">Ficha resultante</p>
-                <p id="composePreviewText" class="compose-preview-text">Selecciona dos mitades en el mismo panel para ver la ficha completa.</p>
+                <p class="compose-preview-title">Vista previa</p>
+                <p id="composePreviewText" class="compose-preview-text">Esperando la primera mitad.</p>
               </div>
             </div>
 
             <div class="compose-actions">
-              <button id="addComposeBtn" class="compose-action" type="button" disabled>Añadir ficha</button>
-              <button id="clearComposeBtn" class="compose-clear" type="button" disabled>Limpiar selección</button>
+              <button id="clearComposeBtn" class="compose-clear" type="button" disabled>Limpiar</button>
             </div>
 
             <p id="composeFeedback" class="compose-feedback" aria-live="polite"></p>
@@ -1213,7 +1211,6 @@
     const composePreview=document.getElementById('composePreview');
     const composePreviewText=document.getElementById('composePreviewText');
     const composeFeedback=document.getElementById('composeFeedback');
-    const addComposeBtn=document.getElementById('addComposeBtn');
     const clearComposeBtn=document.getElementById('clearComposeBtn');
 
     const key=tile=>`${tile[0]}-${tile[1]}`;
@@ -1292,15 +1289,18 @@
 
     function getComposeStatus(tile=getComposeTile()){
       if(!tile){
-        return {tone:'muted',message:'Selecciona ambos valores para habilitar la ficha.'};
+        return {
+          tone:'muted',
+          message:state.compose.first===null?'Elige la primera mitad.':'Elige la segunda mitad.'
+        };
       }
       if(handFull()){
         return {tone:'error',message:'Tu mano ya tiene 7 fichas.'};
       }
       if(isDuplicate(tile)){
-        return {tone:'error',message:`La ficha ${key(tile)} ya está en tu mano.`};
+        return {tone:'error',message:`${key(tile)} ya está en tu mano.`};
       }
-      return {tone:'success',message:`Lista para añadir: ${key(tile)}.`};
+      return {tone:'success',message:`Se añadirá ${key(tile)} al tocar esta segunda mitad.`};
     }
 
     function renderMode(){
@@ -1353,14 +1353,33 @@
     }
 
     function selectComposeHalf(value){
+      composeFeedback.textContent='';
+      composeFeedback.className='compose-feedback';
+
       if(state.compose.first===null){
         state.compose.first=value;
-      }else if(state.compose.second===null){
-        state.compose.second=value;
-      }else{
-        state.compose.second=value;
+        renderCompose();
+        return;
       }
+
+      state.compose.second=value;
+      const tile=getComposeTile();
+
+      if(canAddTile(tile)){
+        state.selected.push(tile);
+        composeFeedback.className='compose-feedback success';
+        composeFeedback.textContent=`Añadida ${key(tile)}.`;
+        clearCompose();
+        render();
+        return;
+      }
+
+      const status=getComposeStatus(tile);
+      composeFeedback.className=`compose-feedback${status.tone==='error'?' error':''}`;
+      composeFeedback.textContent=status.message;
       renderCompose();
+      renderCounter();
+      renderHand();
     }
 
     function renderHalfGrid(){
@@ -1371,25 +1390,17 @@
         const isFirst=first===value;
         const isSecond=second===value;
         let roleClass='';
-        let slotLabel='';
-        let hint='Toca para elegir';
+        let marker='';
 
         if(isFirst && isSecond){
           roleClass='active double';
-          slotLabel='<span class="half-btn-slot double">DOBLE</span>';
-          hint='Elegida como primera y segunda';
+          marker='<span class="half-btn-marker" aria-hidden="true"><span class="half-btn-dot double"></span><span class="half-btn-dot double"></span></span>';
         }else if(isFirst){
           roleClass='active first';
-          slotLabel='<span class="half-btn-slot first">1ª</span>';
-          hint=second===null?'Falta la segunda mitad':'Primera mitad fija';
+          marker='<span class="half-btn-marker" aria-hidden="true"><span class="half-btn-dot first"></span></span>';
         }else if(isSecond){
           roleClass='active second';
-          slotLabel='<span class="half-btn-slot second">2ª</span>';
-          hint='Se reemplaza con otro toque';
-        }else if(first!==null && second!==null){
-          hint='Toca para reemplazar la segunda';
-        }else if(first!==null){
-          hint='Toca para completar la ficha';
+          marker='<span class="half-btn-marker" aria-hidden="true"><span class="half-btn-dot second"></span></span>';
         }
 
         const ariaSuffix=isFirst && isSecond
@@ -1402,10 +1413,8 @@
 
         return `
           <button class="half-btn ${roleClass}" type="button" data-value="${value}" aria-label="Valor ${valueLabels[value]}${ariaSuffix}">
-            ${slotLabel}
+            ${marker}
             ${halfDomino(value)}
-            <span class="half-name">${valueLabels[value]}</span>
-            <span class="half-btn-hint">${hint}</span>
           </button>
         `;
       }).join('');
@@ -1424,26 +1433,28 @@
 
       const isDouble=state.compose.first!==null && state.compose.first===state.compose.second;
 
-      firstHalfChoice.textContent=state.compose.first===null?`Primera: —`:`Primera: ${valueLabels[state.compose.first]}`;
       firstHalfChoice.className=`compose-choice${state.compose.first===null?' empty':' first-filled'}${isDouble?' double-filled':''}`;
-      secondHalfChoice.textContent=state.compose.second===null?`Segunda: —`:`Segunda: ${valueLabels[state.compose.second]}`;
+      firstHalfChoice.setAttribute('aria-label', state.compose.first===null ? 'Primera mitad pendiente' : `Primera mitad: ${valueLabels[state.compose.first]}`);
+      firstHalfChoice.innerHTML=`<span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">${state.compose.first===null?'Primera mitad pendiente':`Primera mitad: ${valueLabels[state.compose.first]}`}</span>`;
+
       secondHalfChoice.className=`compose-choice${state.compose.second===null?' empty':' second-filled'}${isDouble?' double-filled':''}`;
+      secondHalfChoice.setAttribute('aria-label', state.compose.second===null ? 'Segunda mitad pendiente' : `Segunda mitad: ${valueLabels[state.compose.second]}`);
+      secondHalfChoice.innerHTML=`<span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">${state.compose.second===null?'Segunda mitad pendiente':`Segunda mitad: ${valueLabels[state.compose.second]}`}</span>`;
 
       clearComposeBtn.disabled=!hasDraft;
-      addComposeBtn.disabled=!canAddTile(tile);
 
       composePreview.classList.toggle('empty', !tile);
-      composePreview.innerHTML=tile ? domino(tile[0],tile[1],'large') : 'Sin vista previa';
+      composePreview.innerHTML=tile ? domino(tile[0],tile[1],'large') : 'Toca una mitad';
       composePreviewText.textContent=tile
-        ? isDouble
-          ? `Resultado: doble de ${valueLabels[state.compose.first]} → ficha ${tile[0]}-${tile[1]}. Otro toque cambia solo la segunda mitad.`
-          : `Resultado: ${valueLabels[state.compose.first]} + ${valueLabels[state.compose.second]} → ficha ${tile[0]}-${tile[1]}. Otro toque cambia solo la segunda mitad.`
+        ? `Lista: ${tile[0]}-${tile[1]}`
         : state.compose.first===null
-          ? 'Selecciona la primera mitad para empezar.'
-          : 'Ahora toca la segunda mitad para completar la ficha.';
+          ? 'Esperando la primera mitad.'
+          : 'Toca la segunda para añadirla.';
 
-      composeFeedback.className=`compose-feedback${status.tone==='error'?' error':status.tone==='success'?' success':''}`;
-      composeFeedback.textContent=status.message;
+      if(!composeFeedback.textContent || !composeFeedback.classList.contains('success')){
+        composeFeedback.className=`compose-feedback${status.tone==='error'?' error':status.tone==='success'?' success':''}`;
+        composeFeedback.textContent=status.message;
+      }
     }
 
     function renderCounter(){
@@ -1508,18 +1519,9 @@
 
     clearComposeBtn.addEventListener('click',()=>{
       clearCompose();
+      composeFeedback.textContent='';
+      composeFeedback.className='compose-feedback';
       renderCompose();
-    });
-
-    addComposeBtn.addEventListener('click',()=>{
-      const tile=getComposeTile();
-      if(addTile(tile)){
-        clearCompose();
-        render();
-      }else{
-        renderCompose();
-        renderCounter();
-      }
     });
 
     handTray.addEventListener('scroll', updateHandTrayAffordance, {passive:true});
