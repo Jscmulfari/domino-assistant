@@ -419,16 +419,16 @@
       <div class="top-row">
         <div class="title-wrap">
           <h1 class="title">Selecciona exactamente 7 fichas</h1>
-          <p id="counter" class="counter">Hand ready to build</p>
+          <p id="counter" class="counter">Mano lista para armar</p>
         </div>
-        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch page style">🌗 Estilo</button>
+        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Cambiar estilo de la página">🌗 Estilo</button>
       </div>
       <div id="pairGrid" class="pair-grid"></div>
       <div id="tilesRow" class="tiles-row"></div>
       <button id="confirmBtn" class="confirm-btn" type="button">✓ Confirmar mano</button>
     </section>
 
-    <section class="hand-zone" aria-label="Selected domino hand">
+    <section class="hand-zone" aria-label="Mano de dominó seleccionada">
       <div id="handTray" class="hand-tray hand-empty">Selecciona fichas para formar tu mano</div>
     </section>
   </main>
@@ -516,7 +516,7 @@
     }
 
     function renderCounter(){
-      counter.textContent=state.selected.length===7?'Hand complete':'Hand ready to build';
+      counter.textContent=state.selected.length===7?'Mano completa':'Mano lista para armar';
       confirmBtn.disabled=state.selected.length!==7;
     }
 
