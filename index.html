@@ -45,6 +45,8 @@
       --wood-shadow:rgba(16,8,3,.24);
       --wood-grain:linear-gradient(100deg, rgba(255,231,203,.04) 0%, rgba(255,231,203,0) 18%, rgba(70,42,22,.08) 32%, rgba(255,231,203,0) 52%, rgba(91,56,31,.08) 74%, rgba(255,231,203,0) 100%);
       --hero-glow:rgba(117,160,255,.08);
+      --danger:#ff9f9f;
+      --danger-soft:rgba(255,159,159,.12);
     }
 
     html[data-theme="midnight"]{
@@ -91,6 +93,8 @@
       --domino-line:#806850;
       --pip:#5c4533;
       --hero-glow:rgba(255,216,166,.12);
+      --danger:#ffc2b0;
+      --danger-soft:rgba(255,194,176,.12);
     }
 
     *{box-sizing:border-box}
@@ -112,12 +116,21 @@
         linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 38%, var(--bg-bottom) 100%);
     }
 
+    button,select{
+      font:inherit;
+      color:inherit;
+    }
+
     button{
       appearance:none;
       border:none;
-      font:inherit;
-      color:inherit;
       cursor:pointer;
+    }
+
+    select{
+      appearance:none;
+      border:none;
+      background:none;
     }
 
     .app{
@@ -233,7 +246,12 @@
     html[data-theme="wood"] .tile-btn,
     html[data-theme="wood"] .hand-tray,
     html[data-theme="wood"] .hero,
-    html[data-theme="wood"] .panel{
+    html[data-theme="wood"] .panel,
+    html[data-theme="wood"] .mode-toggle,
+    html[data-theme="wood"] .compose-select,
+    html[data-theme="wood"] .compose-preview,
+    html[data-theme="wood"] .compose-action,
+    html[data-theme="wood"] .compose-clear{
       background-image:
         linear-gradient(180deg, rgba(255,231,203,.08), rgba(255,231,203,0) 42%),
         var(--wood-grain),
@@ -244,7 +262,10 @@
     .theme-toggle:hover,
     .pair-btn:hover,
     .tile-btn:hover,
-    .confirm-btn:hover{filter:brightness(1.04)}
+    .confirm-btn:hover,
+    .mode-toggle:hover,
+    .compose-action:hover,
+    .compose-clear:hover{filter:brightness(1.04)}
 
     .hero-meta{
       display:grid;
@@ -288,6 +309,8 @@
       box-shadow:none;
     }
 
+    .panel.hidden{display:none}
+
     .panel-head{
       display:flex;
       align-items:flex-end;
@@ -321,6 +344,47 @@
       font-size:.78rem;
       font-weight:700;
       white-space:nowrap;
+    }
+
+    .mode-panel{
+      padding:14px 16px;
+    }
+
+    .mode-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .mode-control{
+      display:inline-grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:6px;
+      padding:6px;
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      min-width:min(280px, 100%);
+    }
+
+    .mode-toggle{
+      min-height:42px;
+      padding:10px 14px;
+      border-radius:12px;
+      background:transparent;
+      border:1px solid transparent;
+      color:var(--muted);
+      font-weight:800;
+      letter-spacing:-.01em;
+      transition:background .14s ease,border-color .14s ease,color .14s ease;
+    }
+
+    .mode-toggle.active{
+      background:var(--pair);
+      border-color:var(--pair-border);
+      color:var(--text);
     }
 
     .pair-grid{
@@ -379,23 +443,153 @@
       box-shadow:0 0 0 2px rgba(121,218,108,.16);
     }
 
-    .confirm-btn{
+    .compose-shell{
+      display:grid;
+      gap:14px;
+    }
+
+    .compose-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:12px;
+    }
+
+    .compose-field{
+      display:grid;
+      gap:8px;
+    }
+
+    .compose-label{
+      font-size:.84rem;
+      font-weight:700;
+      color:var(--soft);
+      letter-spacing:.01em;
+    }
+
+    .compose-select{
       width:100%;
-      height:52px;
+      min-height:46px;
+      padding:0 42px 0 14px;
       border-radius:14px;
-      background:linear-gradient(180deg, #7ddd70, #63c85a);
-      border:1px solid var(--green-border);
-      color:#fbfff8;
-      font-size:1rem;
+      border:1px solid var(--pair-border);
+      background:var(--pair);
+      color:var(--text);
+      outline:none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+        linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+      background-position:
+        calc(100% - 18px) calc(50% - 3px),
+        calc(100% - 12px) calc(50% - 3px);
+      background-size:6px 6px, 6px 6px;
+      background-repeat:no-repeat;
+    }
+
+    .compose-preview-row{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      flex-wrap:wrap;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+    }
+
+    .compose-preview{
+      min-width:84px;
+      min-height:118px;
+      display:grid;
+      place-items:center;
+      border-radius:16px;
+      border:1px solid var(--tile-border);
+      background:var(--tile-frame);
+      padding:10px;
+    }
+
+    .compose-preview.empty{
+      color:var(--muted);
+      font-size:.9rem;
+      text-align:center;
+      line-height:1.45;
+    }
+
+    .compose-preview-copy{
+      display:grid;
+      gap:4px;
+      min-width:0;
+    }
+
+    .compose-preview-title{
+      margin:0;
+      font-size:.94rem;
+      font-weight:800;
+    }
+
+    .compose-preview-text{
+      margin:0;
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.45;
+    }
+
+    .compose-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .compose-action,
+    .compose-clear,
+    .confirm-btn{
+      min-height:48px;
+      border-radius:14px;
+      font-size:.96rem;
       font-weight:800;
       letter-spacing:-.02em;
-      box-shadow:none;
       transition:opacity .15s ease, filter .15s ease;
     }
 
+    .compose-action{
+      padding:0 18px;
+      background:linear-gradient(180deg, #7ddd70, #63c85a);
+      border:1px solid var(--green-border);
+      color:#fbfff8;
+    }
+
+    .compose-clear{
+      padding:0 16px;
+      background:var(--pair);
+      border:1px solid var(--pair-border);
+      color:var(--soft);
+    }
+
+    .compose-action:disabled,
+    .compose-clear:disabled,
     .confirm-btn:disabled{
       opacity:.55;
       cursor:not-allowed;
+      box-shadow:none;
+      filter:none;
+    }
+
+    .compose-feedback{
+      min-height:20px;
+      margin:0;
+      font-size:.9rem;
+      color:var(--muted);
+    }
+
+    .compose-feedback.error{color:var(--danger)}
+    .compose-feedback.success{color:var(--soft)}
+
+    .confirm-btn{
+      width:100%;
+      height:52px;
+      background:linear-gradient(180deg, #7ddd70, #63c85a);
+      border:1px solid var(--green-border);
+      color:#fbfff8;
       box-shadow:none;
     }
 
@@ -651,13 +845,17 @@
       .theme-toggle{justify-content:center}
       .hero-meta{width:100%}
       .panel-head,
-      .hand-panel-head{flex-direction:column;align-items:flex-start}
+      .hand-panel-head,
+      .mode-row{flex-direction:column;align-items:flex-start}
       .pair-grid,.tiles-row{grid-template-columns:repeat(4, minmax(0, 1fr));gap:9px}
       .panel{padding:16px}
       .pair-btn{min-height:52px;border-radius:15px}
       .domino.large{width:56px;height:88px}
       .tile-btn{min-height:118px;padding:7px 5px;border-radius:18px}
       .hand-tray{min-height:112px;padding:14px 14px 12px}
+      .compose-grid{grid-template-columns:1fr}
+      .compose-preview-row{align-items:flex-start}
+      .mode-control{width:100%;min-width:0}
     }
 
     @media (max-width:560px){
@@ -671,7 +869,7 @@
 
     @media (max-width:420px){
       .title{font-size:1.56rem}
-      .subtitle,.panel-copy,.counter,.hand-copy{font-size:.9rem}
+      .subtitle,.panel-copy,.counter,.hand-copy,.compose-feedback{font-size:.9rem}
       .pair-grid,.tiles-row{gap:8px}
       .pair-btn{min-height:52px;border-radius:14px}
       .tile-btn{min-height:114px;padding:6px 4px;border-radius:16px}
@@ -681,6 +879,8 @@
       .confirm-btn{height:52px;border-radius:16px}
       .hand-tray{gap:8px}
       .hand-status,.panel-badge{font-size:.76rem}
+      .compose-actions{flex-direction:column;align-items:stretch}
+      .compose-action,.compose-clear{width:100%}
     }
   </style>
 </head>
@@ -713,7 +913,20 @@
           </div>
         </header>
 
-        <section class="panel" aria-labelledby="pairsTitle">
+        <section class="panel mode-panel" aria-labelledby="inputModeTitle">
+          <div class="mode-row">
+            <div>
+              <h2 id="inputModeTitle" class="panel-title">Modo de entrada</h2>
+              <p class="panel-copy">Cambia entre selección directa o composición por valores.</p>
+            </div>
+            <div id="modeControl" class="mode-control" role="tablist" aria-label="Modo de entrada">
+              <button class="mode-toggle active" type="button" data-mode="tiles" role="tab" aria-selected="true">Fichas</button>
+              <button class="mode-toggle" type="button" data-mode="values" role="tab" aria-selected="false">Valores</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="pairsPanel" class="panel" aria-labelledby="pairsTitle">
           <div class="panel-head">
             <div>
               <h2 id="pairsTitle" class="panel-title">Pares guía</h2>
@@ -724,16 +937,58 @@
           <div id="pairGrid" class="pair-grid"></div>
         </section>
 
-        <section class="panel" aria-labelledby="tilesTitle">
+        <section id="tilesPanel" class="panel" aria-labelledby="tilesTitle">
           <div class="panel-head">
             <div>
               <h2 id="tilesTitle" class="panel-title">Fichas disponibles</h2>
               <p id="counter" class="counter">Empieza a seleccionar</p>
             </div>
-            <div class="panel-badge">Toca para añadir o quitar</div>
+            <div id="tilesBadge" class="panel-badge">Toca para añadir o quitar</div>
           </div>
           <div id="tilesRow" class="tiles-row"></div>
           <button id="confirmBtn" class="confirm-btn" type="button">✓ Confirmar mano</button>
+        </section>
+
+        <section id="valuesPanel" class="panel hidden" aria-labelledby="valuesTitle">
+          <div class="panel-head">
+            <div>
+              <h2 id="valuesTitle" class="panel-title">Componer ficha</h2>
+              <p class="panel-copy">Elige dos valores, revisa la ficha resultante y añádela manualmente.</p>
+            </div>
+            <div class="panel-badge">Normalización automática</div>
+          </div>
+
+          <div class="compose-shell">
+            <div class="compose-grid">
+              <label class="compose-field">
+                <span class="compose-label">Primer valor</span>
+                <select id="firstValue" class="compose-select" aria-label="Primer valor">
+                  <option value="">Selecciona</option>
+                </select>
+              </label>
+              <label class="compose-field">
+                <span class="compose-label">Segundo valor</span>
+                <select id="secondValue" class="compose-select" aria-label="Segundo valor">
+                  <option value="">Selecciona</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="compose-preview-row">
+              <div id="composePreview" class="compose-preview empty">Sin vista previa</div>
+              <div class="compose-preview-copy">
+                <p class="compose-preview-title">Vista previa</p>
+                <p id="composePreviewText" class="compose-preview-text">Completa ambos valores para generar una ficha.</p>
+              </div>
+            </div>
+
+            <div class="compose-actions">
+              <button id="addComposeBtn" class="compose-action" type="button" disabled>Añadir ficha</button>
+              <button id="clearComposeBtn" class="compose-clear" type="button" disabled>Limpiar selección</button>
+            </div>
+
+            <p id="composeFeedback" class="compose-feedback" aria-live="polite"></p>
+          </div>
         </section>
       </div>
     </section>
@@ -760,19 +1015,27 @@
   <script>
     const PIP_MAP={0:[],1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
     const values=Array.from({length:7},(_,i)=>i);
+    const valueLabels=['Blanco','1','2','3','4','5','6'];
     const themes=['midnight','wood'];
     const savedTheme=localStorage.getItem('domino-theme');
     const state={
       activePair:3,
       selected:[[1,4],[2,3],[1,2],[3,6],[4,6],[2,5],[3,5]],
-      theme:themes.includes(savedTheme)?savedTheme:'midnight'
+      theme:themes.includes(savedTheme)?savedTheme:'midnight',
+      inputMode:'tiles',
+      compose:{first:null,second:null}
     };
 
     const root=document.documentElement;
+    const modeControl=document.getElementById('modeControl');
     const pairGrid=document.getElementById('pairGrid');
+    const pairsPanel=document.getElementById('pairsPanel');
+    const tilesPanel=document.getElementById('tilesPanel');
+    const valuesPanel=document.getElementById('valuesPanel');
     const tilesRow=document.getElementById('tilesRow');
     const counter=document.getElementById('counter');
     const confirmBtn=document.getElementById('confirmBtn');
+    const tilesBadge=document.getElementById('tilesBadge');
     const handTray=document.getElementById('handTray');
     const handTrayWrap=document.getElementById('handTrayWrap');
     const scrollHint=document.getElementById('scrollHint');
@@ -782,10 +1045,27 @@
     const heroCount=document.getElementById('heroCount');
     const activePairLabel=document.getElementById('activePairLabel');
     const handStatus=document.getElementById('handStatus');
+    const firstValue=document.getElementById('firstValue');
+    const secondValue=document.getElementById('secondValue');
+    const composePreview=document.getElementById('composePreview');
+    const composePreviewText=document.getElementById('composePreviewText');
+    const composeFeedback=document.getElementById('composeFeedback');
+    const addComposeBtn=document.getElementById('addComposeBtn');
+    const clearComposeBtn=document.getElementById('clearComposeBtn');
 
     const key=tile=>`${tile[0]}-${tile[1]}`;
     const normalize=(a,b)=>a<=b?[a,b]:[b,a];
     const tilesForPair=n=>values.map(v=>normalize(n,v));
+    const getSelectedKeys=()=>new Set(state.selected.map(key));
+    const isDuplicate=tile=>getSelectedKeys().has(key(tile));
+    const handFull=()=>state.selected.length>=7;
+    const canAddTile=tile=>Boolean(tile) && !isDuplicate(tile) && !handFull();
+
+    function populateValueSelects(){
+      const options=valueLabels.map((label,index)=>`<option value="${index}">${label}</option>`).join('');
+      firstValue.insertAdjacentHTML('beforeend', options);
+      secondValue.insertAdjacentHTML('beforeend', options);
+    }
 
     function setTheme(theme){
       state.theme=theme;
@@ -808,6 +1088,73 @@
       return `<div class="domino ${size} ${orientation==='horizontal'?'pair-visual':''}"><div class="half">${pips(a)}</div><div class="half">${pips(b)}</div></div>`;
     }
 
+    function addTile(tile){
+      if(canAddTile(tile)){
+        state.selected.push(tile);
+        return true;
+      }
+      return false;
+    }
+
+    function removeTile(tile){
+      const tileKey=key(tile);
+      const existingIndex=state.selected.findIndex(item=>key(item)===tileKey);
+      if(existingIndex>=0){
+        state.selected.splice(existingIndex,1);
+        return true;
+      }
+      return false;
+    }
+
+    function toggleTile(tile){
+      return removeTile(tile) || addTile(tile);
+    }
+
+    function clearCompose(){
+      state.compose={first:null,second:null};
+    }
+
+    function setInputMode(mode){
+      if(state.inputMode===mode) return;
+      const leavingValues=state.inputMode==='values' && mode!=='values';
+      state.inputMode=mode;
+      if(leavingValues){
+        clearCompose();
+      }
+      render();
+    }
+
+    function getComposeTile(){
+      const {first,second}=state.compose;
+      return first===null || second===null ? null : normalize(first,second);
+    }
+
+    function getComposeStatus(tile=getComposeTile()){
+      if(!tile){
+        return {tone:'muted',message:'Selecciona ambos valores para habilitar la ficha.'};
+      }
+      if(handFull()){
+        return {tone:'error',message:'Tu mano ya tiene 7 fichas.'};
+      }
+      if(isDuplicate(tile)){
+        return {tone:'error',message:`La ficha ${key(tile)} ya está en tu mano.`};
+      }
+      return {tone:'success',message:`Lista para añadir: ${key(tile)}.`};
+    }
+
+    function renderMode(){
+      const inTilesMode=state.inputMode==='tiles';
+      pairsPanel.classList.toggle('hidden', !inTilesMode);
+      tilesPanel.classList.toggle('hidden', !inTilesMode);
+      valuesPanel.classList.toggle('hidden', inTilesMode);
+
+      modeControl.querySelectorAll('.mode-toggle').forEach(btn=>{
+        const active=btn.dataset.mode===state.inputMode;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-selected', String(active));
+      });
+    }
+
     function renderPairs(){
       activePairLabel.textContent=`Activo: ${state.activePair}-${state.activePair}`;
       pairGrid.innerHTML=values.map(n=>`
@@ -825,7 +1172,7 @@
     }
 
     function renderTiles(){
-      const selectedKeys=new Set(state.selected.map(key));
+      const selectedKeys=getSelectedKeys();
       tilesRow.innerHTML=tilesForPair(state.activePair).map(tile=>{
         const tileKey=key(tile);
         return `
@@ -838,18 +1185,31 @@
       tilesRow.querySelectorAll('.tile-btn').forEach(btn=>{
         btn.onclick=()=>{
           const tile=btn.dataset.tile.split('-').map(Number);
-          const tileKey=key(tile);
-          const existingIndex=state.selected.findIndex(item=>key(item)===tileKey);
-
-          if(existingIndex>=0){
-            state.selected.splice(existingIndex,1);
-          }else if(state.selected.length<7){
-            state.selected.push(tile);
-          }
-
+          toggleTile(tile);
           render();
         };
       });
+    }
+
+    function renderCompose(){
+      firstValue.value=state.compose.first===null?'':String(state.compose.first);
+      secondValue.value=state.compose.second===null?'':String(state.compose.second);
+
+      const tile=getComposeTile();
+      const status=getComposeStatus(tile);
+      const hasDraft=state.compose.first!==null || state.compose.second!==null;
+
+      clearComposeBtn.disabled=!hasDraft;
+      addComposeBtn.disabled=!canAddTile(tile);
+
+      composePreview.classList.toggle('empty', !tile);
+      composePreview.innerHTML=tile ? domino(tile[0],tile[1],'large') : 'Sin vista previa';
+      composePreviewText.textContent=tile
+        ? `Ficha normalizada: ${valueLabels[tile[0]]} · ${valueLabels[tile[1]]}.`
+        : 'Completa ambos valores para generar una ficha.';
+
+      composeFeedback.className=`compose-feedback${status.tone==='error'?' error':status.tone==='success'?' success':''}`;
+      composeFeedback.textContent=status.message;
     }
 
     function renderCounter(){
@@ -860,6 +1220,7 @@
       heroCount.textContent=`${count} / 7`;
       handStatus.textContent=`${count} de 7 fichas`;
       confirmBtn.disabled=!ready;
+      tilesBadge.textContent=state.inputMode==='tiles'?'Toca para añadir o quitar':'Selección manual';
     }
 
     function updateHandTrayAffordance(){
@@ -893,14 +1254,49 @@
     }
 
     function render(){
+      renderMode();
       renderPairs();
       renderTiles();
+      renderCompose();
       renderCounter();
       renderHand();
     }
 
+    populateValueSelects();
+
     themeToggle.addEventListener('click',()=>{
       setTheme(state.theme==='midnight'?'wood':'midnight');
+    });
+
+    modeControl.addEventListener('click',event=>{
+      const button=event.target.closest('.mode-toggle');
+      if(!button) return;
+      setInputMode(button.dataset.mode);
+    });
+
+    firstValue.addEventListener('change',event=>{
+      state.compose.first=event.target.value===''?null:Number(event.target.value);
+      renderCompose();
+    });
+
+    secondValue.addEventListener('change',event=>{
+      state.compose.second=event.target.value===''?null:Number(event.target.value);
+      renderCompose();
+    });
+
+    clearComposeBtn.addEventListener('click',()=>{
+      clearCompose();
+      renderCompose();
+    });
+
+    addComposeBtn.addEventListener('click',()=>{
+      const tile=getComposeTile();
+      if(addTile(tile)){
+        render();
+      }else{
+        renderCompose();
+        renderCounter();
+      }
     });
 
     handTray.addEventListener('scroll', updateHandTrayAffordance, {passive:true});
