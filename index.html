@@ -633,8 +633,8 @@
     }
 
     .hand-zone{
-      width:min(980px, calc(100vw - 28px));
-      margin-top:30px;
+      width:min(920px, calc(100vw - 28px));
+      margin-top:22px;
       position:relative;
       z-index:1;
       display:grid;
@@ -645,8 +645,8 @@
       display:flex;
       justify-content:space-between;
       align-items:center;
-      gap:12px;
-      margin-bottom:14px;
+      gap:10px;
+      margin-bottom:10px;
       text-align:left;
     }
 
@@ -654,7 +654,7 @@
 
     .hand-title{
       margin:0;
-      font-size:1rem;
+      font-size:.92rem;
       font-weight:700;
       letter-spacing:-.03em;
     }
@@ -664,21 +664,21 @@
     }
 
     .hand-status{
-      padding:7px 12px;
+      padding:5px 10px;
       border-radius:999px;
       background:rgba(255,255,255,.05);
       border:1px solid rgba(255,255,255,.08);
-      font-size:.79rem;
+      font-size:.74rem;
       font-weight:800;
       color:var(--soft);
       white-space:nowrap;
-      box-shadow:0 6px 18px rgba(0,0,0,.12);
+      box-shadow:0 4px 12px rgba(0,0,0,.1);
     }
 
     .hand-head-actions{
       display:flex;
       align-items:center;
-      gap:10px;
+      gap:8px;
       flex-wrap:wrap;
       justify-content:flex-end;
     }
@@ -686,16 +686,16 @@
     .hand-confirm-btn{
       width:auto;
       min-width:0;
-      height:44px;
-      padding:0 16px;
+      height:38px;
+      padding:0 13px;
       border-radius:999px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      gap:8px;
+      gap:6px;
       white-space:nowrap;
-      font-size:.9rem;
-      box-shadow:0 10px 24px rgba(56,126,47,.22);
+      font-size:.84rem;
+      box-shadow:0 8px 18px rgba(56,126,47,.18);
     }
 
     .hand-confirm-icon{
@@ -705,9 +705,9 @@
 
     .hand-tray-wrap{
       position:relative;
-      width:min(100%, 920px);
-      padding:18px 18px 14px;
-      border-radius:30px;
+      width:min(100%, 840px);
+      padding:12px 14px 10px;
+      border-radius:22px;
       border:1px solid color-mix(in srgb, var(--tray-border) 78%, transparent);
       background:
         linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,0) 34%),
@@ -721,7 +721,7 @@
       position:absolute;
       left:10%;
       right:10%;
-      top:66px;
+      top:52px;
       height:1px;
       background:linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
       pointer-events:none;
@@ -730,13 +730,13 @@
     .hand-tray-wrap::after{
       content:"";
       position:absolute;
-      left:18%;
-      right:18%;
+      left:20%;
+      right:20%;
       bottom:-2px;
-      height:30px;
+      height:24px;
       border-radius:50%;
-      background:radial-gradient(circle, rgba(0,0,0,.22) 0%, rgba(0,0,0,.12) 46%, transparent 78%);
-      filter:blur(10px);
+      background:radial-gradient(circle, rgba(0,0,0,.2) 0%, rgba(0,0,0,.1) 46%, transparent 78%);
+      filter:blur(8px);
       pointer-events:none;
     }
 
@@ -747,10 +747,10 @@
 
     .scroll-fade{
       position:absolute;
-      top:88px;
-      bottom:18px;
-      width:34px;
-      border-radius:18px;
+      top:68px;
+      bottom:12px;
+      width:26px;
+      border-radius:14px;
       pointer-events:none;
       opacity:0;
       transition:opacity .18s ease;
@@ -758,12 +758,12 @@
     }
 
     .scroll-fade.left{
-      left:18px;
+      left:14px;
       background:linear-gradient(90deg, color-mix(in srgb, var(--tray) 94%, black 6%), rgba(0,0,0,0));
     }
 
     .scroll-fade.right{
-      right:18px;
+      right:14px;
       background:linear-gradient(270deg, color-mix(in srgb, var(--tray) 94%, black 6%), rgba(0,0,0,0));
     }
 
@@ -773,13 +773,13 @@
     }
 
     .scroll-hint{
-      margin:8px 14px 0;
+      margin:6px 10px 0;
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:8px;
+      gap:6px;
       color:var(--soft);
-      font-size:.78rem;
+      font-size:.74rem;
       font-weight:700;
       letter-spacing:.01em;
       opacity:0;
@@ -800,22 +800,22 @@
     }
 
     .hand-tray{
-      min-height:150px;
+      min-height:118px;
       width:100%;
-      border-radius:22px;
+      border-radius:18px;
       border:none;
       background:transparent;
       box-shadow:none;
       display:flex;
       align-items:flex-end;
       justify-content:center;
-      gap:10px;
-      padding:26px 14px 6px;
+      gap:7px;
+      padding:14px 10px 4px;
       overflow-x:auto;
       overflow-y:hidden;
       scrollbar-width:none;
       -ms-overflow-style:none;
-      scroll-padding-inline:14px;
+      scroll-padding-inline:10px;
     }
 
     .hand-tray::-webkit-scrollbar{display:none}
@@ -845,15 +845,15 @@
       align-items:flex-end;
       transform-origin:center bottom;
       transition:transform .14s ease, filter .14s ease;
-      padding:0 0 2px;
-      margin-inline:-1px;
+      padding:0;
+      margin-inline:-2px;
       background:none;
       border:none;
     }
 
-    .hand-tile-wrap:nth-child(odd){transform:translateY(0) rotate(-.45deg)}
-    .hand-tile-wrap:nth-child(even){transform:translateY(-1px) rotate(.45deg)}
-    .hand-tile-wrap:hover{transform:translateY(-5px) scale(1.025)}
+    .hand-tile-wrap:nth-child(odd){transform:translateY(0) rotate(-.35deg)}
+    .hand-tile-wrap:nth-child(even){transform:translateY(-1px) rotate(.35deg)}
+    .hand-tile-wrap:hover{transform:translateY(-4px) scale(1.02)}
     .hand-tile-wrap:focus-visible{
       outline:2px solid var(--accent-second-border);
       outline-offset:4px;
@@ -877,7 +877,7 @@
     }
 
     .domino.large{width:68px;height:104px}
-    .domino.small{width:56px;height:88px}
+    .domino.small{width:48px;height:76px}
     .domino.pair-visual{width:46px;height:32px;grid-template-columns:1fr 1fr;grid-template-rows:none;border-radius:9px}
     .domino.pair-visual .half + .half{border-top:none;border-left:2px solid var(--domino-line)}
     .domino.pair-visual .pips{width:12px;height:12px}
@@ -937,7 +937,7 @@
       .shell{padding:14px}
       .hero{padding:18px}
       .pair-grid,.tiles-row{grid-template-columns:repeat(7, minmax(0, 1fr))}
-      .hand-zone{margin-top:26px}
+      .hand-zone{margin-top:20px}
     }
 
     @media (max-width:680px){
@@ -957,13 +957,13 @@
       .pair-btn{min-height:52px;border-radius:15px}
       .domino.large{width:56px;height:88px}
       .tile-btn{min-height:118px;padding:7px 5px;border-radius:18px}
-      .hand-zone{margin-top:22px}
-      .hand-tray-wrap{width:100%;padding:14px 14px 10px}
-      .hand-tray-wrap::before{top:64px}
-      .hand-panel-head{justify-content:space-between;align-items:center;text-align:left;gap:12px;margin-bottom:12px}
+      .hand-zone{margin-top:18px}
+      .hand-tray-wrap{width:100%;padding:11px 11px 8px}
+      .hand-tray-wrap::before{top:50px}
+      .hand-panel-head{justify-content:space-between;align-items:center;text-align:left;gap:10px;margin-bottom:10px}
       .hand-head-actions{width:100%;justify-content:space-between}
-      .hand-confirm-btn{flex:1 1 auto;justify-content:center}
-      .hand-tray{min-height:124px;padding:18px 4px 6px;gap:8px;justify-content:flex-start}
+      .hand-confirm-btn{flex:1 1 auto;justify-content:center;height:36px;padding:0 12px}
+      .hand-tray{min-height:108px;padding:12px 2px 4px;gap:6px;justify-content:flex-start}
       .hand-tray:not(.hand-empty) > .hand-tile-wrap:first-child,
       .hand-tray:not(.hand-empty) > .hand-tile-wrap:last-child{margin-inline:0}
       .half-grid{grid-template-columns:repeat(4, minmax(0, 1fr))}
@@ -971,9 +971,9 @@
       .compose-choice{min-width:40px;min-height:40px}
       .half-btn{min-height:80px}
       .scroll-hint{justify-content:flex-start}
-      .scroll-fade{top:86px;bottom:16px}
-      .scroll-fade.left{left:14px}
-      .scroll-fade.right{right:14px}
+      .scroll-fade{top:72px;bottom:12px}
+      .scroll-fade.left{left:11px}
+      .scroll-fade.right{right:11px}
     }
 
     @media (max-width:560px){
@@ -982,7 +982,7 @@
       .pair-btn{min-height:56px}
       .tile-btn{min-height:126px;padding:8px 6px}
       .domino.large{width:60px;height:94px}
-      .hand-status{padding:6px 11px}
+      .hand-status{padding:5px 9px}
     }
 
     @media (max-width:420px){
@@ -994,16 +994,16 @@
       .half-btn{min-height:74px;padding:6px;border-radius:14px}
       .half-domino{width:38px;height:52px}
       .domino.large{width:52px;height:82px}
-      .domino.small{width:44px;height:68px}
+      .domino.small{width:40px;height:62px}
       .domino.pair-visual{width:38px;height:27px}
       .confirm-btn{height:52px;border-radius:16px}
       .hand-head-actions{align-items:stretch}
-      .hand-confirm-btn{width:100%;height:46px;padding:0 14px}
-      .hand-tray{gap:6px;padding:16px 2px 6px}
-      .hand-status,.panel-badge{font-size:.76rem}
+      .hand-confirm-btn{width:100%;height:40px;padding:0 12px}
+      .hand-tray{gap:5px;padding:10px 2px 4px}
+      .hand-status,.panel-badge{font-size:.74rem}
       .hand-panel-head{align-items:flex-start}
-      .hand-tray-wrap::before{top:84px}
-      .scroll-fade{top:104px}
+      .hand-tray-wrap::before{top:80px}
+      .scroll-fade{top:96px}
     }
   </style>
 </head>
