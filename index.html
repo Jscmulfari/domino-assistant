@@ -6,45 +6,45 @@
   <title>Domino Assistant</title>
   <style>
     :root{
-      --bg-top:#1f2940;
-      --bg-mid:#152034;
-      --bg-bottom:#0f1726;
-      --text:#f4f7fc;
-      --muted:#9eacc5;
-      --soft:#cbd5e7;
-      --panel:rgba(16,24,39,.72);
-      --panel-2:rgba(20,31,49,.84);
-      --panel-border:rgba(170,191,225,.16);
-      --panel-highlight:rgba(255,255,255,.06);
-      --pair:#344766;
-      --pair-bottom:#2a3a57;
-      --pair-border:rgba(191,207,236,.22);
-      --green:#79da6c;
-      --green-2:#62c958;
-      --green-border:#bff4b7;
-      --green-shadow:rgba(104,203,89,.2);
-      --tile-frame:rgba(37,51,78,.72);
-      --tile-border:rgba(199,215,241,.16);
-      --tile-selected:rgba(121,218,108,.16);
+      --bg-top:#182338;
+      --bg-mid:#121b2d;
+      --bg-bottom:#0d1524;
+      --text:#f3f6fb;
+      --muted:#a4b0c3;
+      --soft:#d4dceb;
+      --panel:#182235;
+      --panel-2:#131c2d;
+      --panel-border:rgba(181,197,224,.12);
+      --panel-highlight:rgba(255,255,255,.03);
+      --pair:#25324a;
+      --pair-bottom:#1f2a40;
+      --pair-border:rgba(191,207,236,.14);
+      --green:#78d86d;
+      --green-2:#63c85a;
+      --green-border:rgba(191,244,183,.72);
+      --green-shadow:rgba(104,203,89,.14);
+      --tile-frame:#1a2539;
+      --tile-border:rgba(199,215,241,.12);
+      --tile-selected:rgba(121,218,108,.12);
       --domino:#f3ebdc;
       --domino-top:#fbf7ef;
-      --domino-edge:rgba(123,110,92,.42);
+      --domino-edge:rgba(123,110,92,.36);
       --domino-line:#877d71;
       --pip:#665b4f;
-      --tray:#26334d;
-      --tray-border:rgba(218,229,247,.16);
-      --shadow:rgba(0,0,0,.34);
-      --wood-top:#77583f;
-      --wood-mid:#5b3f2e;
-      --wood-bottom:#382418;
-      --wood-panel:#78533b;
-      --wood-panel-bottom:#63432f;
-      --wood-panel-border:rgba(250,228,196,.18);
-      --wood-tray:#452d1f;
-      --wood-tray-border:rgba(238,214,186,.18);
-      --wood-shadow:rgba(16,8,3,.34);
-      --wood-grain:linear-gradient(100deg, rgba(255,231,203,.08) 0%, rgba(255,231,203,0) 14%, rgba(70,42,22,.16) 20%, rgba(255,231,203,0) 29%, rgba(58,35,18,.2) 36%, rgba(255,231,203,0) 44%, rgba(91,56,31,.18) 53%, rgba(255,231,203,0) 62%, rgba(71,42,20,.18) 72%, rgba(255,231,203,0) 82%, rgba(109,68,38,.14) 100%);
-      --hero-glow:rgba(117,160,255,.16);
+      --tray:#1b263b;
+      --tray-border:rgba(218,229,247,.12);
+      --shadow:rgba(0,0,0,.22);
+      --wood-top:#6c503b;
+      --wood-mid:#533a2b;
+      --wood-bottom:#342216;
+      --wood-panel:#654732;
+      --wood-panel-bottom:#563a29;
+      --wood-panel-border:rgba(250,228,196,.14);
+      --wood-tray:#3c281d;
+      --wood-tray-border:rgba(238,214,186,.14);
+      --wood-shadow:rgba(16,8,3,.24);
+      --wood-grain:linear-gradient(100deg, rgba(255,231,203,.04) 0%, rgba(255,231,203,0) 18%, rgba(70,42,22,.08) 32%, rgba(255,231,203,0) 52%, rgba(91,56,31,.08) 74%, rgba(255,231,203,0) 100%);
+      --hero-glow:rgba(117,160,255,.08);
     }
 
     html[data-theme="midnight"]{
@@ -100,10 +100,7 @@
       min-height:100vh;
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       color:var(--text);
-      background:
-        radial-gradient(circle at 50% -10%, rgba(255,255,255,.06), transparent 30%),
-        radial-gradient(circle at 15% 15%, rgba(116,151,255,.12), transparent 24%),
-        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 38%, var(--bg-bottom) 100%);
+      background:linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 42%, var(--bg-bottom) 100%);
       transition:background .25s ease,color .25s ease;
     }
 
@@ -128,35 +125,8 @@
       display:flex;
       flex-direction:column;
       align-items:center;
-      padding:36px 16px 22px;
+      padding:24px 14px 18px;
       position:relative;
-      overflow:hidden;
-    }
-
-    .app::before,
-    .app::after{
-      content:"";
-      position:absolute;
-      border-radius:50%;
-      filter:blur(60px);
-      pointer-events:none;
-      opacity:.7;
-    }
-
-    .app::before{
-      width:280px;
-      height:280px;
-      top:30px;
-      left:max(-80px, calc(50% - 540px));
-      background:var(--hero-glow);
-    }
-
-    .app::after{
-      width:220px;
-      height:220px;
-      bottom:90px;
-      right:max(-60px, calc(50% - 500px));
-      background:rgba(121,218,108,.08);
     }
 
     .board{
@@ -165,60 +135,24 @@
       z-index:1;
     }
 
-    .shell{
-      padding:20px;
-      border-radius:28px;
-      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
-      border:1px solid rgba(255,255,255,.05);
-      box-shadow:0 18px 50px rgba(3,7,18,.22);
-      backdrop-filter:blur(8px);
-    }
+    .shell{padding:0;border:none;background:none;box-shadow:none;}
 
     .hero{
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap:18px;
-      padding:22px 22px 18px;
-      margin-bottom:14px;
-      border-radius:24px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
-        linear-gradient(180deg, var(--panel), var(--panel-2));
-      border:1px solid var(--panel-border);
-      box-shadow:inset 0 1px 0 var(--panel-highlight), 0 14px 30px rgba(0,0,0,.16);
+      gap:16px;
+      padding:0 2px;
+      margin-bottom:16px;
     }
 
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:7px 12px;
-      margin-bottom:14px;
-      border-radius:999px;
-      color:var(--soft);
-      font-size:.76rem;
-      font-weight:700;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-    }
-
-    .eyebrow::before{
-      content:"";
-      width:8px;
-      height:8px;
-      border-radius:50%;
-      background:linear-gradient(180deg, #8bf07f, #5fc657);
-      box-shadow:0 0 0 4px rgba(121,218,108,.12);
-    }
+    .eyebrow{display:none;}
 
     .title-wrap{min-width:0;max-width:540px}
 
     .title{
-      margin:0 0 10px;
-      font-size:clamp(1.8rem, 4vw, 2.7rem);
+      margin:0 0 6px;
+      font-size:clamp(1.5rem, 3.4vw, 2.2rem);
       font-weight:850;
       letter-spacing:-.045em;
       line-height:1.02;
@@ -227,9 +161,9 @@
 
     .subtitle{
       margin:0;
-      max-width:48ch;
+      max-width:44ch;
       color:var(--muted);
-      font-size:1rem;
+      font-size:.96rem;
       line-height:1.55;
     }
 
@@ -242,20 +176,20 @@
     }
 
     .theme-toggle{
-      min-height:46px;
+      min-height:40px;
       display:inline-flex;
       align-items:center;
-      gap:10px;
-      padding:8px 14px;
+      gap:8px;
+      padding:8px 12px;
       border-radius:999px;
-      background:linear-gradient(180deg, var(--pair), var(--pair-bottom));
+      background:var(--pair);
       border:1px solid var(--pair-border);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 8px 20px rgba(0,0,0,.12);
-      font-size:.88rem;
-      font-weight:750;
+      box-shadow:none;
+      font-size:.84rem;
+      font-weight:700;
       line-height:1.1;
       text-align:left;
-      transition:transform .15s ease, box-shadow .15s ease;
+      transition:background .15s ease,border-color .15s ease;
     }
 
     .theme-toggle::before{
@@ -264,7 +198,7 @@
       height:10px;
       border-radius:50%;
       background:linear-gradient(180deg,#f4f7ff,#b8c2d8);
-      box-shadow:0 0 0 1px rgba(255,255,255,.28), 0 1px 2px rgba(0,0,0,.18);
+      box-shadow:none;
       flex:0 0 auto;
     }
 
@@ -310,22 +244,22 @@
     .theme-toggle:hover,
     .pair-btn:hover,
     .tile-btn:hover,
-    .confirm-btn:hover{transform:translateY(-1px)}
+    .confirm-btn:hover{filter:brightness(1.04)}
 
     .hero-meta{
       display:grid;
-      grid-template-columns:repeat(2, minmax(120px, 1fr));
-      gap:10px;
-      min-width:min(260px, 100%);
+      grid-template-columns:repeat(2, minmax(110px, 1fr));
+      gap:8px;
+      min-width:min(220px, 100%);
     }
 
     .meta-card{
-      padding:12px 14px;
-      border-radius:16px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
+      padding:10px 12px;
+      border-radius:12px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
       text-align:left;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+      box-shadow:none;
     }
 
     .meta-label{
@@ -346,14 +280,12 @@
     }
 
     .panel{
-      padding:18px;
-      margin-bottom:14px;
-      border-radius:24px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
-        linear-gradient(180deg, var(--panel), var(--panel-2));
+      padding:16px;
+      margin-bottom:12px;
+      border-radius:18px;
+      background:linear-gradient(180deg, var(--panel), var(--panel-2));
       border:1px solid var(--panel-border);
-      box-shadow:inset 0 1px 0 var(--panel-highlight), 0 12px 26px rgba(0,0,0,.14);
+      box-shadow:none;
     }
 
     .panel-head{
@@ -381,12 +313,12 @@
 
     .panel-badge{
       flex:0 0 auto;
-      padding:8px 12px;
+      padding:6px 10px;
       border-radius:999px;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
       color:var(--soft);
-      font-size:.8rem;
+      font-size:.78rem;
       font-weight:700;
       white-space:nowrap;
     }
@@ -398,12 +330,12 @@
     }
 
     .pair-btn{
-      min-height:54px;
-      border-radius:16px;
-      background:linear-gradient(180deg, var(--pair), var(--pair-bottom));
+      min-height:50px;
+      border-radius:12px;
+      background:var(--pair);
       border:1px solid var(--pair-border);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 8px 18px rgba(0,0,0,.1);
-      transition:transform .14s ease, background .14s ease, border-color .14s ease, box-shadow .14s ease;
+      box-shadow:none;
+      transition:border-color .14s ease, background .14s ease;
       display:grid;
       place-items:center;
       padding:6px;
@@ -411,18 +343,10 @@
       overflow:hidden;
     }
 
-    .pair-btn::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:linear-gradient(180deg, rgba(255,255,255,.08), transparent 45%);
-      pointer-events:none;
-    }
-
     .pair-btn.active{
       background:linear-gradient(180deg, #86df78, var(--green-2));
       border-color:var(--green-border);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.24), 0 0 0 3px var(--green-shadow), 0 12px 28px rgba(49,110,39,.2);
+      box-shadow:0 0 0 2px var(--green-shadow);
     }
 
     .pair-btn .domino{transform:scale(.88)}
@@ -435,48 +359,38 @@
     }
 
     .tile-btn{
-      min-height:148px;
+      min-height:140px;
       padding:8px 6px;
-      border-radius:20px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015)),
-        var(--tile-frame);
+      border-radius:16px;
+      background:var(--tile-frame);
       border:1px solid var(--tile-border);
       display:grid;
       place-items:center;
-      transition:transform .14s ease, border-color .14s ease, box-shadow .14s ease, background .14s ease;
+      transition:border-color .14s ease, box-shadow .14s ease, background .14s ease;
       position:relative;
       overflow:hidden;
     }
 
-    .tile-btn::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:linear-gradient(180deg, rgba(255,255,255,.08), transparent 42%);
-      pointer-events:none;
-    }
-
     .tile-btn.selected{
       background:
-        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),
         var(--tile-selected);
       border-color:var(--green-border);
-      box-shadow:0 0 0 3px rgba(121,218,108,.16), 0 16px 28px rgba(31,57,29,.16);
+      box-shadow:0 0 0 2px rgba(121,218,108,.16);
     }
 
     .confirm-btn{
       width:100%;
-      height:56px;
-      border-radius:18px;
-      background:linear-gradient(180deg, #85e776, #62c958);
+      height:52px;
+      border-radius:14px;
+      background:linear-gradient(180deg, #7ddd70, #63c85a);
       border:1px solid var(--green-border);
       color:#fbfff8;
-      font-size:1.02rem;
-      font-weight:850;
+      font-size:1rem;
+      font-weight:800;
       letter-spacing:-.02em;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.26), 0 16px 28px rgba(58,108,47,.22);
-      transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+      box-shadow:none;
+      transition:opacity .15s ease, filter .15s ease;
     }
 
     .confirm-btn:disabled{
@@ -493,13 +407,11 @@
     }
 
     .hand-panel{
-      padding:16px 16px 18px;
-      border-radius:26px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
-        linear-gradient(180deg, var(--panel), var(--panel-2));
+      padding:14px 14px 16px;
+      border-radius:18px;
+      background:linear-gradient(180deg, var(--panel), var(--panel-2));
       border:1px solid var(--panel-border);
-      box-shadow:inset 0 1px 0 var(--panel-highlight), 0 14px 32px rgba(0,0,0,.18);
+      box-shadow:none;
       overflow:hidden;
     }
 
@@ -624,18 +536,16 @@
     }
 
     .hand-tray{
-      min-height:128px;
-      border-radius:22px;
+      min-height:124px;
+      border-radius:16px;
       border:1px solid var(--tray-border);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015)),
-        linear-gradient(180deg, color-mix(in srgb, var(--tray) 88%, white 8%), var(--tray));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06), inset 0 -20px 30px rgba(0,0,0,.08), 0 10px 26px var(--shadow);
+      background:var(--tray);
+      box-shadow:none;
       display:flex;
       align-items:flex-end;
       justify-content:flex-start;
       gap:10px;
-      padding:18px 18px 14px;
+      padding:16px 16px 12px;
       overflow-x:auto;
       overflow-y:hidden;
       scrollbar-width:none;
@@ -669,7 +579,7 @@
     .hand-tile-wrap .domino.small{
       display:grid;
       place-items:stretch;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.62), 0 12px 18px rgba(0,0,0,.18);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.62), 0 8px 12px rgba(0,0,0,.12);
     }
 
     .domino{
@@ -679,7 +589,7 @@
       border-radius:12px;
       border:1px solid var(--domino-edge);
       background:linear-gradient(180deg, var(--domino-top), var(--domino));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.62), 0 4px 10px rgba(0,0,0,.11);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.62), 0 3px 8px rgba(0,0,0,.08);
     }
 
     .domino.large{width:68px;height:104px}
@@ -780,9 +690,8 @@
       <div class="shell">
         <header class="hero">
           <div class="title-wrap">
-            <div class="eyebrow">Asistente de mano inicial</div>
-            <h1 class="title">Selecciona exactamente 7 fichas</h1>
-            <p class="subtitle">Arma tu mano con una vista más clara, mejor ritmo visual y una bandeja inferior pensada para revisar la selección de un vistazo.</p>
+            <h1 class="title">Selecciona 7 fichas</h1>
+            <p class="subtitle">Elige tu mano y revísala abajo en una bandeja alineada y fácil de recorrer.</p>
           </div>
           <div class="hero-actions">
             <button id="themeToggle" class="theme-toggle" type="button" aria-label="Cambiar tema visual">
@@ -808,9 +717,9 @@
           <div class="panel-head">
             <div>
               <h2 id="pairsTitle" class="panel-title">Pares guía</h2>
-              <p class="panel-copy">Usa un doble como punto de entrada para explorar las combinaciones disponibles.</p>
+              <p class="panel-copy">Elige un doble para filtrar las fichas disponibles.</p>
             </div>
-            <div id="activePairLabel" class="panel-badge">Doble activo: 3-3</div>
+            <div id="activePairLabel" class="panel-badge">Activo: 3-3</div>
           </div>
           <div id="pairGrid" class="pair-grid"></div>
         </section>
@@ -819,9 +728,9 @@
           <div class="panel-head">
             <div>
               <h2 id="tilesTitle" class="panel-title">Fichas disponibles</h2>
-              <p id="counter" class="counter">Mano lista para armar</p>
+              <p id="counter" class="counter">Empieza a seleccionar</p>
             </div>
-            <div class="panel-badge">Selecciona o quita fichas</div>
+            <div class="panel-badge">Toca para añadir o quitar</div>
           </div>
           <div id="tilesRow" class="tiles-row"></div>
           <button id="confirmBtn" class="confirm-btn" type="button">✓ Confirmar mano</button>
@@ -834,7 +743,7 @@
         <div class="hand-panel-head">
           <div>
             <h2 class="hand-title">Tu mano</h2>
-            <p class="hand-copy">La bandeja inferior mantiene la selección alineada, visible y lista para revisión.</p>
+            <p class="hand-copy">Las fichas se mantienen alineadas para revisarlas de un vistazo.</p>
           </div>
           <div id="handStatus" class="hand-status">0 de 7 fichas</div>
         </div>
@@ -900,7 +809,7 @@
     }
 
     function renderPairs(){
-      activePairLabel.textContent=`Doble activo: ${state.activePair}-${state.activePair}`;
+      activePairLabel.textContent=`Activo: ${state.activePair}-${state.activePair}`;
       pairGrid.innerHTML=values.map(n=>`
         <button class="pair-btn ${state.activePair===n?'active':''}" type="button" data-pair="${n}" aria-label="Par ${n}-${n}">
           ${domino(n,n,'pair-visual','horizontal')}
