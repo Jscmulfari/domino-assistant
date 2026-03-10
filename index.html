@@ -47,6 +47,15 @@
       --hero-glow:rgba(117,160,255,.08);
       --danger:#ff9f9f;
       --danger-soft:rgba(255,159,159,.12);
+      --accent-first:#7ddd70;
+      --accent-first-border:rgba(191,244,183,.72);
+      --accent-first-soft:rgba(121,218,108,.16);
+      --accent-second:#7ab8ff;
+      --accent-second-border:rgba(162,208,255,.78);
+      --accent-second-soft:rgba(122,184,255,.16);
+      --accent-double:#ffd66f;
+      --accent-double-border:rgba(255,224,149,.82);
+      --accent-double-soft:rgba(255,214,111,.18);
     }
 
     html[data-theme="midnight"]{
@@ -504,6 +513,24 @@
       color:var(--muted);
     }
 
+    .compose-choice.first-filled{
+      border-color:var(--accent-first-border);
+      background:var(--accent-first-soft);
+      color:var(--text);
+    }
+
+    .compose-choice.second-filled{
+      border-color:var(--accent-second-border);
+      background:var(--accent-second-soft);
+      color:var(--text);
+    }
+
+    .compose-choice.double-filled{
+      border-color:var(--accent-double-border);
+      background:var(--accent-double-soft);
+      color:var(--text);
+    }
+
     .half-grid{
       display:grid;
       grid-template-columns:repeat(4, minmax(0, 1fr));
@@ -511,7 +538,7 @@
     }
 
     .half-btn{
-      min-height:90px;
+      min-height:104px;
       padding:10px 8px;
       border-radius:16px;
       border:1px solid var(--tile-border);
@@ -521,6 +548,8 @@
       align-content:center;
       gap:8px;
       transition:border-color .14s ease, box-shadow .14s ease, background .14s ease, transform .14s ease;
+      position:relative;
+      overflow:hidden;
     }
 
     .half-btn:hover{transform:translateY(-1px)}
@@ -529,8 +558,62 @@
       background:
         linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),
         var(--tile-selected);
-      border-color:var(--green-border);
-      box-shadow:0 0 0 2px rgba(121,218,108,.16);
+    }
+
+    .half-btn.first{
+      border-color:var(--accent-first-border);
+      box-shadow:0 0 0 2px var(--accent-first-soft);
+      background:
+        linear-gradient(180deg, rgba(125,221,112,.08), rgba(125,221,112,0)),
+        var(--tile-frame);
+    }
+
+    .half-btn.second{
+      border-color:var(--accent-second-border);
+      box-shadow:0 0 0 2px var(--accent-second-soft);
+      background:
+        linear-gradient(180deg, rgba(122,184,255,.1), rgba(122,184,255,0)),
+        var(--tile-frame);
+    }
+
+    .half-btn.double{
+      border-color:var(--accent-double-border);
+      box-shadow:0 0 0 2px var(--accent-double-soft);
+      background:
+        linear-gradient(180deg, rgba(255,214,111,.14), rgba(255,214,111,0)),
+        var(--tile-frame);
+    }
+
+    .half-btn-slot{
+      position:absolute;
+      top:8px;
+      left:8px;
+      min-width:26px;
+      height:22px;
+      padding:0 8px;
+      border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:.68rem;
+      font-weight:900;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      color:#08111d;
+      background:rgba(255,255,255,.88);
+      box-shadow:0 2px 8px rgba(0,0,0,.12);
+    }
+
+    .half-btn-slot.first{background:var(--accent-first);}
+    .half-btn-slot.second{background:var(--accent-second); color:#06101d;}
+    .half-btn-slot.double{background:var(--accent-double);}
+
+    .half-btn-hint{
+      font-size:.72rem;
+      font-weight:700;
+      color:var(--muted);
+      line-height:1.2;
+      text-align:center;
     }
 
     .half-domino{
@@ -1033,7 +1116,7 @@
           <div class="panel-head">
             <div>
               <h2 id="valuesTitle" class="panel-title">Componer ficha</h2>
-              <p class="panel-copy">Toca un valor y luego otro en el mismo grupo. Si repites el mismo, se forma un doble.</p>
+              <p class="panel-copy">La primera y la segunda mitad se marcan distinto. Si repites el mismo valor, se marca como doble; con un tercer toque se reemplaza solo la segunda mitad.</p>
             </div>
             <div class="panel-badge">Selector único</div>
           </div>
@@ -1043,7 +1126,7 @@
               <div class="compose-card-head">
                 <div>
                   <h3 id="halfSelectorTitle" class="compose-label">Mitades de la ficha</h3>
-                  <span class="compose-step">Paso 1 · Elige una mitad · Paso 2 · Toca otra en el mismo lugar</span>
+                  <span class="compose-step">Paso 1 · Elige la primera mitad · Paso 2 · Elige la segunda · Paso 3 · Si quieres corregir, toca la ranura que falta</span>
                 </div>
                 <div class="compose-choice-row" aria-label="Selección actual">
                   <div id="firstHalfChoice" class="compose-choice empty">Primera: —</div>
@@ -1275,7 +1358,6 @@
       }else if(state.compose.second===null){
         state.compose.second=value;
       }else{
-        state.compose.first=state.compose.second;
         state.compose.second=value;
       }
       renderCompose();
@@ -1288,13 +1370,42 @@
       sharedHalfGrid.innerHTML=values.map(value=>{
         const isFirst=first===value;
         const isSecond=second===value;
-        const selectedCount=(isFirst?1:0)+(isSecond?1:0);
-        const activeClass=selectedCount?'active':'';
-        const badge=selectedCount===2?' · doble':selectedCount===1?' · elegido':'';
+        let roleClass='';
+        let slotLabel='';
+        let hint='Toca para elegir';
+
+        if(isFirst && isSecond){
+          roleClass='active double';
+          slotLabel='<span class="half-btn-slot double">DOBLE</span>';
+          hint='Elegida como primera y segunda';
+        }else if(isFirst){
+          roleClass='active first';
+          slotLabel='<span class="half-btn-slot first">1ª</span>';
+          hint=second===null?'Falta la segunda mitad':'Primera mitad fija';
+        }else if(isSecond){
+          roleClass='active second';
+          slotLabel='<span class="half-btn-slot second">2ª</span>';
+          hint='Se reemplaza con otro toque';
+        }else if(first!==null && second!==null){
+          hint='Toca para reemplazar la segunda';
+        }else if(first!==null){
+          hint='Toca para completar la ficha';
+        }
+
+        const ariaSuffix=isFirst && isSecond
+          ? ' seleccionada como doble'
+          : isFirst
+            ? ' seleccionada como primera mitad'
+            : isSecond
+              ? ' seleccionada como segunda mitad'
+              : '';
+
         return `
-          <button class="half-btn ${activeClass}" type="button" data-value="${value}" aria-label="Valor ${valueLabels[value]}${badge}">
+          <button class="half-btn ${roleClass}" type="button" data-value="${value}" aria-label="Valor ${valueLabels[value]}${ariaSuffix}">
+            ${slotLabel}
             ${halfDomino(value)}
-            <span class="half-name">${valueLabels[value]}${badge}</span>
+            <span class="half-name">${valueLabels[value]}</span>
+            <span class="half-btn-hint">${hint}</span>
           </button>
         `;
       }).join('');
@@ -1311,10 +1422,12 @@
 
       renderHalfGrid();
 
+      const isDouble=state.compose.first!==null && state.compose.first===state.compose.second;
+
       firstHalfChoice.textContent=state.compose.first===null?`Primera: —`:`Primera: ${valueLabels[state.compose.first]}`;
-      firstHalfChoice.classList.toggle('empty', state.compose.first===null);
+      firstHalfChoice.className=`compose-choice${state.compose.first===null?' empty':' first-filled'}${isDouble?' double-filled':''}`;
       secondHalfChoice.textContent=state.compose.second===null?`Segunda: —`:`Segunda: ${valueLabels[state.compose.second]}`;
-      secondHalfChoice.classList.toggle('empty', state.compose.second===null);
+      secondHalfChoice.className=`compose-choice${state.compose.second===null?' empty':' second-filled'}${isDouble?' double-filled':''}`;
 
       clearComposeBtn.disabled=!hasDraft;
       addComposeBtn.disabled=!canAddTile(tile);
@@ -1322,10 +1435,12 @@
       composePreview.classList.toggle('empty', !tile);
       composePreview.innerHTML=tile ? domino(tile[0],tile[1],'large') : 'Sin vista previa';
       composePreviewText.textContent=tile
-        ? `Resultado: ${valueLabels[state.compose.first]} + ${valueLabels[state.compose.second]} → ficha ${tile[0]}-${tile[1]}.`
+        ? isDouble
+          ? `Resultado: doble de ${valueLabels[state.compose.first]} → ficha ${tile[0]}-${tile[1]}. Otro toque cambia solo la segunda mitad.`
+          : `Resultado: ${valueLabels[state.compose.first]} + ${valueLabels[state.compose.second]} → ficha ${tile[0]}-${tile[1]}. Otro toque cambia solo la segunda mitad.`
         : state.compose.first===null
           ? 'Selecciona la primera mitad para empezar.'
-          : 'Ahora toca la segunda mitad en el mismo panel para completar la ficha.';
+          : 'Ahora toca la segunda mitad para completar la ficha.';
 
       composeFeedback.className=`compose-feedback${status.tone==='error'?' error':status.tone==='success'?' success':''}`;
       composeFeedback.textContent=status.message;
