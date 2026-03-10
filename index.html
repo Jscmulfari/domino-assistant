@@ -1063,7 +1063,6 @@
             <div id="tilesBadge" class="panel-badge">Toca</div>
           </div>
           <div id="tilesRow" class="tiles-row"></div>
-          <button id="confirmBtn" class="confirm-btn" type="button">✓ Confirmar mano</button>
         </section>
 
         <section id="valuesPanel" class="panel hidden" aria-labelledby="valuesTitle">
@@ -1130,7 +1129,8 @@
       selected:[[1,4],[2,3],[1,2],[3,6],[4,6],[2,5],[3,5]],
       theme:themes.includes(savedTheme)?savedTheme:'midnight',
       inputMode:'tiles',
-      compose:{first:null,second:null}
+      compose:{first:null,second:null},
+      handConfirmed:false
     };
 
     const root=document.documentElement;
@@ -1141,7 +1141,6 @@
     const valuesPanel=document.getElementById('valuesPanel');
     const tilesRow=document.getElementById('tilesRow');
     const counter=document.getElementById('counter');
-    const confirmBtn=document.getElementById('confirmBtn');
     const tilesBadge=document.getElementById('tilesBadge');
     const handConfirmBtn=document.getElementById('handConfirmBtn');
     const handConfirmLabel=document.getElementById('handConfirmLabel');
@@ -1190,7 +1189,7 @@
     }
 
     function markHandUnconfirmed(){
-      confirmBtn.dataset.confirmed='false';
+      state.handConfirmed=false;
     }
 
     function addTile(tile){
@@ -1404,16 +1403,14 @@
     function renderCounter(){
       const count=state.selected.length;
       const ready=count===7;
-      const confirmed=confirmBtn.dataset.confirmed==='true';
-      counter.textContent=ready?'Lista para confirmar':`${count} / 7 seleccionadas`;
-      handStatus.textContent=`Mano ${count} / 7`;
-      confirmBtn.disabled=!ready;
+      const confirmed=state.handConfirmed;
+      counter.textContent=ready ? (confirmed ? 'Mano confirmada' : 'Lista para confirmar') : `${count} / 7 seleccionadas`;
+      handStatus.textContent=confirmed ? `Mano confirmada · ${count} / 7` : `Mano ${count} / 7`;
       handConfirmBtn.disabled=!ready;
+      handConfirmBtn.setAttribute('aria-pressed', String(confirmed));
       if(ready && confirmed){
-        confirmBtn.textContent='✓ Mano confirmada';
         handConfirmLabel.textContent='Confirmada';
       }else{
-        confirmBtn.textContent='✓ Confirmar mano';
         handConfirmLabel.textContent='Confirmar';
       }
       tilesBadge.textContent=state.inputMode==='tiles'?'Toca':'Manual';
@@ -1454,7 +1451,7 @@
 
     function confirmHand(){
       if(state.selected.length===7){
-        confirmBtn.dataset.confirmed='true';
+        state.handConfirmed=true;
         renderCounter();
       }
     }
@@ -1494,8 +1491,6 @@
       }
     });
 
-    confirmBtn.dataset.confirmed='false';
-    confirmBtn.addEventListener('click', confirmHand);
     handConfirmBtn.addEventListener('click', confirmHand);
 
     setTheme(state.theme);
