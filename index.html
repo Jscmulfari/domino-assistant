@@ -1100,6 +1100,78 @@
     .domino.small .pip{width:5.6px;height:5.6px}
     .pip.show{opacity:1}
 
+    .hidden{display:none !important}
+
+    .opening-stack,
+    .game-stack{
+      display:grid;
+      gap:14px;
+    }
+
+    .opening-note,
+    .game-note,
+    .summary-chip,
+    .player-card,
+    .mini-board,
+    .my-hand-card{
+      border:1px solid var(--panel-border);
+      background:linear-gradient(180deg, color-mix(in srgb, var(--panel) 86%, rgba(255,255,255,.02)), color-mix(in srgb, var(--panel-2) 92%, rgba(255,255,255,.02)));
+      border-radius:18px;
+      padding:14px;
+      box-shadow:0 14px 34px rgba(0,0,0,.14);
+    }
+
+    .opening-note strong,
+    .player-card strong,
+    .mini-board strong,
+    .my-hand-card strong{display:block;margin-bottom:6px}
+
+    .seat-grid,
+    .summary-grid,
+    .player-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:12px;
+    }
+
+    .seat-btn,
+    .opening-action-btn{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:4px;
+      min-height:78px;
+      padding:14px;
+      border-radius:16px;
+      background:var(--tile-frame);
+      border:1px solid var(--tile-border);
+      box-shadow:0 10px 20px rgba(0,0,0,.12);
+    }
+
+    .seat-btn.active,
+    .opening-action-btn:hover,
+    .seat-btn:hover{
+      border-color:var(--accent-second-border);
+      transform:translateY(-1px);
+    }
+
+    .seat-btn small,
+    .summary-chip small,
+    .player-card small{color:var(--muted)}
+
+    .opening-actions{display:flex;gap:12px;flex-wrap:wrap}
+
+    .summary-grid{grid-template-columns:repeat(4, minmax(0, 1fr))}
+    .summary-chip span{display:block;font-weight:750;font-size:1.02rem;margin-top:4px}
+
+    .mini-board-chain,
+    .my-hand-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+
+    .player-card.current-turn{border-color:var(--green-border);box-shadow:0 0 0 1px var(--green-shadow), 0 14px 34px rgba(0,0,0,.14)}
+    .player-card.opened{background:linear-gradient(180deg, color-mix(in srgb, var(--panel) 80%, var(--accent-second-soft)), color-mix(in srgb, var(--panel-2) 88%, rgba(255,255,255,.02)))}
+    .player-meta{display:grid;gap:6px}
+    .tag{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.05);font-size:.82rem;width:max-content}
+
     @media (max-width:820px){
       .board,.hand-zone{width:min(100%, calc(100vw - 24px))}
       .shell{padding:14px}
@@ -1147,6 +1219,7 @@
       .scroll-fade{top:66px;bottom:10px}
       .scroll-fade.left{left:11px}
       .scroll-fade.right{right:11px}
+      .seat-grid,.player-grid,.summary-grid{grid-template-columns:1fr}
     }
 
     @media (max-width:560px){
@@ -1260,6 +1333,26 @@
         <div id="scrollHint" class="scroll-hint" aria-hidden="true">Desliza la bandeja para ver más fichas</div>
       </div>
     </section>
+
+    <section id="openingPanel" class="board panel hidden" aria-labelledby="openingTitle">
+      <div class="panel-head">
+        <div>
+          <h2 id="openingTitle" class="panel-title">Contexto de apertura</h2>
+          <p id="openingCopy" class="panel-copy">Define cómo arrancó la partida antes de seguir.</p>
+        </div>
+      </div>
+      <div id="openingContent"></div>
+    </section>
+
+    <section id="gamePanel" class="board panel hidden" aria-labelledby="gameTitle">
+      <div class="panel-head">
+        <div>
+          <h2 id="gameTitle" class="panel-title">Seguimiento de la partida</h2>
+          <p class="panel-copy">Resumen público de la mesa y tu mano restante.</p>
+        </div>
+      </div>
+      <div id="gameContent"></div>
+    </section>
   </main>
 
   <script>
@@ -1268,12 +1361,22 @@
     const valueLabels=['Blanco','1','2','3','4','5','6'];
     const themes=['midnight','wood'];
     const savedTheme=localStorage.getItem('domino-theme');
+    const SEAT_LABELS={self:'Tú',left:'Izquierda',partner:'Compañero/a',right:'Derecha'};
     const state={
       selected:[],
       theme:themes.includes(savedTheme)?savedTheme:'midnight',
       compose:{first:null,second:null},
       handConfirmed:false,
-      isFirstHand:null
+      isFirstHand:null,
+      phase:'build_hand',
+      opener:null,
+      openingTile:null,
+      boardChain:[],
+      boardEnds:null,
+      players:{},
+      currentTurn:null,
+      moveHistory:[],
+      openingSelection:{tile:null,player:null}
     };
 
     const root=document.documentElement;
@@ -1296,6 +1399,10 @@
     const firstHalfChoice=document.getElementById('firstHalfChoice');
     const secondHalfChoice=document.getElementById('secondHalfChoice');
     const composeFeedback=document.getElementById('composeFeedback');
+    const openingPanel=document.getElementById('openingPanel');
+    const openingContent=document.getElementById('openingContent');
+    const gamePanel=document.getElementById('gamePanel');
+    const gameContent=document.getElementById('gameContent');
 
     const key=tile=>`${tile[0]}-${tile[1]}`;
     const normalize=(a,b)=>a<=b?[a,b]:[b,a];
@@ -1303,6 +1410,13 @@
     const isDuplicate=tile=>getSelectedKeys().has(key(tile));
     const handFull=()=>state.selected.length>=7;
     const canAddTile=tile=>Boolean(tile) && !isDuplicate(tile) && !handFull();
+    const nextSeat=seat=>({self:'left',left:'partner',partner:'right',right:'self'})[seat] || 'self';
+    const createPlayers=()=>({
+      self:{seat:'self',label:SEAT_LABELS.self,remaining:7,opened:false,lastAction:'Sin jugadas',isCurrentTurn:false},
+      left:{seat:'left',label:SEAT_LABELS.left,remaining:7,opened:false,lastAction:'Sin jugadas',isCurrentTurn:false},
+      partner:{seat:'partner',label:SEAT_LABELS.partner,remaining:7,opened:false,lastAction:'Sin jugadas',isCurrentTurn:false},
+      right:{seat:'right',label:SEAT_LABELS.right,remaining:7,opened:false,lastAction:'Sin jugadas',isCurrentTurn:false}
+    });
 
     function halfDomino(value){
       return `<div class="half-domino" aria-hidden="true">${pips(value)}</div>`;
@@ -1330,6 +1444,9 @@
 
     function markHandUnconfirmed(){
       state.handConfirmed=false;
+      if(state.phase!=='build_hand'){
+        state.phase='build_hand';
+      }
     }
 
     function addTile(tile){
@@ -1352,46 +1469,25 @@
       return false;
     }
 
-    function clearCompose(){
-      state.compose={first:null,second:null};
-    }
-
-    function getComposeTile(){
-      const {first,second}=state.compose;
-      return first===null || second===null ? null : normalize(first,second);
-    }
+    function clearCompose(){ state.compose={first:null,second:null}; }
+    function getComposeTile(){ const {first,second}=state.compose; return first===null || second===null ? null : normalize(first,second); }
 
     function getComposeStatus(tile=getComposeTile()){
       if(!tile){
-        return {
-          tone:'muted',
-          message:state.compose.first===null?'Elige la primera mitad.':'Selecciona cualquier valor para completar la ficha.'
-        };
+        return {tone:'muted',message:state.compose.first===null?'Elige la primera mitad.':'Selecciona cualquier valor para completar la ficha.'};
       }
-      if(handFull()){
-        return {tone:'error',message:'Tu mano ya tiene 7 fichas.'};
-      }
-      if(isDuplicate(tile)){
-        return {tone:'error',message:`${key(tile)} ya está en tu mano.`};
-      }
+      if(handFull()) return {tone:'error',message:'Tu mano ya tiene 7 fichas.'};
+      if(isDuplicate(tile)) return {tone:'error',message:`${key(tile)} ya está en tu mano.`};
       return {tone:'success',message:`Se añadirá ${key(tile)} al tocar esta segunda mitad.`};
     }
-
 
     function selectComposeHalf(value){
       composeFeedback.textContent='';
       composeFeedback.className='compose-feedback';
-
-      if(state.compose.first===null){
-        state.compose.first=value;
-        renderCompose();
-        return;
-      }
-
+      if(state.compose.first===null){ state.compose.first=value; renderCompose(); return; }
       if(state.compose.second===null){
         state.compose.second=value;
         const tile=getComposeTile();
-
         if(canAddTile(tile)){
           addTile(tile);
           composeFeedback.className='compose-feedback success';
@@ -1400,16 +1496,12 @@
           render();
           return;
         }
-
         const status=getComposeStatus(tile);
         composeFeedback.className=`compose-feedback${status.tone==='error'?' error':''}`;
         composeFeedback.textContent=status.message;
-        renderCompose();
-        renderCounter();
-        renderHand();
+        renderCompose(); renderCounter(); renderHand();
         return;
       }
-
       state.compose={first:value,second:null};
       renderCompose();
     }
@@ -1417,61 +1509,31 @@
     function renderHalfGrid(){
       const first=state.compose.first;
       const second=state.compose.second;
-
       sharedHalfGrid.innerHTML=values.map(value=>{
         const isFirst=first===value;
         const isSecond=second===value;
         let roleClass='';
         let marker='';
-
-        if(isFirst && isSecond){
-          roleClass='active double';
-          marker='<span class="half-btn-marker" aria-hidden="true"><span class="half-btn-dot double"></span><span class="half-btn-dot double"></span></span>';
-        }else if(isFirst){
-          roleClass='active first';
-          marker='<span class="half-btn-marker" aria-hidden="true"><span class="half-btn-dot first"></span></span>';
-        }else if(isSecond){
-          roleClass='active second';
-          marker='<span class="half-btn-marker" aria-hidden="true"><span class="half-btn-dot second"></span></span>';
-        }
-
-        const ariaSuffix=isFirst && isSecond
-          ? ' seleccionada como doble'
-          : isFirst
-            ? ' seleccionada como primera mitad'
-            : isSecond
-              ? ' seleccionada como segunda mitad'
-              : '';
-
-        return `
-          <button class="half-btn ${roleClass}" type="button" data-value="${value}" aria-label="Valor ${valueLabels[value]}${ariaSuffix}">
-            ${marker}
-            ${halfDomino(value)}
-          </button>
-        `;
+        if(isFirst && isSecond){ roleClass='active double'; marker='<span class="half-btn-marker" aria-hidden="true"><span class="half-btn-dot double"></span><span class="half-btn-dot double"></span></span>'; }
+        else if(isFirst){ roleClass='active first'; marker='<span class="half-btn-marker" aria-hidden="true"><span class="half-btn-dot first"></span></span>'; }
+        else if(isSecond){ roleClass='active second'; marker='<span class="half-btn-marker" aria-hidden="true"><span class="half-btn-dot second"></span></span>'; }
+        const ariaSuffix=isFirst && isSecond ? ' seleccionada como doble' : isFirst ? ' seleccionada como primera mitad' : isSecond ? ' seleccionada como segunda mitad' : '';
+        return `<button class="half-btn ${roleClass}" type="button" data-value="${value}" aria-label="Valor ${valueLabels[value]}${ariaSuffix}">${marker}${halfDomino(value)}</button>`;
       }).join('');
-
-      sharedHalfGrid.querySelectorAll('.half-btn').forEach(btn=>{
-        btn.onclick=()=>selectComposeHalf(Number(btn.dataset.value));
-      });
+      sharedHalfGrid.querySelectorAll('.half-btn').forEach(btn=>{ btn.onclick=()=>selectComposeHalf(Number(btn.dataset.value)); });
     }
 
     function renderCompose(){
       const tile=getComposeTile();
       const status=getComposeStatus(tile);
-
       renderHalfGrid();
-
       const isDouble=state.compose.first!==null && state.compose.first===state.compose.second;
-
       firstHalfChoice.className=`compose-choice${state.compose.first===null?' empty':' first-filled'}${isDouble?' double-filled':''}`;
       firstHalfChoice.setAttribute('aria-label', state.compose.first===null ? 'Primera mitad pendiente' : `Primera mitad: ${valueLabels[state.compose.first]}`);
       firstHalfChoice.innerHTML=`<span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">${state.compose.first===null?'Primera mitad pendiente':`Primera mitad: ${valueLabels[state.compose.first]}`}</span>`;
-
       secondHalfChoice.className=`compose-choice${state.compose.second===null?' empty':' second-filled'}${isDouble?' double-filled':''}`;
       secondHalfChoice.setAttribute('aria-label', state.compose.second===null ? 'Segunda mitad pendiente' : `Segunda mitad: ${valueLabels[state.compose.second]}`);
       secondHalfChoice.innerHTML=`<span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">${state.compose.second===null?'Segunda mitad pendiente':`Segunda mitad: ${valueLabels[state.compose.second]}`}</span>`;
-
       if(!composeFeedback.textContent || !composeFeedback.classList.contains('success')){
         composeFeedback.className=`compose-feedback${status.tone==='error'?' error':status.tone==='success'?' success':''}`;
         composeFeedback.textContent=status.message;
@@ -1480,38 +1542,19 @@
 
     function renderFirstHandStatus(){
       const answered=state.isFirstHand!==null;
-      valuesPanel.classList.toggle('flow-locked', !answered);
-      handZone.classList.toggle('flow-locked', !answered);
+      const canBuild=answered && state.phase==='build_hand';
+      valuesPanel.classList.toggle('flow-locked', !canBuild);
+      handZone.classList.toggle('flow-locked', !canBuild);
       modeSummary.classList.toggle('flow-locked', !answered);
       gatePanel.classList.toggle('hidden', answered);
-
-      if(!answered){
-        modeSummary.innerHTML='';
-        return;
-      }
-
-      const guidance=state.isFirstHand
-        ? '<span class="mode-guidance">Si tienes la 6-6 en tu mano, inclúyela para abrir.</span>'
-        : '';
-
-      modeSummary.innerHTML=`
-        <div class="mode-summary-copy">
-          <span class="mode-badge">${state.isFirstHand ? 'Primera mano' : 'No es primera mano'}</span>
-          ${guidance}
-        </div>
-        <button id="editFirstHandBtn" class="mode-edit-btn" type="button" aria-label="Cambiar respuesta de primera mano">Cambiar respuesta</button>
-      `;
-
-      document.getElementById('editFirstHandBtn')?.addEventListener('click',()=>{
-        state.isFirstHand=null;
-        render();
-      });
+      if(!answered){ modeSummary.innerHTML=''; return; }
+      const phaseLabel={build_hand:'Arma tu mano',hand_confirmed:'Mano confirmada',opening_context:'Apertura',game_tracking:'Seguimiento'}[state.phase] || 'Arma tu mano';
+      const guidance=state.isFirstHand ? '<span class="mode-guidance">Si tienes la 6-6 en tu mano, inclúyela para abrir.</span>' : '<span class="mode-guidance">Luego indicarás qué ficha abrió la mesa.</span>';
+      modeSummary.innerHTML=`<div class="mode-summary-copy"><span class="mode-badge">${state.isFirstHand ? 'Primera mano' : 'No es primera mano'}</span><span class="mode-badge">${phaseLabel}</span>${guidance}</div><button id="editFirstHandBtn" class="mode-edit-btn" type="button" aria-label="Cambiar respuesta de primera mano">Cambiar respuesta</button>`;
+      document.getElementById('editFirstHandBtn')?.addEventListener('click',()=>{ state.isFirstHand=null; state.phase='build_hand'; render(); });
     }
 
-    function chooseFirstHand(isFirstHand){
-      state.isFirstHand=isFirstHand;
-      render();
-    }
+    function chooseFirstHand(isFirstHand){ state.isFirstHand=isFirstHand; state.phase='build_hand'; render(); }
 
     function renderCounter(){
       const count=state.selected.length;
@@ -1519,13 +1562,9 @@
       const confirmed=state.handConfirmed;
       counter.textContent=ready ? (confirmed ? 'Mano confirmada' : 'Lista para confirmar') : `${count} / 7 seleccionadas`;
       handStatus.textContent=confirmed ? `Confirmada · ${count} / 7` : `${count} / 7`;
-      handConfirmBtn.disabled=!ready;
+      handConfirmBtn.disabled=!ready || state.phase!=='build_hand';
       handConfirmBtn.setAttribute('aria-pressed', String(confirmed));
-      if(ready && confirmed){
-        handConfirmLabel.textContent='Confirmada';
-      }else{
-        handConfirmLabel.textContent='Confirmar';
-      }
+      handConfirmLabel.textContent=ready && confirmed ? 'Confirmada' : 'Confirmar';
     }
 
     function updateHandTrayAffordance(){
@@ -1533,7 +1572,6 @@
       const maxScroll=Math.max(0, handTray.scrollWidth-handTray.clientWidth);
       const atStart=handTray.scrollLeft<=4;
       const atEnd=handTray.scrollLeft>=maxScroll-4;
-
       handTrayWrap.classList.toggle('scrollable', canScroll);
       handTrayWrap.classList.toggle('can-scroll-left', canScroll && !atStart);
       handTrayWrap.classList.toggle('can-scroll-right', canScroll && !atEnd);
@@ -1544,65 +1582,114 @@
       if(!state.selected.length){
         handTray.className='hand-tray hand-empty';
         handTray.textContent='Tus fichas aparecerán aquí';
-        handTray.scrollLeft=0;
-        updateHandTrayAffordance();
-        return;
+        handTray.scrollLeft=0; updateHandTrayAffordance(); return;
       }
-
       handTray.className='hand-tray';
-      handTray.innerHTML=state.selected.map(tile=>{
-        const tileKey=key(tile);
-        return `
-          <button class="hand-tile-wrap" type="button" data-hand-tile="${tileKey}" aria-label="Quitar ficha ${tileKey}">
-            ${domino(tile[0],tile[1],'small')}
-          </button>
-        `;
-      }).join('');
+      handTray.innerHTML=state.selected.map(tile=>`<button class="hand-tile-wrap" type="button" data-hand-tile="${key(tile)}" aria-label="Quitar ficha ${key(tile)}">${domino(tile[0],tile[1],'small')}</button>`).join('');
       updateHandTrayAffordance();
+    }
+
+    function startOpeningContext(){ state.phase='opening_context'; render(); }
+
+    function initializeGame({openingTile, opener}){
+      const players=createPlayers();
+      const tileKey=key(openingTile);
+      state.handConfirmed=true;
+      players[opener].opened=true;
+      players[opener].lastAction=`Abrió con ${tileKey}`;
+      players[opener].remaining=opener==='self' ? Math.max(0, state.selected.length) : 6;
+      state.players=players;
+      state.opener=opener;
+      state.openingTile=openingTile;
+      state.boardChain=[openingTile];
+      state.boardEnds={left:openingTile[0],right:openingTile[1]};
+      state.moveHistory=[{player:opener,tile:openingTile,action:`Abrió con ${tileKey}`}];
+      state.currentTurn=nextSeat(opener);
+      Object.values(state.players).forEach(player=>{ player.isCurrentTurn=player.seat===state.currentTurn; if(player.seat!==opener){ player.lastAction='Esperando siguiente jugada'; } });
+      state.phase='game_tracking';
+      render();
+    }
+
+    function handleOpeningSeatChoice(seat){ initializeGame({openingTile:[6,6],opener:seat}); }
+    function handleOpeningTileChoice(tileKey){ state.openingSelection.tile=tileKey; renderOpening(); }
+    function handleOpeningPlayerChoice(player){ state.openingSelection.player=player; renderOpening(); }
+
+    function submitNonFirstOpening(){
+      const tileKey=state.openingSelection.tile;
+      const player=state.openingSelection.player;
+      if(!tileKey || !player) return;
+      const tile=tileKey.split('-').map(Number);
+      if(player==='self'){
+        const hasTile=state.selected.some(item=>key(item)===tileKey);
+        if(!hasTile){ window.alert('Si la jugaste tú, esa ficha debe estar en tu mano.'); return; }
+        removeTile(tile);
+      }
+      initializeGame({openingTile:tile,opener:player});
     }
 
     function confirmHand(){
       if(state.selected.length===7){
         state.handConfirmed=true;
-        renderCounter();
+        state.phase='hand_confirmed';
+        startOpeningContext();
       }
+    }
+
+    function renderOpening(){
+      openingPanel.classList.toggle('hidden', state.phase!=='opening_context');
+      if(state.phase!=='opening_context') return;
+      const hasDoubleSix=state.selected.some(tile=>key(tile)==='6-6');
+      if(state.isFirstHand){
+        if(hasDoubleSix){
+          openingContent.innerHTML=`<div class="opening-stack"><div class="opening-note"><strong>Salida obligatoria</strong><p>Tienes la 6-6 en tu mano, así que abres tú la partida con esa ficha.</p><div class="mini-board-chain">${domino(6,6,'small','horizontal')}</div></div><div class="opening-actions"><button id="continueSelfOpenBtn" class="confirm-btn opening-action-btn" type="button">Continuar al seguimiento</button></div></div>`;
+          document.getElementById('continueSelfOpenBtn')?.addEventListener('click',()=>{ removeTile([6,6]); initializeGame({openingTile:[6,6],opener:'self'}); });
+          return;
+        }
+        openingContent.innerHTML=`<div class="opening-stack"><div class="opening-note"><strong>Salida obligatoria</strong><p>En primera mano la mesa siempre arranca con la 6-6. Indica quién la abrió.</p><div class="mini-board-chain">${domino(6,6,'small','horizontal')}</div></div><div class="seat-grid">${['left','partner','right'].map(seat=>`<button class="seat-btn" type="button" data-opening-seat="${seat}"><strong>${SEAT_LABELS[seat]}</strong><small>Abrió con 6-6</small></button>`).join('')}</div></div>`;
+        openingContent.querySelectorAll('[data-opening-seat]').forEach(btn=>btn.addEventListener('click',()=>handleOpeningSeatChoice(btn.dataset.openingSeat)));
+        return;
+      }
+      const selectedTile=state.openingSelection.tile;
+      const selectedPlayer=state.openingSelection.player;
+      const options=player=>player==='self'?state.selected:values.flatMap(a=>values.filter(b=>b>=a).map(b=>[a,b]));
+      const tileOptions=options('any');
+      openingContent.innerHTML=`<div class="opening-stack"><div class="opening-note"><strong>No es primera mano</strong><p>Registra la ficha que ya se jugó y quién la puso en la mesa.</p></div><div><strong>Ficha jugada</strong><div class="mini-board-chain">${tileOptions.map(tile=>{ const tileK=key(tile); const active=tileK===selectedTile?'active':''; return `<button class="seat-btn ${active}" type="button" data-opening-tile="${tileK}">${domino(tile[0],tile[1],'small','horizontal')}<small>${tileK}${state.selected.some(item=>key(item)===tileK)?' · en tu mano':''}</small></button>`; }).join('')}</div></div><div><strong>Quién la jugó</strong><div class="seat-grid">${['self','left','partner','right'].map(seat=>`<button class="seat-btn ${selectedPlayer===seat?'active':''}" type="button" data-opening-player="${seat}"><strong>${SEAT_LABELS[seat]}</strong><small>${seat==='self'?'Si eliges esta opción, la ficha se quitará de tu mano.':'Información pública de apertura'}</small></button>`).join('')}</div></div><div class="opening-actions"><button id="submitOpeningBtn" class="confirm-btn opening-action-btn" type="button" ${selectedTile && selectedPlayer?'':'disabled'}>Iniciar seguimiento</button></div></div>`;
+      openingContent.querySelectorAll('[data-opening-tile]').forEach(btn=>btn.addEventListener('click',()=>handleOpeningTileChoice(btn.dataset.openingTile)));
+      openingContent.querySelectorAll('[data-opening-player]').forEach(btn=>btn.addEventListener('click',()=>handleOpeningPlayerChoice(btn.dataset.openingPlayer)));
+      document.getElementById('submitOpeningBtn')?.addEventListener('click', submitNonFirstOpening);
+    }
+
+    function renderGameTracking(){
+      gamePanel.classList.toggle('hidden', state.phase!=='game_tracking');
+      if(state.phase!=='game_tracking') return;
+      const lastMove=state.moveHistory.at(-1);
+      const playerCards=['left','partner','right'].map(seat=>{
+        const player=state.players[seat];
+        return `<article class="player-card ${player.isCurrentTurn?'current-turn':''} ${player.opened?'opened':''}"><strong>${player.label}</strong><div class="player-meta"><span class="tag">Fichas restantes: ${player.remaining}</span><span class="tag">Abrió: ${player.opened?'Sí':'No'}</span><span>${player.lastAction}</span>${player.isCurrentTurn?'<span class="tag">Turno actual</span>':''}</div></article>`;
+      }).join('');
+      gameContent.innerHTML=`<div class="game-stack"><div class="summary-grid"><div class="summary-chip"><small>Apertura</small><span>${key(state.openingTile)}</span></div><div class="summary-chip"><small>Extremos</small><span>${state.boardEnds.left} · ${state.boardEnds.right}</span></div><div class="summary-chip"><small>Última jugada</small><span>${lastMove ? `${SEAT_LABELS[lastMove.player]} · ${key(lastMove.tile)}` : 'Sin jugadas'}</span></div><div class="summary-chip"><small>Turno actual</small><span>${SEAT_LABELS[state.currentTurn]}</span></div></div><div class="mini-board"><strong>Resumen de la mesa</strong><div class="mini-board-chain">${state.boardChain.map(tile=>domino(tile[0],tile[1],'small','horizontal')).join('')}</div></div><div class="my-hand-card"><strong>Mi mano restante</strong><div class="mini-board-chain my-hand-row">${state.selected.length?state.selected.map(tile=>domino(tile[0],tile[1],'small')).join(''):'<span class="game-note">Ya no quedan fichas registradas en tu mano.</span>'}</div><p class="game-note">Te quedan ${state.selected.length} fichas registradas.</p></div><div><strong>Contexto de otros jugadores</strong><div class="player-grid">${playerCards}</div></div></div>`;
     }
 
     function render(){
       renderFirstHandStatus();
-      if(state.isFirstHand===null){
-        return;
-      }
-      renderCompose();
-      renderCounter();
-      renderHand();
+      if(state.isFirstHand===null) return;
+      renderCompose(); renderCounter(); renderHand(); renderOpening(); renderGameTracking();
     }
 
-    themePicker.addEventListener('click',event=>{
-      const chip=event.target.closest('.theme-chip');
-      if(!chip) return;
-      setTheme(chip.dataset.themeOption);
-    });
-
+    themePicker.addEventListener('click',event=>{ const chip=event.target.closest('.theme-chip'); if(!chip) return; setTheme(chip.dataset.themeOption); });
     handTray.addEventListener('scroll', updateHandTrayAffordance, {passive:true});
     window.addEventListener('resize', updateHandTrayAffordance);
-
     handTray.addEventListener('click',event=>{
-      const button=event.target.closest('[data-hand-tile]');
-      if(!button) return;
+      if(state.phase!=='build_hand') return;
+      const button=event.target.closest('[data-hand-tile]'); if(!button) return;
       const tile=button.dataset.handTile.split('-').map(Number);
-      const tileKey=key(tile);
-      if(window.confirm(`¿Quitar la ficha ${tileKey} de tu mano?`)){
-        removeTile(tile);
-        render();
-      }
+      if(window.confirm(`¿Quitar la ficha ${key(tile)} de tu mano?`)){ removeTile(tile); render(); }
     });
-
     handConfirmBtn.addEventListener('click', confirmHand);
     firstHandYesBtn.addEventListener('click',()=>chooseFirstHand(true));
     firstHandNoBtn.addEventListener('click',()=>chooseFirstHand(false));
-
     setTheme(state.theme);
+    state.players=createPlayers();
     render();
   </script>
 </body>
