@@ -623,6 +623,14 @@
 
     .confirm-wrap{
       margin-top:14px;
+      width:100%;
+      display:flex;
+      justify-content:center;
+    }
+
+    .hand-confirm{
+      max-width:360px;
+      margin-inline:auto;
     }
 
     .sr-only{
@@ -1044,9 +1052,6 @@
             <div id="tilesBadge" class="panel-badge">Toca</div>
           </div>
           <div id="tilesRow" class="tiles-row"></div>
-          <div id="confirmWrap" class="confirm-wrap hidden">
-            <button id="confirmBtn" class="confirm-btn" type="button">✓ Confirmar mano</button>
-          </div>
         </section>
 
         <section id="valuesPanel" class="panel hidden" aria-labelledby="valuesTitle">
@@ -1093,6 +1098,9 @@
           <div class="scroll-fade right" aria-hidden="true"></div>
           <div id="handTray" class="hand-tray hand-empty">Tus fichas aparecerán aquí</div>
           <div id="scrollHint" class="scroll-hint" aria-hidden="true">Desliza la bandeja para ver más fichas</div>
+        </div>
+        <div id="confirmWrap" class="confirm-wrap hand-confirm hidden">
+          <button id="confirmBtn" class="confirm-btn" type="button">✓ Confirmar mano</button>
         </div>
       </div>
     </section>
