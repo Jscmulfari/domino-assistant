@@ -257,10 +257,7 @@
     html[data-theme="wood"] .hero,
     html[data-theme="wood"] .panel,
     html[data-theme="wood"] .mode-toggle,
-    html[data-theme="wood"] .compose-select,
-    html[data-theme="wood"] .compose-preview,
-    html[data-theme="wood"] .compose-action,
-    html[data-theme="wood"] .compose-clear{
+    html[data-theme="wood"] .compose-select{
       background-image:
         linear-gradient(180deg, rgba(255,231,203,.08), rgba(255,231,203,0) 42%),
         var(--wood-grain),
@@ -272,9 +269,7 @@
     .pair-btn:hover,
     .tile-btn:hover,
     .confirm-btn:hover,
-    .mode-toggle:hover,
-    .compose-action:hover,
-    .compose-clear:hover{filter:brightness(1.04)}
+    .mode-toggle:hover{filter:brightness(1.04)}
 
     .hero-meta{
       display:grid;
@@ -627,68 +622,6 @@
       height:4px;
     }
 
-    .compose-preview-row{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-      padding:12px 14px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.03);
-    }
-
-    .compose-preview{
-      min-width:84px;
-      min-height:118px;
-      display:grid;
-      place-items:center;
-      border-radius:16px;
-      border:1px solid var(--tile-border);
-      background:var(--tile-frame);
-      padding:10px;
-    }
-
-    .compose-preview.empty{
-      color:var(--muted);
-      font-size:.84rem;
-      text-align:center;
-      line-height:1.35;
-    }
-
-    .compose-preview-copy{
-      display:grid;
-      gap:4px;
-      min-width:0;
-      flex:1 1 180px;
-    }
-
-    .compose-preview-title{
-      margin:0;
-      font-size:.82rem;
-      font-weight:800;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      color:var(--muted);
-    }
-
-    .compose-preview-text{
-      margin:0;
-      color:var(--soft);
-      font-size:.92rem;
-      line-height:1.35;
-      font-weight:700;
-    }
-
-    .compose-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-
-    .compose-action,
-    .compose-clear,
     .confirm-btn{
       min-height:48px;
       border-radius:14px;
@@ -698,22 +631,6 @@
       transition:opacity .15s ease, filter .15s ease;
     }
 
-    .compose-action{
-      padding:0 18px;
-      background:linear-gradient(180deg, #7ddd70, #63c85a);
-      border:1px solid var(--green-border);
-      color:#fbfff8;
-    }
-
-    .compose-clear{
-      padding:0 16px;
-      background:var(--pair);
-      border:1px solid var(--pair-border);
-      color:var(--soft);
-    }
-
-    .compose-action:disabled,
-    .compose-clear:disabled,
     .confirm-btn:disabled{
       opacity:.55;
       cursor:not-allowed;
@@ -1015,7 +932,6 @@
       .tile-btn{min-height:118px;padding:7px 5px;border-radius:18px}
       .hand-tray{min-height:112px;padding:14px 14px 12px}
       .half-grid{grid-template-columns:repeat(4, minmax(0, 1fr))}
-      .compose-preview-row{align-items:flex-start}
       .mode-control{width:100%;min-width:0}
       .compose-choice{min-width:40px;min-height:40px}
       .half-btn{min-height:80px}
@@ -1044,9 +960,6 @@
       .confirm-btn{height:52px;border-radius:16px}
       .hand-tray{gap:8px}
       .hand-status,.panel-badge{font-size:.76rem}
-      .compose-actions{flex-direction:column;align-items:stretch}
-      .compose-action,.compose-clear{width:100%}
-      .compose-preview-row{padding:10px 12px}
     }
   </style>
 </head>
@@ -1135,18 +1048,6 @@
               <div id="sharedHalfGrid" class="half-grid" role="list" aria-label="Opciones para componer la ficha"></div>
             </section>
 
-            <div class="compose-preview-row">
-              <div id="composePreview" class="compose-preview empty">Toca una mitad</div>
-              <div class="compose-preview-copy">
-                <p class="compose-preview-title">Vista previa</p>
-                <p id="composePreviewText" class="compose-preview-text">Esperando la primera mitad.</p>
-              </div>
-            </div>
-
-            <div class="compose-actions">
-              <button id="clearComposeBtn" class="compose-clear" type="button" disabled>Limpiar</button>
-            </div>
-
             <p id="composeFeedback" class="compose-feedback" aria-live="polite"></p>
           </div>
         </section>
@@ -1208,10 +1109,7 @@
     const sharedHalfGrid=document.getElementById('sharedHalfGrid');
     const firstHalfChoice=document.getElementById('firstHalfChoice');
     const secondHalfChoice=document.getElementById('secondHalfChoice');
-    const composePreview=document.getElementById('composePreview');
-    const composePreviewText=document.getElementById('composePreviewText');
     const composeFeedback=document.getElementById('composeFeedback');
-    const clearComposeBtn=document.getElementById('clearComposeBtn');
 
     const key=tile=>`${tile[0]}-${tile[1]}`;
     const normalize=(a,b)=>a<=b?[a,b]:[b,a];
@@ -1427,7 +1325,6 @@
     function renderCompose(){
       const tile=getComposeTile();
       const status=getComposeStatus(tile);
-      const hasDraft=state.compose.first!==null || state.compose.second!==null;
 
       renderHalfGrid();
 
@@ -1440,16 +1337,6 @@
       secondHalfChoice.className=`compose-choice${state.compose.second===null?' empty':' second-filled'}${isDouble?' double-filled':''}`;
       secondHalfChoice.setAttribute('aria-label', state.compose.second===null ? 'Segunda mitad pendiente' : `Segunda mitad: ${valueLabels[state.compose.second]}`);
       secondHalfChoice.innerHTML=`<span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">${state.compose.second===null?'Segunda mitad pendiente':`Segunda mitad: ${valueLabels[state.compose.second]}`}</span>`;
-
-      clearComposeBtn.disabled=!hasDraft;
-
-      composePreview.classList.toggle('empty', !tile);
-      composePreview.innerHTML=tile ? domino(tile[0],tile[1],'large') : 'Toca una mitad';
-      composePreviewText.textContent=tile
-        ? `Lista: ${tile[0]}-${tile[1]}`
-        : state.compose.first===null
-          ? 'Esperando la primera mitad.'
-          : 'Toca la segunda para añadirla.';
 
       if(!composeFeedback.textContent || !composeFeedback.classList.contains('success')){
         composeFeedback.className=`compose-feedback${status.tone==='error'?' error':status.tone==='success'?' success':''}`;
@@ -1515,13 +1402,6 @@
       const button=event.target.closest('.mode-toggle');
       if(!button) return;
       setInputMode(button.dataset.mode);
-    });
-
-    clearComposeBtn.addEventListener('click',()=>{
-      clearCompose();
-      composeFeedback.textContent='';
-      composeFeedback.className='compose-feedback';
-      renderCompose();
     });
 
     handTray.addEventListener('scroll', updateHandTrayAffordance, {passive:true});
