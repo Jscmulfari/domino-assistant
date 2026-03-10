@@ -1024,43 +1024,12 @@
           </div>
         </header>
 
-        <section class="panel mode-panel" aria-labelledby="inputModeTitle">
-          <div class="mode-row">
-            <h2 id="inputModeTitle" class="sr-only">Modo de entrada</h2>
-            <div id="modeControl" class="mode-control" role="tablist" aria-label="Modo de entrada">
-              <button class="mode-toggle active" type="button" data-mode="tiles" role="tab" aria-selected="true">Fichas</button>
-              <button class="mode-toggle" type="button" data-mode="values" role="tab" aria-selected="false">Valores</button>
-            </div>
-          </div>
-        </section>
-
-        <section id="pairsPanel" class="panel" aria-labelledby="pairsTitle">
-          <div class="panel-head">
-            <div>
-              <h2 id="pairsTitle" class="panel-title">Dobles</h2>
-              <p class="panel-copy">Filtra por doble.</p>
-            </div>
-            <div id="activePairLabel" class="panel-badge">Activo: 3-3</div>
-          </div>
-          <div id="pairGrid" class="pair-grid"></div>
-        </section>
-
-        <section id="tilesPanel" class="panel" aria-labelledby="tilesTitle">
-          <div class="panel-head">
-            <div>
-              <h2 id="tilesTitle" class="panel-title">Selección</h2>
-              <p id="counter" class="counter">Empieza a seleccionar</p>
-            </div>
-            <div id="tilesBadge" class="panel-badge">Toca</div>
-          </div>
-          <div id="tilesRow" class="tiles-row"></div>
-        </section>
-
-        <section id="valuesPanel" class="panel hidden" aria-labelledby="valuesTitle">
+        <section id="valuesPanel" class="panel" aria-labelledby="valuesTitle">
           <div class="panel-head">
             <div>
               <h2 id="valuesTitle" class="panel-title">Manual</h2>
               <p class="panel-copy">Elige dos mitades.</p>
+              <p id="counter" class="counter">Empieza a seleccionar</p>
             </div>
             <div class="panel-badge">Auto</div>
           </div>
@@ -1114,23 +1083,14 @@
     const themes=['midnight','wood'];
     const savedTheme=localStorage.getItem('domino-theme');
     const state={
-      activePair:3,
       selected:[[1,4],[2,3],[1,2],[3,6],[4,6],[2,5],[3,5]],
       theme:themes.includes(savedTheme)?savedTheme:'midnight',
-      inputMode:'tiles',
       compose:{first:null,second:null},
       handConfirmed:false
     };
 
     const root=document.documentElement;
-    const modeControl=document.getElementById('modeControl');
-    const pairGrid=document.getElementById('pairGrid');
-    const pairsPanel=document.getElementById('pairsPanel');
-    const tilesPanel=document.getElementById('tilesPanel');
-    const valuesPanel=document.getElementById('valuesPanel');
-    const tilesRow=document.getElementById('tilesRow');
     const counter=document.getElementById('counter');
-    const tilesBadge=document.getElementById('tilesBadge');
     const handConfirmBtn=document.getElementById('handConfirmBtn');
     const handConfirmLabel=document.getElementById('handConfirmLabel');
     const handTray=document.getElementById('handTray');
@@ -1138,7 +1098,6 @@
     const scrollHint=document.getElementById('scrollHint');
     const themePicker=document.querySelector('.theme-picker');
     const themeChips=document.querySelectorAll('.theme-chip');
-    const activePairLabel=document.getElementById('activePairLabel');
     const handStatus=document.getElementById('handStatus');
     const sharedHalfGrid=document.getElementById('sharedHalfGrid');
     const firstHalfChoice=document.getElementById('firstHalfChoice');
@@ -1147,7 +1106,6 @@
 
     const key=tile=>`${tile[0]}-${tile[1]}`;
     const normalize=(a,b)=>a<=b?[a,b]:[b,a];
-    const tilesForPair=n=>values.map(v=>normalize(n,v));
     const getSelectedKeys=()=>new Set(state.selected.map(key));
     const isDuplicate=tile=>getSelectedKeys().has(key(tile));
     const handFull=()=>state.selected.length>=7;
@@ -1201,22 +1159,8 @@
       return false;
     }
 
-    function toggleTile(tile){
-      return removeTile(tile) || addTile(tile);
-    }
-
     function clearCompose(){
       state.compose={first:null,second:null};
-    }
-
-    function setInputMode(mode){
-      if(state.inputMode===mode) return;
-      const leavingValues=state.inputMode==='values' && mode!=='values';
-      state.inputMode=mode;
-      if(leavingValues){
-        clearCompose();
-      }
-      render();
     }
 
     function getComposeTile(){
@@ -1240,54 +1184,6 @@
       return {tone:'success',message:`Se añadirá ${key(tile)} al tocar esta segunda mitad.`};
     }
 
-    function renderMode(){
-      const inTilesMode=state.inputMode==='tiles';
-      pairsPanel.classList.toggle('hidden', !inTilesMode);
-      tilesPanel.classList.toggle('hidden', !inTilesMode);
-      valuesPanel.classList.toggle('hidden', inTilesMode);
-
-      modeControl.querySelectorAll('.mode-toggle').forEach(btn=>{
-        const active=btn.dataset.mode===state.inputMode;
-        btn.classList.toggle('active', active);
-        btn.setAttribute('aria-selected', String(active));
-      });
-    }
-
-    function renderPairs(){
-      activePairLabel.textContent=`Activo: ${state.activePair}-${state.activePair}`;
-      pairGrid.innerHTML=values.map(n=>`
-        <button class="pair-btn ${state.activePair===n?'active':''}" type="button" data-pair="${n}" aria-label="Par ${n}-${n}">
-          ${domino(n,n,'pair-visual','horizontal')}
-        </button>
-      `).join('');
-
-      pairGrid.querySelectorAll('.pair-btn').forEach(btn=>{
-        btn.onclick=()=>{
-          state.activePair=Number(btn.dataset.pair);
-          render();
-        };
-      });
-    }
-
-    function renderTiles(){
-      const selectedKeys=getSelectedKeys();
-      tilesRow.innerHTML=tilesForPair(state.activePair).map(tile=>{
-        const tileKey=key(tile);
-        return `
-          <button class="tile-btn ${selectedKeys.has(tileKey)?'selected':''}" type="button" data-tile="${tileKey}" aria-label="Ficha ${tileKey}">
-            ${domino(tile[0],tile[1],'large')}
-          </button>
-        `;
-      }).join('');
-
-      tilesRow.querySelectorAll('.tile-btn').forEach(btn=>{
-        btn.onclick=()=>{
-          const tile=btn.dataset.tile.split('-').map(Number);
-          toggleTile(tile);
-          render();
-        };
-      });
-    }
 
     function selectComposeHalf(value){
       composeFeedback.textContent='';
@@ -1402,7 +1298,6 @@
       }else{
         handConfirmLabel.textContent='Confirmar';
       }
-      tilesBadge.textContent=state.inputMode==='tiles'?'Toca':'Manual';
     }
 
     function updateHandTrayAffordance(){
@@ -1446,9 +1341,6 @@
     }
 
     function render(){
-      renderMode();
-      renderPairs();
-      renderTiles();
       renderCompose();
       renderCounter();
       renderHand();
@@ -1458,12 +1350,6 @@
       const chip=event.target.closest('.theme-chip');
       if(!chip) return;
       setTheme(chip.dataset.themeOption);
-    });
-
-    modeControl.addEventListener('click',event=>{
-      const button=event.target.closest('.mode-toggle');
-      if(!button) return;
-      setInputMode(button.dataset.mode);
     });
 
     handTray.addEventListener('scroll', updateHandTrayAffordance, {passive:true});
