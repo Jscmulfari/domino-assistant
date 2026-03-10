@@ -153,7 +153,7 @@
       display:flex;
       flex-direction:column;
       align-items:center;
-      padding:24px 14px 18px;
+      padding:24px 14px 28px;
       position:relative;
     }
 
@@ -246,10 +246,12 @@
     html[data-theme="wood"] .pair-btn,
     html[data-theme="wood"] .tile-btn,
     html[data-theme="wood"] .hand-tray,
+    html[data-theme="wood"] .hand-panel,
     html[data-theme="wood"] .hero,
     html[data-theme="wood"] .panel,
     html[data-theme="wood"] .mode-toggle,
-    html[data-theme="wood"] .compose-select{
+    html[data-theme="wood"] .compose-select,
+    html[data-theme="wood"] .hand-status{
       background-image:
         linear-gradient(180deg, rgba(255,231,203,.08), rgba(255,231,203,0) 42%),
         var(--wood-grain),
@@ -632,7 +634,7 @@
     }
 
     .hand-zone{
-      width:min(920px, calc(100vw - 28px));
+      width:min(980px, calc(100vw - 28px));
       margin-top:30px;
       position:relative;
       z-index:1;
@@ -641,12 +643,23 @@
     }
 
     .hand-panel{
-      width:min(100%, 860px);
-      padding:0;
-      background:none;
-      border:none;
-      box-shadow:none;
+      width:min(100%, 920px);
+      padding:18px 18px 14px;
+      background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:28px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
       overflow:visible;
+      position:relative;
+    }
+
+    .hand-panel::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:inherit;
+      background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,0) 28%);
+      pointer-events:none;
     }
 
     .hand-panel-head{
@@ -654,7 +667,7 @@
       justify-content:center;
       align-items:center;
       gap:10px;
-      margin-bottom:10px;
+      margin-bottom:14px;
       text-align:center;
     }
 
@@ -662,10 +675,9 @@
 
     .hand-title{
       margin:0;
-      font-size:.96rem;
+      font-size:1rem;
       font-weight:700;
       letter-spacing:-.03em;
-      color:var(--soft);
     }
 
     .hand-copy{
@@ -673,27 +685,29 @@
     }
 
     .hand-status{
-      font-size:.96rem;
+      padding:7px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      font-size:.79rem;
       font-weight:800;
-      letter-spacing:-.03em;
-      color:var(--text);
+      color:var(--soft);
       white-space:nowrap;
+      box-shadow:0 6px 18px rgba(0,0,0,.12);
     }
 
     .hand-tray-wrap{
       position:relative;
       width:100%;
-      max-width:780px;
-      padding:8px 0 6px;
-      margin:0 auto;
+      padding:6px 0 4px;
     }
 
     .hand-tray-wrap::before{
       content:"";
       position:absolute;
-      left:12%;
-      right:12%;
-      top:6px;
+      left:10%;
+      right:10%;
+      top:8px;
       height:1px;
       background:linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
       pointer-events:none;
@@ -702,12 +716,12 @@
     .hand-tray-wrap::after{
       content:"";
       position:absolute;
-      left:16%;
-      right:16%;
-      bottom:0;
-      height:28px;
+      left:18%;
+      right:18%;
+      bottom:-2px;
+      height:30px;
       border-radius:50%;
-      background:radial-gradient(circle, rgba(0,0,0,.2) 0%, rgba(0,0,0,.1) 46%, transparent 78%);
+      background:radial-gradient(circle, rgba(0,0,0,.22) 0%, rgba(0,0,0,.12) 46%, transparent 78%);
       filter:blur(10px);
       pointer-events:none;
     }
@@ -745,10 +759,10 @@
     }
 
     .scroll-hint{
-      margin:10px 4px 0;
+      margin:10px 6px 0;
       display:flex;
       align-items:center;
-      justify-content:flex-end;
+      justify-content:center;
       gap:8px;
       color:var(--soft);
       font-size:.78rem;
@@ -772,24 +786,24 @@
     }
 
     .hand-tray{
-      min-height:136px;
+      min-height:150px;
       width:100%;
-      border-radius:26px;
+      border-radius:30px;
       border:1px solid color-mix(in srgb, var(--tray-border) 78%, transparent);
       background:
-        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,0) 34%),
+        linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,0) 34%),
         linear-gradient(180deg, color-mix(in srgb, var(--tray) 94%, white 6%), var(--tray));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08), inset 0 -1px 0 rgba(0,0,0,.16);
       display:flex;
       align-items:flex-end;
       justify-content:center;
-      gap:12px;
-      padding:18px 24px 12px;
+      gap:10px;
+      padding:26px 32px 16px;
       overflow-x:auto;
       overflow-y:hidden;
       scrollbar-width:none;
       -ms-overflow-style:none;
-      scroll-padding-inline:24px;
+      scroll-padding-inline:32px;
     }
 
     .hand-tray::-webkit-scrollbar{display:none}
@@ -819,13 +833,14 @@
       transform-origin:center bottom;
       transition:transform .14s ease, filter .14s ease;
       padding:0 0 2px;
-      margin-inline:0;
+      margin-inline:-1px;
       background:none;
       border:none;
-      transform:translateY(0);
     }
 
-    .hand-tile-wrap:hover{transform:translateY(-5px)}
+    .hand-tile-wrap:nth-child(odd){transform:translateY(0) rotate(-.45deg)}
+    .hand-tile-wrap:nth-child(even){transform:translateY(-1px) rotate(.45deg)}
+    .hand-tile-wrap:hover{transform:translateY(-5px) scale(1.025)}
     .hand-tile-wrap:focus-visible{
       outline:2px solid var(--accent-second-border);
       outline-offset:4px;
@@ -835,7 +850,7 @@
     .hand-tile-wrap .domino.small{
       display:grid;
       place-items:stretch;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.62), 0 8px 12px rgba(0,0,0,.12);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.62), 0 9px 14px rgba(0,0,0,.14);
     }
 
     .domino{
@@ -849,7 +864,7 @@
     }
 
     .domino.large{width:68px;height:104px}
-    .domino.small{width:52px;height:82px}
+    .domino.small{width:56px;height:88px}
     .domino.pair-visual{width:46px;height:32px;grid-template-columns:1fr 1fr;grid-template-rows:none;border-radius:9px}
     .domino.pair-visual .half + .half{border-top:none;border-left:2px solid var(--domino-line)}
     .domino.pair-visual .pips{width:12px;height:12px}
@@ -909,10 +924,11 @@
       .shell{padding:14px}
       .hero{padding:18px}
       .pair-grid,.tiles-row{grid-template-columns:repeat(7, minmax(0, 1fr))}
+      .hand-zone{margin-top:26px}
     }
 
     @media (max-width:680px){
-      .app{padding:20px 10px 16px}
+      .app{padding:20px 10px 20px}
       .shell{padding:10px;border-radius:22px}
       .hero,
       .panel,
@@ -921,7 +937,6 @@
       .hero-actions{align-items:flex-start}
       .theme-picker{justify-content:center}
       .panel-head,
-      .hand-panel-head,
       .mode-row,
       .compose-card-head{flex-direction:column;align-items:flex-start}
       .pair-grid,.tiles-row{grid-template-columns:repeat(4, minmax(0, 1fr));gap:9px}
@@ -929,16 +944,17 @@
       .pair-btn{min-height:52px;border-radius:15px}
       .domino.large{width:56px;height:88px}
       .tile-btn{min-height:118px;padding:7px 5px;border-radius:18px}
-      .hand-panel{width:100%}
-      .hand-panel-head{justify-content:space-between;text-align:left}
-      .hand-tray-wrap{max-width:100%}
-      .hand-tray{min-height:118px;padding:15px 18px 13px;gap:10px;border-radius:22px;justify-content:flex-start}
+      .hand-zone{margin-top:22px}
+      .hand-panel{width:100%;padding:14px 14px 10px}
+      .hand-panel-head{justify-content:space-between;align-items:center;text-align:left;gap:12px;margin-bottom:12px}
+      .hand-tray{min-height:124px;padding:18px 18px 13px;gap:8px;border-radius:22px;justify-content:flex-start}
       .hand-tray:not(.hand-empty) > .hand-tile-wrap:first-child,
       .hand-tray:not(.hand-empty) > .hand-tile-wrap:last-child{margin-inline:0}
       .half-grid{grid-template-columns:repeat(4, minmax(0, 1fr))}
       .mode-control{width:100%;min-width:0}
       .compose-choice{min-width:40px;min-height:40px}
       .half-btn{min-height:80px}
+      .scroll-hint{justify-content:flex-start}
     }
 
     @media (max-width:560px){
@@ -947,7 +963,7 @@
       .pair-btn{min-height:56px}
       .tile-btn{min-height:126px;padding:8px 6px}
       .domino.large{width:60px;height:94px}
-      .scroll-hint{justify-content:flex-start}
+      .hand-status{padding:6px 11px}
     }
 
     @media (max-width:420px){
@@ -959,11 +975,12 @@
       .half-btn{min-height:74px;padding:6px;border-radius:14px}
       .half-domino{width:38px;height:52px}
       .domino.large{width:52px;height:82px}
-      .domino.small{width:40px;height:62px}
+      .domino.small{width:44px;height:68px}
       .domino.pair-visual{width:38px;height:27px}
       .confirm-btn{height:52px;border-radius:16px}
-      .hand-tray{gap:8px}
+      .hand-tray{gap:6px;padding:16px 12px 12px}
       .hand-status,.panel-badge{font-size:.76rem}
+      .hand-panel-head{align-items:flex-start}
     }
   </style>
 </head>
@@ -1049,10 +1066,10 @@
         <div class="hand-panel-head">
           <div>
             <div class="hand-label" aria-hidden="true">Tu mano</div>
-            <h2 class="hand-title">Mano</h2>
+            <h2 class="hand-title">Mano actual</h2>
             <p class="hand-copy"></p>
           </div>
-          <div id="handStatus" class="hand-status">Mano · 0/7</div>
+          <div id="handStatus" class="hand-status">0 / 7</div>
         </div>
         <div id="handTrayWrap" class="hand-tray-wrap">
           <div class="scroll-fade left" aria-hidden="true"></div>
@@ -1075,9 +1092,7 @@
       selected:[[1,4],[2,3],[1,2],[3,6],[4,6],[2,5],[3,5]],
       theme:themes.includes(savedTheme)?savedTheme:'midnight',
       inputMode:'tiles',
-      compose:{first:null,second:null},
-      composeFeedbackLock:false,
-      composeFeedbackTimer:null
+      compose:{first:null,second:null}
     };
 
     const root=document.documentElement;
@@ -1158,19 +1173,6 @@
 
     function clearCompose(){
       state.compose={first:null,second:null};
-    }
-
-    function setComposeFeedback(message='',tone='muted',persist=false){
-      state.composeFeedbackLock=persist;
-      composeFeedback.className=`compose-feedback${tone==='error'?' error':tone==='success'?' success':''}`;
-      composeFeedback.textContent=message;
-    }
-
-    function clearComposeFeedbackTimer(){
-      if(state.composeFeedbackTimer){
-        window.clearTimeout(state.composeFeedbackTimer);
-        state.composeFeedbackTimer=null;
-      }
     }
 
     function setInputMode(mode){
@@ -1254,14 +1256,8 @@
     }
 
     function selectComposeHalf(value){
-      clearComposeFeedbackTimer();
-      setComposeFeedback();
-
-      if(state.compose.first!==null && state.compose.second!==null){
-        state.compose={first:value,second:null};
-        renderCompose();
-        return;
-      }
+      composeFeedback.textContent='';
+      composeFeedback.className='compose-feedback';
 
       if(state.compose.first===null){
         state.compose.first=value;
@@ -1269,27 +1265,30 @@
         return;
       }
 
-      state.compose.second=value;
-      const tile=getComposeTile();
+      if(state.compose.second===null){
+        state.compose.second=value;
+        const tile=getComposeTile();
 
-      if(canAddTile(tile)){
-        state.selected.push(tile);
-        setComposeFeedback(`Añadida ${key(tile)}.`,'success',true);
-        render();
-        state.composeFeedbackTimer=window.setTimeout(()=>{
+        if(canAddTile(tile)){
+          state.selected.push(tile);
+          composeFeedback.className='compose-feedback success';
+          composeFeedback.textContent=`Añadida ${key(tile)}.`;
           clearCompose();
-          setComposeFeedback();
-          renderCompose();
-          state.composeFeedbackTimer=null;
-        },700);
+          render();
+          return;
+        }
+
+        const status=getComposeStatus(tile);
+        composeFeedback.className=`compose-feedback${status.tone==='error'?' error':''}`;
+        composeFeedback.textContent=status.message;
+        renderCompose();
+        renderCounter();
+        renderHand();
         return;
       }
 
-      const status=getComposeStatus(tile);
-      setComposeFeedback(status.message,status.tone,true);
+      state.compose={first:value,second:null};
       renderCompose();
-      renderCounter();
-      renderHand();
     }
 
     function renderHalfGrid(){
@@ -1350,7 +1349,7 @@
       secondHalfChoice.setAttribute('aria-label', state.compose.second===null ? 'Segunda mitad pendiente' : `Segunda mitad: ${valueLabels[state.compose.second]}`);
       secondHalfChoice.innerHTML=`<span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">${state.compose.second===null?'Segunda mitad pendiente':`Segunda mitad: ${valueLabels[state.compose.second]}`}</span>`;
 
-      if(!state.composeFeedbackLock){
+      if(!composeFeedback.textContent || !composeFeedback.classList.contains('success')){
         composeFeedback.className=`compose-feedback${status.tone==='error'?' error':status.tone==='success'?' success':''}`;
         composeFeedback.textContent=status.message;
       }
@@ -1360,7 +1359,7 @@
       const count=state.selected.length;
       const ready=count===7;
       counter.textContent=ready?'Lista para confirmar':`${count} / 7 seleccionadas`;
-      handStatus.textContent=`Mano · ${count}/7`;
+      handStatus.textContent=`Mano ${count} / 7`;
       confirmBtn.disabled=!ready;
       tilesBadge.textContent=state.inputMode==='tiles'?'Toca':'Manual';
     }
