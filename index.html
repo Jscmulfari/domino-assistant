@@ -694,17 +694,45 @@
       margin-bottom:14px;
     }
 
+    .hand-label{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:6px;
+      color:var(--soft);
+      font-size:.8rem;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .hand-label::before{
+      content:"";
+      width:30px;
+      height:10px;
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 22% 50%, rgba(255,255,255,.92) 0 1.5px, transparent 2px),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.92) 0 1.5px, transparent 2px),
+        radial-gradient(circle at 78% 50%, rgba(255,255,255,.92) 0 1.5px, transparent 2px),
+        linear-gradient(180deg, rgba(255,255,255,.2), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.2);
+      flex:0 0 auto;
+      opacity:.9;
+    }
+
     .hand-title{
-      margin:0 0 4px;
-      font-size:1rem;
-      font-weight:800;
-      letter-spacing:-.02em;
+      margin:0;
+      font-size:1.08rem;
+      font-weight:700;
+      letter-spacing:-.03em;
     }
 
     .hand-copy{
-      margin:0;
+      margin:3px 0 0;
       color:var(--muted);
-      font-size:.92rem;
+      font-size:.9rem;
     }
 
     .hand-status{
@@ -1065,15 +1093,16 @@
       <div class="hand-panel">
         <div class="hand-panel-head">
           <div>
-            <h2 class="hand-title">Tu mano</h2>
-            <p class="hand-copy">Las fichas se mantienen alineadas para revisarlas de un vistazo.</p>
+            <div class="hand-label" aria-hidden="true">Tu mano</div>
+            <h2 class="hand-title">Bandeja de juego</h2>
+            <p class="hand-copy">Tus fichas, listas para recorrer de un vistazo.</p>
           </div>
           <div id="handStatus" class="hand-status">0 de 7 fichas</div>
         </div>
         <div id="handTrayWrap" class="hand-tray-wrap">
           <div class="scroll-fade left" aria-hidden="true"></div>
           <div class="scroll-fade right" aria-hidden="true"></div>
-          <div id="handTray" class="hand-tray hand-empty">Selecciona fichas para formar tu mano</div>
+          <div id="handTray" class="hand-tray hand-empty">Tus fichas aparecerán aquí</div>
           <div id="scrollHint" class="scroll-hint" aria-hidden="true">Desliza la bandeja para ver más fichas</div>
         </div>
       </div>
@@ -1384,7 +1413,7 @@
     function renderHand(){
       if(!state.selected.length){
         handTray.className='hand-tray hand-empty';
-        handTray.textContent='Selecciona fichas para formar tu mano';
+        handTray.textContent='Tus fichas aparecerán aquí';
         handTray.scrollLeft=0;
         updateHandTrayAffordance();
         return;
