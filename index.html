@@ -161,12 +161,21 @@
       align-items:center;
       padding:24px 14px 28px;
       position:relative;
+      gap:20px;
     }
 
     .board{
       width:min(760px, calc(100vw - 28px));
       position:relative;
       z-index:1;
+    }
+
+    .app > .board:first-of-type{order:1}
+    #openingPanel,
+    #gamePanel{order:2}
+    #handZone{
+      order:3;
+      margin-top:auto;
     }
 
     .shell{padding:0;border:none;background:none;box-shadow:none;}
@@ -1161,6 +1170,69 @@
 
     .opening-actions{display:flex;gap:12px;flex-wrap:wrap}
 
+    .opening-step{
+      display:grid;
+      gap:12px;
+    }
+
+    .opening-step-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin:0;
+      font-size:1rem;
+      font-weight:800;
+      color:var(--soft);
+    }
+
+    .opening-step-copy{
+      margin:0;
+      color:var(--muted);
+      font-size:.92rem;
+    }
+
+    .opening-tile-grid{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:10px;
+      padding:2px 0;
+    }
+
+    .opening-tile-btn{
+      min-width:72px;
+      padding:8px 8px 10px;
+      border-radius:20px;
+      border:1px solid transparent;
+      background:transparent;
+      display:grid;
+      gap:8px;
+      justify-items:center;
+      transition:border-color .14s ease, box-shadow .14s ease, transform .14s ease, background .14s ease;
+    }
+
+    .opening-tile-btn small{
+      color:var(--muted);
+      font-size:.74rem;
+      font-weight:700;
+      text-align:center;
+      line-height:1.2;
+    }
+
+    .opening-tile-btn.selected{
+      border-color:var(--green-border);
+      background:linear-gradient(180deg, rgba(121,218,108,.08), rgba(121,218,108,0));
+      box-shadow:0 0 0 2px rgba(121,218,108,.12);
+    }
+
+    .opening-player-prompt{
+      margin:0;
+      color:var(--soft);
+      font-size:.92rem;
+      font-weight:700;
+    }
+
     .summary-grid{grid-template-columns:repeat(4, minmax(0, 1fr))}
     .summary-chip span{display:block;font-weight:750;font-size:1.02rem;margin-top:4px}
 
@@ -1611,7 +1683,12 @@
     }
 
     function handleOpeningSeatChoice(seat){ initializeGame({openingTile:[6,6],opener:seat}); }
-    function handleOpeningTileChoice(tileKey){ state.openingSelection.tile=tileKey; renderOpening(); }
+    function handleOpeningTileChoice(tileKey){
+      const changed=state.openingSelection.tile!==tileKey;
+      state.openingSelection.tile=tileKey;
+      if(changed) state.openingSelection.player=null;
+      renderOpening();
+    }
     function handleOpeningPlayerChoice(player){ state.openingSelection.player=player; renderOpening(); }
 
     function submitNonFirstOpening(){
@@ -1651,9 +1728,8 @@
       }
       const selectedTile=state.openingSelection.tile;
       const selectedPlayer=state.openingSelection.player;
-      const options=player=>player==='self'?state.selected:values.flatMap(a=>values.filter(b=>b>=a).map(b=>[a,b]));
-      const tileOptions=options('any');
-      openingContent.innerHTML=`<div class="opening-stack"><div class="opening-note"><strong>No es primera mano</strong><p>Registra la ficha que ya se jugó y quién la puso en la mesa.</p></div><div><strong>Ficha jugada</strong><div class="mini-board-chain">${tileOptions.map(tile=>{ const tileK=key(tile); const active=tileK===selectedTile?'active':''; return `<button class="seat-btn ${active}" type="button" data-opening-tile="${tileK}">${domino(tile[0],tile[1],'small','horizontal')}<small>${tileK}${state.selected.some(item=>key(item)===tileK)?' · en tu mano':''}</small></button>`; }).join('')}</div></div><div><strong>Quién la jugó</strong><div class="seat-grid">${['self','left','partner','right'].map(seat=>`<button class="seat-btn ${selectedPlayer===seat?'active':''}" type="button" data-opening-player="${seat}"><strong>${SEAT_LABELS[seat]}</strong><small>${seat==='self'?'Si eliges esta opción, la ficha se quitará de tu mano.':'Información pública de apertura'}</small></button>`).join('')}</div></div><div class="opening-actions"><button id="submitOpeningBtn" class="confirm-btn opening-action-btn" type="button" ${selectedTile && selectedPlayer?'':'disabled'}>Iniciar seguimiento</button></div></div>`;
+      const tileOptions=values.flatMap(a=>values.filter(b=>b>=a).map(b=>[a,b]));
+      openingContent.innerHTML=`<div class="opening-stack"><div class="opening-note"><strong>No es primera mano</strong><p>Registra la ficha que ya se jugó y después quién la puso en la mesa.</p></div><section class="opening-step" aria-labelledby="openingTileStepTitle"><div><h3 id="openingTileStepTitle" class="opening-step-title">1. Elige la ficha jugada</h3><p class="opening-step-copy">Usa el mismo gesto de selección de la mano: toca una ficha para marcarla.</p></div><div class="opening-tile-grid">${tileOptions.map(tile=>{ const tileK=key(tile); const active=tileK===selectedTile?'selected':''; const inHand=state.selected.some(item=>key(item)===tileK); return `<button class="hand-tile-wrap opening-tile-btn ${active}" type="button" data-opening-tile="${tileK}" aria-pressed="${tileK===selectedTile}">${domino(tile[0],tile[1],'small')}<small>${tileK}${inHand?' · en tu mano':''}</small></button>`; }).join('')}</div></section>${selectedTile?`<section class="opening-step" aria-labelledby="openingPlayerStepTitle"><div><h3 id="openingPlayerStepTitle" class="opening-step-title">2. ¿Quién jugó ${selectedTile}?</h3><p class="opening-player-prompt">Selecciona el jugador que colocó la ficha elegida.</p></div><div class="seat-grid">${['self','left','partner','right'].map(seat=>`<button class="seat-btn ${selectedPlayer===seat?'active':''}" type="button" data-opening-player="${seat}"><strong>${SEAT_LABELS[seat]}</strong><small>${seat==='self'?'Si eliges esta opción, la ficha se quitará de tu mano.':'Información pública de apertura'}</small></button>`).join('')}</div></section>`:''}<div class="opening-actions"><button id="submitOpeningBtn" class="confirm-btn opening-action-btn" type="button" ${selectedTile && selectedPlayer?'':'disabled'}>Iniciar seguimiento</button></div></div>`;
       openingContent.querySelectorAll('[data-opening-tile]').forEach(btn=>btn.addEventListener('click',()=>handleOpeningTileChoice(btn.dataset.openingTile)));
       openingContent.querySelectorAll('[data-opening-player]').forEach(btn=>btn.addEventListener('click',()=>handleOpeningPlayerChoice(btn.dataset.openingPlayer)));
       document.getElementById('submitOpeningBtn')?.addEventListener('click', submitNonFirstOpening);
