@@ -242,17 +242,19 @@
     }
 
     .theme-toggle{
-      height:42px;
+      min-height:46px;
       display:inline-flex;
       align-items:center;
-      gap:8px;
-      padding:0 14px;
+      gap:10px;
+      padding:8px 14px;
       border-radius:999px;
       background:linear-gradient(180deg, var(--pair), var(--pair-bottom));
       border:1px solid var(--pair-border);
       box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 8px 20px rgba(0,0,0,.12);
       font-size:.88rem;
       font-weight:750;
+      line-height:1.1;
+      text-align:left;
       transition:transform .15s ease, box-shadow .15s ease;
     }
 
@@ -264,6 +266,30 @@
       background:linear-gradient(180deg,#f4f7ff,#b8c2d8);
       box-shadow:0 0 0 1px rgba(255,255,255,.28), 0 1px 2px rgba(0,0,0,.18);
       flex:0 0 auto;
+    }
+
+    .theme-toggle-copy{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      min-width:0;
+    }
+
+    .theme-toggle-label{
+      font-size:.7rem;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+
+    .theme-toggle-value{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-weight:800;
+      letter-spacing:-.01em;
+      color:var(--text);
     }
 
     html[data-theme="wood"] .theme-toggle::before{background:linear-gradient(180deg,#f4d8b6,#a66a38)}
@@ -538,6 +564,65 @@
       pointer-events:none;
     }
 
+    .hand-tray-wrap.scrollable::before,
+    .hand-tray-wrap.scrollable::after{
+      opacity:1;
+    }
+
+    .scroll-fade{
+      position:absolute;
+      top:14px;
+      bottom:8px;
+      width:34px;
+      border-radius:18px;
+      pointer-events:none;
+      opacity:0;
+      transition:opacity .18s ease;
+      z-index:2;
+    }
+
+    .scroll-fade.left{
+      left:6px;
+      background:linear-gradient(90deg, color-mix(in srgb, var(--tray) 94%, black 6%), rgba(0,0,0,0));
+    }
+
+    .scroll-fade.right{
+      right:6px;
+      background:linear-gradient(270deg, color-mix(in srgb, var(--tray) 94%, black 6%), rgba(0,0,0,0));
+    }
+
+    .hand-tray-wrap.can-scroll-left .scroll-fade.left,
+    .hand-tray-wrap.can-scroll-right .scroll-fade.right{
+      opacity:1;
+    }
+
+    .scroll-hint{
+      margin:10px 4px 0;
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:8px;
+      color:var(--soft);
+      font-size:.78rem;
+      font-weight:700;
+      letter-spacing:.01em;
+      opacity:0;
+      transform:translateY(-2px);
+      transition:opacity .18s ease, transform .18s ease;
+      pointer-events:none;
+    }
+
+    .scroll-hint::before{
+      content:"↔";
+      font-size:.95rem;
+      line-height:1;
+    }
+
+    .hand-tray-wrap.scrollable .scroll-hint{
+      opacity:.88;
+      transform:translateY(0);
+    }
+
     .hand-tray{
       min-height:128px;
       border-radius:22px;
@@ -657,20 +742,30 @@
       .hero-meta{width:100%}
       .panel-head,
       .hand-panel-head{flex-direction:column;align-items:flex-start}
-      .pair-grid{grid-template-columns:repeat(4, minmax(0, 1fr))}
-      .tiles-row{grid-template-columns:repeat(4, minmax(0, 1fr))}
-      .domino.large{width:58px;height:90px}
-      .tile-btn{min-height:122px}
+      .pair-grid,.tiles-row{grid-template-columns:repeat(4, minmax(0, 1fr));gap:9px}
+      .panel{padding:16px}
+      .pair-btn{min-height:52px;border-radius:15px}
+      .domino.large{width:56px;height:88px}
+      .tile-btn{min-height:118px;padding:7px 5px;border-radius:18px}
       .hand-tray{min-height:112px;padding:14px 14px 12px}
+    }
+
+    @media (max-width:560px){
+      .pair-grid,.tiles-row{grid-template-columns:repeat(3, minmax(0, 1fr));gap:10px}
+      .panel-head{margin-bottom:12px}
+      .pair-btn{min-height:56px}
+      .tile-btn{min-height:126px;padding:8px 6px}
+      .domino.large{width:60px;height:94px}
+      .scroll-hint{justify-content:flex-start}
     }
 
     @media (max-width:420px){
       .title{font-size:1.56rem}
       .subtitle,.panel-copy,.counter,.hand-copy{font-size:.9rem}
       .pair-grid,.tiles-row{gap:8px}
-      .pair-btn{min-height:50px;border-radius:14px}
-      .tile-btn{min-height:108px;padding:6px 4px;border-radius:16px}
-      .domino.large{width:48px;height:78px}
+      .pair-btn{min-height:52px;border-radius:14px}
+      .tile-btn{min-height:114px;padding:6px 4px;border-radius:16px}
+      .domino.large{width:52px;height:82px}
       .domino.small{width:34px;height:54px}
       .domino.pair-visual{width:38px;height:27px}
       .confirm-btn{height:52px;border-radius:16px}
@@ -690,7 +785,12 @@
             <p class="subtitle">Arma tu mano con una vista más clara, mejor ritmo visual y una bandeja inferior pensada para revisar la selección de un vistazo.</p>
           </div>
           <div class="hero-actions">
-            <button id="themeToggle" class="theme-toggle" type="button" aria-label="Cambiar estilo de la página">🌗 Estilo</button>
+            <button id="themeToggle" class="theme-toggle" type="button" aria-label="Cambiar tema visual">
+              <span class="theme-toggle-copy">
+                <span class="theme-toggle-label">Tema visual</span>
+                <span id="themeToggleValue" class="theme-toggle-value">🌙 Noche</span>
+              </span>
+            </button>
             <div class="hero-meta" aria-label="Resumen de selección">
               <div class="meta-card">
                 <span class="meta-label">Estado</span>
@@ -738,8 +838,11 @@
           </div>
           <div id="handStatus" class="hand-status">0 de 7 fichas</div>
         </div>
-        <div class="hand-tray-wrap">
+        <div id="handTrayWrap" class="hand-tray-wrap">
+          <div class="scroll-fade left" aria-hidden="true"></div>
+          <div class="scroll-fade right" aria-hidden="true"></div>
           <div id="handTray" class="hand-tray hand-empty">Selecciona fichas para formar tu mano</div>
+          <div id="scrollHint" class="scroll-hint" aria-hidden="true">Desliza la bandeja para ver más fichas</div>
         </div>
       </div>
     </section>
@@ -762,7 +865,10 @@
     const counter=document.getElementById('counter');
     const confirmBtn=document.getElementById('confirmBtn');
     const handTray=document.getElementById('handTray');
+    const handTrayWrap=document.getElementById('handTrayWrap');
+    const scrollHint=document.getElementById('scrollHint');
     const themeToggle=document.getElementById('themeToggle');
+    const themeToggleValue=document.getElementById('themeToggleValue');
     const heroStatus=document.getElementById('heroStatus');
     const heroCount=document.getElementById('heroCount');
     const activePairLabel=document.getElementById('activePairLabel');
@@ -776,7 +882,12 @@
       state.theme=theme;
       root.dataset.theme=theme;
       localStorage.setItem('domino-theme', theme);
-      themeToggle.textContent=theme==='wood'?'🪵 Madera':'🌙 Noche';
+      const isWood=theme==='wood';
+      const currentLabel=isWood?'🪵 Madera':'🌙 Noche';
+      const nextLabel=isWood?'Cambiar a Noche':'Cambiar a Madera';
+      themeToggleValue.textContent=currentLabel;
+      themeToggle.title=nextLabel;
+      themeToggle.setAttribute('aria-label', `${currentLabel}. ${nextLabel}`);
     }
 
     function pips(n){
@@ -842,10 +953,24 @@
       confirmBtn.disabled=!ready;
     }
 
+    function updateHandTrayAffordance(){
+      const canScroll=handTray.scrollWidth-handTray.clientWidth>8;
+      const maxScroll=Math.max(0, handTray.scrollWidth-handTray.clientWidth);
+      const atStart=handTray.scrollLeft<=4;
+      const atEnd=handTray.scrollLeft>=maxScroll-4;
+
+      handTrayWrap.classList.toggle('scrollable', canScroll);
+      handTrayWrap.classList.toggle('can-scroll-left', canScroll && !atStart);
+      handTrayWrap.classList.toggle('can-scroll-right', canScroll && !atEnd);
+      scrollHint.setAttribute('aria-hidden', String(!canScroll));
+    }
+
     function renderHand(){
       if(!state.selected.length){
         handTray.className='hand-tray hand-empty';
         handTray.textContent='Selecciona fichas para formar tu mano';
+        handTray.scrollLeft=0;
+        updateHandTrayAffordance();
         return;
       }
 
@@ -855,6 +980,7 @@
           ${domino(tile[0],tile[1],'small')}
         </div>
       `).join('');
+      updateHandTrayAffordance();
     }
 
     function render(){
@@ -867,6 +993,9 @@
     themeToggle.addEventListener('click',()=>{
       setTheme(state.theme==='midnight'?'wood':'midnight');
     });
+
+    handTray.addEventListener('scroll', updateHandTrayAffordance, {passive:true});
+    window.addEventListener('resize', updateHandTrayAffordance);
 
     confirmBtn.addEventListener('click',()=>{
       if(state.selected.length===7){
