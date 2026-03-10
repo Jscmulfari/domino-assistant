@@ -445,18 +445,29 @@
 
     .compose-shell{
       display:grid;
-      gap:14px;
+      gap:16px;
     }
 
-    .compose-grid{
+    .compose-stage{
       display:grid;
       grid-template-columns:repeat(2, minmax(0, 1fr));
       gap:12px;
     }
 
-    .compose-field{
+    .compose-card{
       display:grid;
-      gap:8px;
+      gap:12px;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+    }
+
+    .compose-card-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
     }
 
     .compose-label{
@@ -466,23 +477,88 @@
       letter-spacing:.01em;
     }
 
-    .compose-select{
-      width:100%;
-      min-height:46px;
-      padding:0 42px 0 14px;
-      border-radius:14px;
-      border:1px solid var(--pair-border);
-      background:var(--pair);
-      color:var(--text);
-      outline:none;
-      background-image:
-        linear-gradient(45deg, transparent 50%, var(--muted) 50%),
-        linear-gradient(135deg, var(--muted) 50%, transparent 50%);
-      background-position:
-        calc(100% - 18px) calc(50% - 3px),
-        calc(100% - 12px) calc(50% - 3px);
-      background-size:6px 6px, 6px 6px;
-      background-repeat:no-repeat;
+    .compose-step{
+      display:block;
+      margin-top:4px;
+      color:var(--muted);
+      font-size:.82rem;
+      font-weight:600;
+      line-height:1.35;
+    }
+
+    .compose-choice{
+      min-width:74px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      color:var(--soft);
+      font-size:.8rem;
+      font-weight:800;
+      text-align:center;
+      white-space:nowrap;
+    }
+
+    .compose-choice.empty{
+      color:var(--muted);
+    }
+
+    .half-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:10px;
+    }
+
+    .half-btn{
+      min-height:90px;
+      padding:10px 8px;
+      border-radius:16px;
+      border:1px solid var(--tile-border);
+      background:var(--tile-frame);
+      display:grid;
+      justify-items:center;
+      align-content:center;
+      gap:8px;
+      transition:border-color .14s ease, box-shadow .14s ease, background .14s ease, transform .14s ease;
+    }
+
+    .half-btn:hover{transform:translateY(-1px)}
+
+    .half-btn.active{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),
+        var(--tile-selected);
+      border-color:var(--green-border);
+      box-shadow:0 0 0 2px rgba(121,218,108,.16);
+    }
+
+    .half-domino{
+      width:48px;
+      height:64px;
+      border-radius:12px;
+      border:1px solid var(--domino-edge);
+      background:linear-gradient(180deg, var(--domino-top), var(--domino));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.62), 0 3px 8px rgba(0,0,0,.08);
+      display:grid;
+      place-items:center;
+      padding:8px;
+    }
+
+    .half-domino .pips{
+      width:20px;
+      height:20px;
+    }
+
+    .half-domino .pip{
+      width:4px;
+      height:4px;
+    }
+
+    .half-name{
+      font-size:.8rem;
+      font-weight:800;
+      color:var(--soft);
+      letter-spacing:-.01em;
     }
 
     .compose-preview-row{
@@ -846,20 +922,22 @@
       .hero-meta{width:100%}
       .panel-head,
       .hand-panel-head,
-      .mode-row{flex-direction:column;align-items:flex-start}
+      .mode-row,
+      .compose-card-head{flex-direction:column;align-items:flex-start}
       .pair-grid,.tiles-row{grid-template-columns:repeat(4, minmax(0, 1fr));gap:9px}
       .panel{padding:16px}
       .pair-btn{min-height:52px;border-radius:15px}
       .domino.large{width:56px;height:88px}
       .tile-btn{min-height:118px;padding:7px 5px;border-radius:18px}
       .hand-tray{min-height:112px;padding:14px 14px 12px}
-      .compose-grid{grid-template-columns:1fr}
+      .compose-stage{grid-template-columns:1fr}
+      .half-grid{grid-template-columns:repeat(4, minmax(0, 1fr))}
       .compose-preview-row{align-items:flex-start}
       .mode-control{width:100%;min-width:0}
     }
 
     @media (max-width:560px){
-      .pair-grid,.tiles-row{grid-template-columns:repeat(3, minmax(0, 1fr));gap:10px}
+      .pair-grid,.tiles-row,.half-grid{grid-template-columns:repeat(3, minmax(0, 1fr));gap:10px}
       .panel-head{margin-bottom:12px}
       .pair-btn{min-height:56px}
       .tile-btn{min-height:126px;padding:8px 6px}
@@ -870,9 +948,11 @@
     @media (max-width:420px){
       .title{font-size:1.56rem}
       .subtitle,.panel-copy,.counter,.hand-copy,.compose-feedback{font-size:.9rem}
-      .pair-grid,.tiles-row{gap:8px}
+      .pair-grid,.tiles-row,.half-grid{gap:8px}
       .pair-btn{min-height:52px;border-radius:14px}
       .tile-btn{min-height:114px;padding:6px 4px;border-radius:16px}
+      .half-btn{min-height:82px;padding:8px 6px;border-radius:14px}
+      .half-domino{width:42px;height:56px}
       .domino.large{width:52px;height:82px}
       .domino.small{width:34px;height:54px}
       .domino.pair-visual{width:38px;height:27px}
@@ -917,7 +997,7 @@
           <div class="mode-row">
             <div>
               <h2 id="inputModeTitle" class="panel-title">Modo de entrada</h2>
-              <p class="panel-copy">Cambia entre selección directa o composición por valores.</p>
+              <p class="panel-copy">Cambia entre selección directa o composición visual por mitades.</p>
             </div>
             <div id="modeControl" class="mode-control" role="tablist" aria-label="Modo de entrada">
               <button class="mode-toggle active" type="button" data-mode="tiles" role="tab" aria-selected="true">Fichas</button>
@@ -953,32 +1033,41 @@
           <div class="panel-head">
             <div>
               <h2 id="valuesTitle" class="panel-title">Componer ficha</h2>
-              <p class="panel-copy">Elige dos valores, revisa la ficha resultante y añádela manualmente.</p>
+              <p class="panel-copy">Primero elige una mitad, luego la otra. La ficha completa aparece al momento.</p>
             </div>
-            <div class="panel-badge">Normalización automática</div>
+            <div class="panel-badge">Mitades visuales</div>
           </div>
 
           <div class="compose-shell">
-            <div class="compose-grid">
-              <label class="compose-field">
-                <span class="compose-label">Primer valor</span>
-                <select id="firstValue" class="compose-select" aria-label="Primer valor">
-                  <option value="">Selecciona</option>
-                </select>
-              </label>
-              <label class="compose-field">
-                <span class="compose-label">Segundo valor</span>
-                <select id="secondValue" class="compose-select" aria-label="Segundo valor">
-                  <option value="">Selecciona</option>
-                </select>
-              </label>
+            <div class="compose-stage">
+              <section class="compose-card" aria-labelledby="firstHalfTitle">
+                <div class="compose-card-head">
+                  <div>
+                    <h3 id="firstHalfTitle" class="compose-label">Primera mitad</h3>
+                    <span class="compose-step">Paso 1 · Elige el lado inicial</span>
+                  </div>
+                  <div id="firstHalfChoice" class="compose-choice empty">Sin elegir</div>
+                </div>
+                <div id="firstHalfGrid" class="half-grid" role="list" aria-label="Opciones para la primera mitad"></div>
+              </section>
+
+              <section class="compose-card" aria-labelledby="secondHalfTitle">
+                <div class="compose-card-head">
+                  <div>
+                    <h3 id="secondHalfTitle" class="compose-label">Segunda mitad</h3>
+                    <span class="compose-step">Paso 2 · Completa la ficha</span>
+                  </div>
+                  <div id="secondHalfChoice" class="compose-choice empty">Sin elegir</div>
+                </div>
+                <div id="secondHalfGrid" class="half-grid" role="list" aria-label="Opciones para la segunda mitad"></div>
+              </section>
             </div>
 
             <div class="compose-preview-row">
               <div id="composePreview" class="compose-preview empty">Sin vista previa</div>
               <div class="compose-preview-copy">
-                <p class="compose-preview-title">Vista previa</p>
-                <p id="composePreviewText" class="compose-preview-text">Completa ambos valores para generar una ficha.</p>
+                <p class="compose-preview-title">Ficha resultante</p>
+                <p id="composePreviewText" class="compose-preview-text">Selecciona dos mitades para ver la ficha completa.</p>
               </div>
             </div>
 
@@ -1045,8 +1134,10 @@
     const heroCount=document.getElementById('heroCount');
     const activePairLabel=document.getElementById('activePairLabel');
     const handStatus=document.getElementById('handStatus');
-    const firstValue=document.getElementById('firstValue');
-    const secondValue=document.getElementById('secondValue');
+    const firstHalfGrid=document.getElementById('firstHalfGrid');
+    const secondHalfGrid=document.getElementById('secondHalfGrid');
+    const firstHalfChoice=document.getElementById('firstHalfChoice');
+    const secondHalfChoice=document.getElementById('secondHalfChoice');
     const composePreview=document.getElementById('composePreview');
     const composePreviewText=document.getElementById('composePreviewText');
     const composeFeedback=document.getElementById('composeFeedback');
@@ -1061,10 +1152,8 @@
     const handFull=()=>state.selected.length>=7;
     const canAddTile=tile=>Boolean(tile) && !isDuplicate(tile) && !handFull();
 
-    function populateValueSelects(){
-      const options=valueLabels.map((label,index)=>`<option value="${index}">${label}</option>`).join('');
-      firstValue.insertAdjacentHTML('beforeend', options);
-      secondValue.insertAdjacentHTML('beforeend', options);
+    function halfDomino(value){
+      return `<div class="half-domino" aria-hidden="true">${pips(value)}</div>`;
     }
 
     function setTheme(theme){
@@ -1191,13 +1280,38 @@
       });
     }
 
-    function renderCompose(){
-      firstValue.value=state.compose.first===null?'':String(state.compose.first);
-      secondValue.value=state.compose.second===null?'':String(state.compose.second);
+    function renderHalfGrid(container, selectedValue, onSelect, labelPrefix){
+      container.innerHTML=values.map(value=>`
+        <button class="half-btn ${selectedValue===value?'active':''}" type="button" data-value="${value}" aria-label="${labelPrefix} ${valueLabels[value]}">
+          ${halfDomino(value)}
+          <span class="half-name">${valueLabels[value]}</span>
+        </button>
+      `).join('');
 
+      container.querySelectorAll('.half-btn').forEach(btn=>{
+        btn.onclick=()=>onSelect(Number(btn.dataset.value));
+      });
+    }
+
+    function renderCompose(){
       const tile=getComposeTile();
       const status=getComposeStatus(tile);
       const hasDraft=state.compose.first!==null || state.compose.second!==null;
+
+      renderHalfGrid(firstHalfGrid, state.compose.first, value=>{
+        state.compose.first=value;
+        renderCompose();
+      }, 'Primera mitad');
+
+      renderHalfGrid(secondHalfGrid, state.compose.second, value=>{
+        state.compose.second=value;
+        renderCompose();
+      }, 'Segunda mitad');
+
+      firstHalfChoice.textContent=state.compose.first===null?'Sin elegir':valueLabels[state.compose.first];
+      firstHalfChoice.classList.toggle('empty', state.compose.first===null);
+      secondHalfChoice.textContent=state.compose.second===null?'Sin elegir':valueLabels[state.compose.second];
+      secondHalfChoice.classList.toggle('empty', state.compose.second===null);
 
       clearComposeBtn.disabled=!hasDraft;
       addComposeBtn.disabled=!canAddTile(tile);
@@ -1205,8 +1319,8 @@
       composePreview.classList.toggle('empty', !tile);
       composePreview.innerHTML=tile ? domino(tile[0],tile[1],'large') : 'Sin vista previa';
       composePreviewText.textContent=tile
-        ? `Ficha normalizada: ${valueLabels[tile[0]]} · ${valueLabels[tile[1]]}.`
-        : 'Completa ambos valores para generar una ficha.';
+        ? `Resultado: ${valueLabels[state.compose.first]} + ${valueLabels[state.compose.second]} → ${valueLabels[tile[0]]}-${valueLabels[tile[1]]}.`
+        : 'Selecciona dos mitades para ver la ficha completa.';
 
       composeFeedback.className=`compose-feedback${status.tone==='error'?' error':status.tone==='success'?' success':''}`;
       composeFeedback.textContent=status.message;
@@ -1262,8 +1376,6 @@
       renderHand();
     }
 
-    populateValueSelects();
-
     themeToggle.addEventListener('click',()=>{
       setTheme(state.theme==='midnight'?'wood':'midnight');
     });
@@ -1272,16 +1384,6 @@
       const button=event.target.closest('.mode-toggle');
       if(!button) return;
       setInputMode(button.dataset.mode);
-    });
-
-    firstValue.addEventListener('change',event=>{
-      state.compose.first=event.target.value===''?null:Number(event.target.value);
-      renderCompose();
-    });
-
-    secondValue.addEventListener('change',event=>{
-      state.compose.second=event.target.value===''?null:Number(event.target.value);
-      renderCompose();
     });
 
     clearComposeBtn.addEventListener('click',()=>{
