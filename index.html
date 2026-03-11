@@ -901,7 +901,22 @@
       border-radius:999px;
     }
 
-    .opponent-tile{
+    .opponent-hand.left .opponent-tile,
+    .opponent-hand.right .opponent-tile{
+      width:62px;
+      height:40px;
+      margin-block:-3px;
+    }
+
+    .opponent-hand.left .opponent-tile::after,
+    .opponent-hand.right .opponent-tile::after{
+      inset:8px auto 8px 50%;
+      width:2px;
+      height:auto;
+      transform:translateX(-50%);
+    }
+
+    .opponent-hand.top .opponent-tile{
       width:40px;
       height:62px;
       margin-block:-3px;
@@ -1465,7 +1480,9 @@
       .domino.small{width:54px;height:86px}
       .hand-status{padding:5px 9px}
       .opponent-hand{gap:4px}
-      .opponent-tile{width:34px;height:54px}
+      .opponent-hand.top .opponent-tile{width:34px;height:54px}
+      .opponent-hand.left .opponent-tile,
+      .opponent-hand.right .opponent-tile{width:54px;height:34px}
     }
 
     @media (max-width:420px){
@@ -1489,7 +1506,9 @@
       .hand-tray-wrap::before{top:78px}
       .scroll-fade{top:92px}
       .table-stage{padding:12px 8px 8px}
-      .opponent-tile{width:30px;height:48px;margin-inline:0}
+      .opponent-hand.top .opponent-tile{width:30px;height:48px;margin-inline:0}
+      .opponent-hand.left .opponent-tile,
+      .opponent-hand.right .opponent-tile{width:48px;height:30px;margin-inline:0}
     }
   </style>
 </head>
