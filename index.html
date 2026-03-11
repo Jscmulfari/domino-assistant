@@ -1411,6 +1411,123 @@
     .player-meta{display:grid;gap:6px}
     .tag{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.05);font-size:.82rem;width:max-content}
 
+    .board-map{
+      grid-column:2;
+      grid-row:2;
+      min-height:360px;
+      border-radius:28px;
+      border:1px solid rgba(255,255,255,.08);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(129,184,255,.08), transparent 42%),
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015)),
+        linear-gradient(180deg, color-mix(in srgb, var(--panel) 72%, #1e7b4b 28%), color-mix(in srgb, var(--panel-2) 78%, #0d5031 22%));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08), inset 0 -1px 0 rgba(0,0,0,.18);
+      padding:16px;
+      display:grid;
+      gap:14px;
+    }
+
+    .board-map-head,
+    .board-controls,
+    .board-status,
+    .board-actions,
+    .move-log-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .board-map-title,
+    .move-log-title{margin:0;font-size:.96rem;font-weight:850;letter-spacing:-.02em;color:var(--soft)}
+    .board-map-copy,
+    .board-hint,
+    .move-log-empty{margin:0;color:var(--muted);font-size:.84rem;line-height:1.4}
+
+    .board-chip-row{display:flex;gap:8px;flex-wrap:wrap}
+    .board-chip,
+    .board-control,
+    .board-action-btn,
+    .pass-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:36px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.05);
+      color:var(--soft);
+      font-weight:800;
+      font-size:.8rem;
+      letter-spacing:-.01em;
+    }
+
+    .board-chip.active{
+      background:var(--accent-second-soft);
+      border-color:var(--accent-second-border);
+      color:var(--text);
+    }
+
+    .board-surface{
+      min-height:164px;
+      border-radius:22px;
+      border:1px dashed rgba(255,255,255,.14);
+      background:rgba(5,20,15,.16);
+      display:grid;
+      align-items:center;
+      gap:12px;
+      padding:16px 12px;
+    }
+
+    .board-chain{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+      min-height:92px;
+    }
+
+    .board-chain-slot{
+      min-width:72px;
+      min-height:92px;
+      border-radius:18px;
+      border:1px dashed rgba(255,255,255,.12);
+      display:grid;
+      place-items:center;
+      color:var(--muted);
+      font-size:.76rem;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      padding:10px;
+    }
+
+    .board-chain-tile{display:grid;gap:4px;justify-items:center}
+    .board-chain-tile .board-tile-meta{font-size:.72rem;color:var(--soft);font-weight:700}
+
+    .draft-card,
+    .move-log{
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      padding:12px;
+      display:grid;
+      gap:12px;
+    }
+
+    .draft-preview{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .draft-preview .draft-value{font-weight:800;color:var(--soft)}
+    .draft-empty{color:var(--muted)}
+    .board-action-btn.primary{background:var(--accent-first-soft);border-color:var(--accent-first-border);color:var(--text)}
+    .pass-btn{background:var(--danger-soft);border-color:rgba(255,159,159,.38)}
+    .move-log-list{list-style:none;padding:0;margin:0;display:grid;gap:8px;max-height:180px;overflow:auto}
+    .move-log-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;border-radius:14px;background:rgba(255,255,255,.04);font-size:.8rem}
+    .move-log-item strong{color:var(--soft)}
+    .move-log-item span{color:var(--muted);text-align:right}
+
     @media (max-width:820px){
       .board,.hand-zone,.table-stage{width:min(100%, calc(100vw - 24px))}
       .shell{padding:14px}
@@ -1465,10 +1582,11 @@
       .seat-grid,.player-grid,.summary-grid{grid-template-columns:1fr}
       .board.menu-focus{margin-top:-1vh}
       .table-stage{padding:14px 10px 10px}
-      .table-layout{grid-template-columns:1fr;grid-template-rows:auto auto auto auto;gap:10px}
+      .table-layout{grid-template-columns:1fr;grid-template-rows:auto auto auto auto auto;gap:10px}
       .opponent-hand.top,
       .opponent-hand.left,
-      .opponent-hand.right{grid-column:1;grid-row:auto;min-height:auto}
+      .opponent-hand.right,
+      .board-map{grid-column:1;grid-row:auto;min-height:auto}
       .opponent-hand.left .opponent-stack,
       .opponent-hand.right .opponent-stack{flex-direction:row}
       .opponent-hand{padding:10px 8px;min-height:74px}
@@ -1580,6 +1698,59 @@
             <div id="leftOpponent" class="opponent-stack" aria-hidden="true"></div>
           </div>
         </section>
+        <section id="boardMap" class="board-map" aria-label="Tablero principal para simular jugadas">
+          <div class="board-map-head">
+            <div>
+              <h2 class="board-map-title">Mesa en vivo</h2>
+              <p class="board-map-copy">La mesa es la superficie principal: juega desde tu bandeja o compón una ficha para simular rivales.</p>
+            </div>
+            <div class="board-chip-row" id="actorChips" aria-label="Jugador que actúa">
+              <button class="board-chip active" type="button" data-actor="self">Tú</button>
+              <button class="board-chip" type="button" data-actor="top">Arriba</button>
+              <button class="board-chip" type="button" data-actor="left">Izquierda</button>
+              <button class="board-chip" type="button" data-actor="right">Derecha</button>
+            </div>
+          </div>
+
+          <div class="board-controls">
+            <label class="board-control">Extremo
+              <select id="boardSideSelect">
+                <option value="right">Derecha</option>
+                <option value="left">Izquierda</option>
+              </select>
+            </label>
+            <div id="boardStatus" class="board-status">
+              <span class="board-control">Abiertos: <strong id="openEndsText">—</strong></span>
+              <span class="board-control">Turno simulado: <strong id="activeActorText">Tú</strong></span>
+            </div>
+          </div>
+
+          <div class="board-surface">
+            <div id="boardChain" class="board-chain" aria-live="polite"></div>
+            <p id="boardHint" class="board-hint">Confirma tu mano y luego usa la mesa para registrar jugadas o pases.</p>
+          </div>
+
+          <section class="draft-card" aria-labelledby="draftTitle">
+            <div class="board-actions">
+              <h3 id="draftTitle" class="board-map-title">Ficha contextual</h3>
+              <div>
+                <button id="clearDraftBtn" class="board-action-btn" type="button">Limpiar borrador</button>
+                <button id="playDraftBtn" class="board-action-btn primary" type="button">Jugar borrador</button>
+                <button id="passBtn" class="pass-btn" type="button">Registrar pase</button>
+              </div>
+            </div>
+            <div id="draftPreview" class="draft-preview"><span class="draft-empty">Sin ficha en borrador</span></div>
+          </section>
+
+          <section class="move-log" aria-labelledby="moveLogTitle">
+            <div class="move-log-head">
+              <h3 id="moveLogTitle" class="move-log-title">Registro</h3>
+              <span id="moveCount" class="board-control">0 movimientos</span>
+            </div>
+            <ul id="moveLogList" class="move-log-list"></ul>
+            <p id="moveLogEmpty" class="move-log-empty">Aún no hay jugadas registradas.</p>
+          </section>
+        </section>
         <section class="opponent-hand right" aria-label="Mano simulada del jugador de la derecha">
           <div>
             <p class="opponent-label">Derecha</p>
@@ -1624,7 +1795,14 @@
       handConfirmed:false,
       phase:'start_menu',
       startMode:null,
-      targetPoints:null
+      targetPoints:null,
+      live:{
+        actor:'self',
+        side:'right',
+        draft:{first:null,second:null},
+        board:[],
+        moves:[]
+      }
     };
 
     const root=document.documentElement;
@@ -1641,6 +1819,19 @@
     const topOpponent=document.getElementById('topOpponent');
     const leftOpponent=document.getElementById('leftOpponent');
     const rightOpponent=document.getElementById('rightOpponent');
+    const actorChips=document.getElementById('actorChips');
+    const boardSideSelect=document.getElementById('boardSideSelect');
+    const activeActorText=document.getElementById('activeActorText');
+    const openEndsText=document.getElementById('openEndsText');
+    const boardChain=document.getElementById('boardChain');
+    const boardHint=document.getElementById('boardHint');
+    const draftPreview=document.getElementById('draftPreview');
+    const clearDraftBtn=document.getElementById('clearDraftBtn');
+    const playDraftBtn=document.getElementById('playDraftBtn');
+    const passBtn=document.getElementById('passBtn');
+    const moveLogList=document.getElementById('moveLogList');
+    const moveLogEmpty=document.getElementById('moveLogEmpty');
+    const moveCount=document.getElementById('moveCount');
     const handZone=document.getElementById('handZone');
     const handConfirmBtn=document.getElementById('handConfirmBtn');
     const handConfirmLabel=document.getElementById('handConfirmLabel');
@@ -1685,6 +1876,58 @@
       return `<div class="domino ${size} ${orientation==='horizontal'?'pair-visual':''}"><div class="half">${pips(a)}</div><div class="half">${pips(b)}</div></div>`;
     }
 
+    function actorLabel(actor){
+      return ({self:'Tú',top:'Arriba',left:'Izquierda',right:'Derecha'})[actor] || 'Jugador';
+    }
+
+    function getOpenEnds(){
+      if(!state.live.board.length) return [];
+      return [state.live.board[0][0], state.live.board[state.live.board.length-1][1]];
+    }
+
+    function orientTileForSide(tile, side){
+      if(!state.live.board.length) return [...tile];
+      const [leftEnd,rightEnd]=getOpenEnds();
+      const [a,b]=tile;
+      if(side==='left'){
+        if(b===leftEnd) return [a,b];
+        if(a===leftEnd) return [b,a];
+      } else {
+        if(a===rightEnd) return [a,b];
+        if(b===rightEnd) return [b,a];
+      }
+      return null;
+    }
+
+    function canPlayTileOnBoard(tile, side=state.live.side){
+      return !state.live.board.length || Boolean(orientTileForSide(tile, side));
+    }
+
+    function resetLiveDraft(){ state.live.draft={first:null,second:null}; }
+    function getLiveDraftTile(){ const {first,second}=state.live.draft; return first===null || second===null ? null : [first,second]; }
+
+    function addMove(entry){ state.live.moves.unshift(entry); }
+
+    function playTileToBoard(tile,{actor=state.live.actor,side=state.live.side,fromHand=false}={}){
+      let oriented=[...tile];
+      if(state.live.board.length){
+        oriented=orientTileForSide(tile,side);
+        if(!oriented) return false;
+        if(side==='left') state.live.board.unshift(oriented);
+        else state.live.board.push(oriented);
+      } else {
+        state.live.board.push(oriented);
+      }
+      if(fromHand){ removeTile(tile); }
+      addMove({type:'play',actor,side,tile:[...oriented]});
+      resetLiveDraft();
+      state.handConfirmed=true;
+      state.phase='hand_confirmed';
+      return true;
+    }
+
+    function registerPass(actor=state.live.actor){ addMove({type:'pass',actor}); }
+
     function markHandUnconfirmed(){
       state.handConfirmed=false;
       state.phase='build_hand';
@@ -1714,6 +1957,13 @@
     function getComposeTile(){ const {first,second}=state.compose; return first===null || second===null ? null : normalize(first,second); }
 
     function selectComposeHalf(value){
+      if(state.phase==='hand_confirmed'){
+        if(state.live.draft.first===null){ state.live.draft.first=value; renderLiveBoard(); return; }
+        if(state.live.draft.second===null){ state.live.draft.second=value; renderLiveBoard(); return; }
+        state.live.draft={first:value,second:null};
+        renderLiveBoard();
+        return;
+      }
       if(state.compose.first===null){ state.compose.first=value; renderCompose(); return; }
       if(state.compose.second===null){
         state.compose.second=value;
@@ -1734,8 +1984,9 @@
     }
 
     function renderHalfGrid(){
-      const first=state.compose.first;
-      const second=state.compose.second;
+      const source=state.phase==='hand_confirmed' ? state.live.draft : state.compose;
+      const first=source.first;
+      const second=source.second;
       sharedHalfGrid.innerHTML=values.map(value=>{
         const isFirst=first===value;
         const isSecond=second===value;
@@ -1752,13 +2003,14 @@
 
     function renderCompose(){
       renderHalfGrid();
-      const isDouble=state.compose.first!==null && state.compose.first===state.compose.second;
-      firstHalfChoice.className=`compose-choice${state.compose.first===null?' empty':' first-filled'}${isDouble?' double-filled':''}`;
-      firstHalfChoice.setAttribute('aria-label', state.compose.first===null ? 'Primera mitad pendiente' : `Primera mitad: ${valueLabels[state.compose.first]}`);
-      firstHalfChoice.innerHTML=`<span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">${state.compose.first===null?'Primera mitad pendiente':`Primera mitad: ${valueLabels[state.compose.first]}`}</span>`;
-      secondHalfChoice.className=`compose-choice${state.compose.second===null?' empty':' second-filled'}${isDouble?' double-filled':''}`;
-      secondHalfChoice.setAttribute('aria-label', state.compose.second===null ? 'Segunda mitad pendiente' : `Segunda mitad: ${valueLabels[state.compose.second]}`);
-      secondHalfChoice.innerHTML=`<span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">${state.compose.second===null?'Segunda mitad pendiente':`Segunda mitad: ${valueLabels[state.compose.second]}`}</span>`;
+      const source=state.phase==='hand_confirmed' ? state.live.draft : state.compose;
+      const isDouble=source.first!==null && source.first===source.second;
+      firstHalfChoice.className=`compose-choice${source.first===null?' empty':' first-filled'}${isDouble?' double-filled':''}`;
+      firstHalfChoice.setAttribute('aria-label', source.first===null ? 'Primera mitad pendiente' : `Primera mitad: ${valueLabels[source.first]}`);
+      firstHalfChoice.innerHTML=`<span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">${source.first===null?'Primera mitad pendiente':`Primera mitad: ${valueLabels[source.first]}`}</span>`;
+      secondHalfChoice.className=`compose-choice${source.second===null?' empty':' second-filled'}${isDouble?' double-filled':''}`;
+      secondHalfChoice.setAttribute('aria-label', source.second===null ? 'Segunda mitad pendiente' : `Segunda mitad: ${valueLabels[source.second]}`);
+      secondHalfChoice.innerHTML=`<span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">${source.second===null?'Segunda mitad pendiente':`Segunda mitad: ${valueLabels[source.second]}`}</span>`;
     }
 
     function renderFlow(){
@@ -1847,13 +2099,47 @@
       rightOpponent.innerHTML=createOpponentTiles('right');
     }
 
+    function renderLiveBoard(){
+      actorChips.querySelectorAll('[data-actor]').forEach(btn=>btn.classList.toggle('active', btn.dataset.actor===state.live.actor));
+      boardSideSelect.value=state.live.side;
+      activeActorText.textContent=actorLabel(state.live.actor);
+      const openEnds=getOpenEnds();
+      openEndsText.textContent=openEnds.length ? openEnds.join(' · ') : 'Mesa vacía';
+
+      if(!state.live.board.length){
+        boardChain.innerHTML='<div class="board-chain-slot">Salida</div>';
+      } else {
+        boardChain.innerHTML=state.live.board.map((tile,index)=>`<div class="board-chain-tile">${domino(tile[0],tile[1], 'small', index % 2 ? 'horizontal' : 'vertical')}<span class="board-tile-meta">${tile[0]}-${tile[1]}</span></div>`).join('');
+      }
+
+      const draftTile=getLiveDraftTile();
+      if(draftTile){
+        draftPreview.innerHTML=`${domino(draftTile[0],draftTile[1],'small')}<span class="draft-value">${draftTile[0]}-${draftTile[1]}</span>`;
+      } else {
+        draftPreview.innerHTML='<span class="draft-empty">Sin ficha en borrador</span>';
+      }
+
+      const canPlayDraft=Boolean(draftTile) && canPlayTileOnBoard(draftTile);
+      playDraftBtn.disabled=!canPlayDraft;
+      clearDraftBtn.disabled=!draftTile;
+      const selfPlayable=state.live.actor==='self';
+      if(!state.live.board.length) boardHint.textContent=selfPlayable ? 'Juega cualquier ficha desde tu bandeja para abrir la mesa o usa el borrador para simular otro jugador.' : 'Compón una ficha con los valores y pulsa “Jugar borrador” para simular la salida.';
+      else if(selfPlayable) boardHint.textContent='Selecciona una ficha de tu bandeja para jugarla en el extremo elegido.';
+      else boardHint.textContent=canPlayDraft ? 'El borrador encaja con la mesa. Puedes registrarlo o marcar un pase.' : 'Compón una ficha para el rival activo o registra un pase si no puede jugar.';
+
+      moveCount.textContent=`${state.live.moves.length} ${state.live.moves.length===1?'movimiento':'movimientos'}`;
+      moveLogEmpty.classList.toggle('hidden', state.live.moves.length>0);
+      moveLogList.innerHTML=state.live.moves.map(move=>{
+        if(move.type==='pass') return `<li class="move-log-item"><strong>${actorLabel(move.actor)}</strong><span>Pasó</span></li>`;
+        return `<li class="move-log-item"><strong>${actorLabel(move.actor)}</strong><span>${move.tile[0]}-${move.tile[1]} · ${move.side==='left'?'izquierda':'derecha'}</span></li>`;
+      }).join('');
+    }
+
     function confirmHand(){
       if(state.selected.length===7){
         state.handConfirmed=true;
         state.phase='hand_confirmed';
-        renderCounter();
-        renderOpponentHands();
-        renderFlow();
+        render();
       }
     }
 
@@ -1864,15 +2150,20 @@
       renderCounter();
       renderHand();
       renderOpponentHands();
+      renderLiveBoard();
     }
 
     themePicker.addEventListener('click',event=>{ const chip=event.target.closest('.theme-chip'); if(!chip) return; setTheme(chip.dataset.themeOption); });
     handTray.addEventListener('scroll', updateHandTrayAffordance, {passive:true});
     window.addEventListener('resize', updateHandTrayAffordance);
     handTray.addEventListener('click',event=>{
-      if(state.handConfirmed) return;
       const button=event.target.closest('[data-hand-tile]'); if(!button) return;
       const tile=button.dataset.handTile.split('-').map(Number);
+      if(state.handConfirmed){
+        if(state.live.actor!=='self') return;
+        if(playTileToBoard(tile,{actor:'self',side:state.live.side,fromHand:true})) render();
+        return;
+      }
       if(window.confirm(`¿Quitar la ficha ${key(tile)} de tu mano?`)){ removeTile(tile); render(); }
     });
     handConfirmBtn.addEventListener('click', confirmHand);
@@ -1880,6 +2171,23 @@
     continueGameBtn.addEventListener('click', continueGame);
     points70Btn.addEventListener('click',()=>chooseTargetPoints(70));
     points100Btn.addEventListener('click',()=>chooseTargetPoints(100));
+    actorChips.addEventListener('click',event=>{
+      const button=event.target.closest('[data-actor]');
+      if(!button) return;
+      state.live.actor=button.dataset.actor;
+      renderLiveBoard();
+    });
+    boardSideSelect.addEventListener('change',()=>{
+      state.live.side=boardSideSelect.value;
+      renderLiveBoard();
+    });
+    clearDraftBtn.addEventListener('click',()=>{ resetLiveDraft(); renderLiveBoard(); });
+    playDraftBtn.addEventListener('click',()=>{
+      const draftTile=getLiveDraftTile();
+      if(!draftTile) return;
+      if(playTileToBoard(draftTile,{actor:state.live.actor,side:state.live.side})) render();
+    });
+    passBtn.addEventListener('click',()=>{ registerPass(); renderLiveBoard(); });
     setTheme(state.theme);
     render();
   </script>
