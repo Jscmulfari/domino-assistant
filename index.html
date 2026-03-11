@@ -811,17 +811,6 @@
 
     .table-stage.hidden{display:none}
 
-    .opponent-label{
-      margin:0 0 10px;
-      color:var(--soft);
-      font-size:.78rem;
-      font-weight:800;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      opacity:.82;
-      text-align:center;
-    }
-
     .table-layout{
       display:grid;
       grid-template-columns:92px minmax(0,1fr) 92px;
@@ -912,14 +901,7 @@
       border-radius:999px;
     }
 
-    .opponent-tile.horizontal{
-      width:40px;
-      height:62px;
-      transform:rotate(90deg);
-      margin-inline:-4px;
-    }
-
-    .opponent-tile.vertical{
+    .opponent-tile{
       width:40px;
       height:62px;
       margin-block:-3px;
@@ -1472,7 +1454,6 @@
       .opponent-hand.left .opponent-stack,
       .opponent-hand.right .opponent-stack{flex-direction:row}
       .opponent-hand{padding:10px 8px;min-height:74px}
-      .opponent-tile.vertical{transform:rotate(90deg);margin-inline:-4px;margin-block:0}
     }
 
     @media (max-width:560px){
@@ -1484,8 +1465,7 @@
       .domino.small{width:54px;height:86px}
       .hand-status{padding:5px 9px}
       .opponent-hand{gap:4px}
-      .opponent-tile.horizontal,
-      .opponent-tile.vertical{width:34px;height:54px}
+      .opponent-tile{width:34px;height:54px}
     }
 
     @media (max-width:420px){
@@ -1509,9 +1489,7 @@
       .hand-tray-wrap::before{top:78px}
       .scroll-fade{top:92px}
       .table-stage{padding:12px 8px 8px}
-      .opponent-tile.horizontal,
-      .opponent-tile.vertical{width:30px;height:48px;margin-inline:-5px}
-      .opponent-label{font-size:.72rem;margin-bottom:8px}
+      .opponent-tile{width:30px;height:48px;margin-inline:0}
     }
   </style>
 </head>
@@ -1569,22 +1547,13 @@
     <section id="tableStage" class="table-stage hidden" aria-label="Mesa con manos simuladas de los rivales">
       <div class="table-layout">
         <section class="opponent-hand top" aria-label="Mano simulada del jugador de arriba">
-          <div>
-            <p class="opponent-label">Arriba</p>
-            <div id="topOpponent" class="opponent-stack" aria-hidden="true"></div>
-          </div>
+          <div id="topOpponent" class="opponent-stack" aria-hidden="true"></div>
         </section>
         <section class="opponent-hand left" aria-label="Mano simulada del jugador de la izquierda">
-          <div>
-            <p class="opponent-label">Izquierda</p>
-            <div id="leftOpponent" class="opponent-stack" aria-hidden="true"></div>
-          </div>
+          <div id="leftOpponent" class="opponent-stack" aria-hidden="true"></div>
         </section>
         <section class="opponent-hand right" aria-label="Mano simulada del jugador de la derecha">
-          <div>
-            <p class="opponent-label">Derecha</p>
-            <div id="rightOpponent" class="opponent-stack" aria-hidden="true"></div>
-          </div>
+          <div id="rightOpponent" class="opponent-stack" aria-hidden="true"></div>
         </section>
       </div>
     </section>
@@ -1831,8 +1800,8 @@
         left:[-6,-4,-1,0,1,4,6],
         right:[6,4,1,0,-1,-4,-6]
       };
-      const orientation=position==='top' ? 'horizontal' : 'vertical';
-      return tiltMap[position].map((tilt,index)=>`<span class="opponent-tile ${orientation}" style="transform:${orientation==='horizontal'?`rotate(90deg) `:''}rotate(${tilt}deg) translate${orientation==='horizontal'?'Y':'X'}(${(index-3)*0.5}px);"></span>`).join('');
+      const axis=position==='top' ? 'Y' : 'X';
+      return tiltMap[position].map((tilt,index)=>`<span class="opponent-tile" style="transform:rotate(${tilt}deg) translate${axis}(${(index-3)*0.5}px);"></span>`).join('');
     }
 
     function renderOpponentHands(){
