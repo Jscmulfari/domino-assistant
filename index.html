@@ -73,6 +73,10 @@
       --opponent-tile-edge:rgba(214,226,247,.16);
       --opponent-tile-line:rgba(255,255,255,.14);
       --opponent-glow:rgba(0,0,0,.18);
+      --table-felt:#175c3b;
+      --table-felt-2:#0d3f2a;
+      --table-ring:rgba(221,244,224,.14);
+      --table-rail:rgba(8,25,18,.28);
     }
 
     html[data-theme="midnight"]{
@@ -126,6 +130,10 @@
       --opponent-tile-edge:rgba(255,233,204,.18);
       --opponent-tile-line:rgba(65,36,18,.28);
       --opponent-glow:rgba(16,8,3,.2);
+      --table-felt:#516331;
+      --table-felt-2:#32431f;
+      --table-ring:rgba(255,235,205,.14);
+      --table-rail:rgba(25,12,6,.28);
     }
 
     *{box-sizing:border-box}
@@ -798,21 +806,158 @@
     }
 
     .table-stage{
-      width:min(980px, calc(100vw - 28px));
+      width:min(1040px, calc(100vw - 28px));
       margin-top:22px;
-      padding:18px 18px 14px;
+      padding:18px 18px 16px;
       border-radius:32px;
       border:1px solid color-mix(in srgb, var(--panel-border) 90%, transparent);
       background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
       position:relative;
       z-index:1;
       box-shadow:0 18px 44px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.06);
+      display:grid;
+      gap:14px;
     }
 
     .table-stage.hidden{display:none}
 
+    .live-summary{
+      display:grid;
+      grid-template-columns:minmax(0, 1.2fr) minmax(280px, .8fr);
+      gap:12px;
+      align-items:stretch;
+    }
+
+    .live-hero,
+    .live-flow{
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
+      padding:14px 16px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+    }
+
+    .live-hero{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+    }
+
+    .live-kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin-bottom:8px;
+      color:var(--soft);
+      font-size:.78rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      opacity:.86;
+    }
+
+    .live-kicker::before{
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:50%;
+      background:var(--accent-first);
+      box-shadow:0 0 0 6px rgba(125,221,112,.12);
+    }
+
+    .live-title{
+      margin:0;
+      font-size:1.18rem;
+      font-weight:850;
+      letter-spacing:-.03em;
+      color:var(--text);
+    }
+
+    .live-copy,
+    .live-flow-copy,
+    .opponent-meta,
+    .opponent-context,
+    .board-step-copy,
+    .pass-copy{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:.84rem;
+      line-height:1.4;
+    }
+
+    .live-hero-status{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .live-stat{
+      display:grid;
+      gap:2px;
+      min-width:110px;
+      padding:10px 12px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      text-align:left;
+    }
+
+    .live-stat-label{
+      color:var(--muted);
+      font-size:.72rem;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .live-stat strong{
+      color:var(--soft);
+      font-size:.95rem;
+      letter-spacing:-.02em;
+    }
+
+    .live-flow{
+      display:grid;
+      gap:8px;
+      align-content:start;
+    }
+
+    .flow-steps{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .flow-step{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      min-height:34px;
+      padding:7px 11px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:var(--soft);
+      font-size:.8rem;
+      font-weight:800;
+      letter-spacing:-.01em;
+    }
+
+    .flow-step-number{
+      width:20px;
+      height:20px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      font-size:.72rem;
+    }
+
     .opponent-label{
-      margin:0 0 10px;
+      margin:0;
       color:var(--soft);
       font-size:.78rem;
       font-weight:800;
@@ -824,21 +969,21 @@
 
     .table-layout{
       display:grid;
-      grid-template-columns:92px minmax(0,1fr) 92px;
+      grid-template-columns:112px minmax(0,1fr) 112px;
       grid-template-rows:auto auto;
-      gap:14px 10px;
-      align-items:center;
+      gap:14px 12px;
+      align-items:stretch;
     }
 
     .opponent-hand{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-      min-height:90px;
-      padding:8px;
-      border-radius:22px;
-      background:var(--opponent-shell);
+      display:grid;
+      align-content:start;
+      justify-items:center;
+      gap:10px;
+      min-height:120px;
+      padding:10px;
+      border-radius:24px;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
       border:1px solid rgba(255,255,255,.06);
       box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
       overflow:hidden;
@@ -847,20 +992,32 @@
     .opponent-hand.top{
       grid-column:2;
       grid-row:1;
+      grid-template-columns:minmax(0,1fr);
     }
 
     .opponent-hand.left{
       grid-column:1;
       grid-row:2;
-      flex-direction:column;
-      min-height:250px;
+      min-height:280px;
     }
 
     .opponent-hand.right{
       grid-column:3;
       grid-row:2;
-      flex-direction:column;
-      min-height:250px;
+      min-height:280px;
+    }
+
+    .opponent-head{
+      display:grid;
+      gap:4px;
+      justify-items:center;
+      text-align:center;
+    }
+
+    .opponent-meta strong{
+      color:var(--soft);
+      font-size:.95rem;
+      letter-spacing:-.02em;
     }
 
     .opponent-stack{
@@ -870,6 +1027,7 @@
       gap:6px;
       width:100%;
       height:100%;
+      min-height:72px;
     }
 
     .opponent-hand.left .opponent-stack,
@@ -1414,21 +1572,26 @@
     .board-map{
       grid-column:2;
       grid-row:2;
-      min-height:360px;
-      border-radius:28px;
-      border:1px solid rgba(255,255,255,.08);
+      min-height:420px;
+      border-radius:30px;
+      border:1px solid var(--table-ring);
       background:
-        radial-gradient(circle at 50% 50%, rgba(129,184,255,.08), transparent 42%),
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015)),
-        linear-gradient(180deg, color-mix(in srgb, var(--panel) 72%, #1e7b4b 28%), color-mix(in srgb, var(--panel-2) 78%, #0d5031 22%));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.08), inset 0 -1px 0 rgba(0,0,0,.18);
-      padding:16px;
+        radial-gradient(circle at 50% 45%, rgba(255,255,255,.06), transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(129,184,255,.08), transparent 48%),
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015)),
+        linear-gradient(180deg, color-mix(in srgb, var(--table-felt) 86%, white 14%), var(--table-felt-2));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08), inset 0 -1px 0 rgba(0,0,0,.18), inset 0 0 0 10px var(--table-rail), 0 24px 44px rgba(0,0,0,.16);
+      padding:18px;
       display:grid;
+      grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);
+      grid-template-areas:
+        "head head"
+        "surface action"
+        "log log";
       gap:14px;
     }
 
     .board-map-head,
-    .board-controls,
     .board-status,
     .board-actions,
     .move-log-head{
@@ -1438,6 +1601,8 @@
       gap:10px;
       flex-wrap:wrap;
     }
+
+    .board-map-head{grid-area:head}
 
     .board-map-title,
     .move-log-title{margin:0;font-size:.96rem;font-weight:850;letter-spacing:-.02em;color:var(--soft)}
@@ -1449,7 +1614,8 @@
     .board-chip,
     .board-control,
     .board-action-btn,
-    .pass-btn{
+    .pass-btn,
+    .side-pill{
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -1464,21 +1630,57 @@
       letter-spacing:-.01em;
     }
 
+    .board-chip{opacity:.82}
+
     .board-chip.active{
       background:var(--accent-second-soft);
       border-color:var(--accent-second-border);
       color:var(--text);
+      opacity:1;
     }
 
     .board-surface{
-      min-height:164px;
-      border-radius:22px;
-      border:1px dashed rgba(255,255,255,.14);
-      background:rgba(5,20,15,.16);
+      grid-area:surface;
+      min-height:220px;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.045), transparent 44%),
+        rgba(5,20,15,.12);
       display:grid;
+      align-content:start;
+      gap:14px;
+      padding:16px 14px;
+    }
+
+    .board-stepper{
+      display:flex;
       align-items:center;
+      justify-content:space-between;
       gap:12px;
-      padding:16px 12px;
+      flex-wrap:wrap;
+    }
+
+    .board-step-copy strong{color:var(--soft)}
+
+    .board-side-row{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .side-pill{
+      background:rgba(255,255,255,.04);
+      transition:border-color .14s ease, background .14s ease, opacity .14s ease;
+      opacity:.84;
+    }
+
+    .side-pill.active{
+      background:var(--accent-first-soft);
+      border-color:var(--accent-first-border);
+      color:var(--text);
+      opacity:1;
     }
 
     .board-chain{
@@ -1510,19 +1712,81 @@
 
     .draft-card,
     .move-log{
-      border-radius:20px;
+      border-radius:22px;
       border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.04);
-      padding:12px;
+      background:rgba(8,22,16,.18);
+      padding:14px;
       display:grid;
       gap:12px;
     }
 
-    .draft-preview{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .draft-card{
+      grid-area:action;
+      align-content:start;
+      box-shadow:0 14px 24px rgba(0,0,0,.14);
+    }
+
+    .move-log{grid-area:log}
+
+    .draft-preview{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      min-height:94px;
+      padding:10px;
+      border-radius:18px;
+      border:1px dashed rgba(255,255,255,.12);
+      background:rgba(255,255,255,.03);
+    }
+
     .draft-preview .draft-value{font-weight:800;color:var(--soft)}
     .draft-empty{color:var(--muted)}
-    .board-action-btn.primary{background:var(--accent-first-soft);border-color:var(--accent-first-border);color:var(--text)}
-    .pass-btn{background:var(--danger-soft);border-color:rgba(255,159,159,.38)}
+
+    .action-stack,
+    .pass-stack{
+      display:grid;
+      gap:8px;
+    }
+
+    .action-stack{margin-top:4px}
+
+    .board-action-btn{
+      width:100%;
+      justify-content:center;
+      transition:transform .14s ease, background .14s ease, border-color .14s ease, opacity .14s ease;
+    }
+
+    .board-action-btn:hover,
+    .pass-btn:hover{transform:translateY(-1px)}
+
+    .board-action-btn.primary{
+      min-height:48px;
+      background:linear-gradient(180deg, rgba(125,221,112,.22), rgba(125,221,112,.14));
+      border-color:var(--accent-first-border);
+      color:var(--text);
+      box-shadow:0 10px 22px rgba(69,140,57,.18);
+    }
+
+    .board-action-btn.secondary{
+      background:rgba(255,255,255,.04);
+      border-style:dashed;
+    }
+
+    .pass-stack{
+      margin-top:8px;
+      padding-top:10px;
+      border-top:1px solid rgba(255,255,255,.08);
+    }
+
+    .pass-btn{
+      background:rgba(255,159,159,.08);
+      border-color:rgba(255,159,159,.24);
+      color:var(--muted);
+      width:100%;
+      justify-content:center;
+    }
+
     .move-log-list{list-style:none;padding:0;margin:0;display:grid;gap:8px;max-height:180px;overflow:auto}
     .move-log-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;border-radius:14px;background:rgba(255,255,255,.04);font-size:.8rem}
     .move-log-item strong{color:var(--soft)}
@@ -1535,8 +1799,12 @@
       .pair-grid,.tiles-row{grid-template-columns:repeat(7, minmax(0, 1fr))}
       .hand-zone{margin-top:20px}
       .hand-tray-wrap{width:min(100%, 860px)}
-      .table-layout{grid-template-columns:78px minmax(0,1fr) 78px}
-      .opponent-hand.left,.opponent-hand.right{min-height:228px}
+      .live-summary{grid-template-columns:1fr}
+      .live-hero{flex-direction:column}
+      .live-hero-status{justify-content:flex-start}
+      .table-layout{grid-template-columns:88px minmax(0,1fr) 88px}
+      .board-map{grid-template-columns:minmax(0,1fr) 260px}
+      .opponent-hand.left,.opponent-hand.right{min-height:248px}
     }
 
     @media (max-width:680px){
@@ -1582,6 +1850,9 @@
       .seat-grid,.player-grid,.summary-grid{grid-template-columns:1fr}
       .board.menu-focus{margin-top:-1vh}
       .table-stage{padding:14px 10px 10px}
+      .live-hero,
+      .live-flow{padding:12px}
+      .flow-steps{display:grid;grid-template-columns:1fr;}
       .table-layout{grid-template-columns:1fr;grid-template-rows:auto auto auto auto auto;gap:10px}
       .opponent-hand.top,
       .opponent-hand.left,
@@ -1589,7 +1860,12 @@
       .board-map{grid-column:1;grid-row:auto;min-height:auto}
       .opponent-hand.left .opponent-stack,
       .opponent-hand.right .opponent-stack{flex-direction:row}
-      .opponent-hand{padding:10px 8px;min-height:74px}
+      .opponent-hand{padding:12px 10px;min-height:74px;justify-items:start}
+      .opponent-head{justify-items:start;text-align:left;width:100%}
+      .board-map{grid-template-columns:1fr;grid-template-areas:"head" "surface" "action" "log";padding:14px;border-radius:24px}
+      .board-stepper{align-items:flex-start}
+      .board-side-row{width:100%}
+      .side-pill{flex:1 1 0}
       .opponent-tile.vertical{transform:rotate(90deg);margin-inline:-4px;margin-block:0}
     }
 
@@ -1601,7 +1877,10 @@
       .domino.large{width:62px;height:96px}
       .domino.small{width:54px;height:86px}
       .hand-status{padding:5px 9px}
+      .live-hero-status{width:100%}
+      .live-stat{flex:1 1 0;min-width:0}
       .opponent-hand{gap:4px}
+      .opponent-context{display:none}
       .opponent-tile.horizontal,
       .opponent-tile.vertical{width:34px;height:54px}
     }
@@ -1627,9 +1906,13 @@
       .hand-tray-wrap::before{top:78px}
       .scroll-fade{top:92px}
       .table-stage{padding:12px 8px 8px}
+      .live-title{font-size:1.04rem}
+      .live-copy,.live-flow-copy,.board-step-copy,.pass-copy{font-size:.8rem}
+      .board-chip-row{width:100%}
+      .board-chip{flex:1 1 calc(50% - 8px)}
       .opponent-tile.horizontal,
       .opponent-tile.vertical{width:30px;height:48px;margin-inline:-5px}
-      .opponent-label{font-size:.72rem;margin-bottom:8px}
+      .opponent-label{font-size:.72rem}
     }
   </style>
 </head>
@@ -1685,24 +1968,48 @@
     </section>
 
     <section id="tableStage" class="table-stage hidden" aria-label="Mesa con manos simuladas de los rivales">
+      <section class="live-summary" aria-label="Resumen de la interacción">
+        <div class="live-hero">
+          <div>
+            <span class="live-kicker">Mesa en vivo</span>
+            <h2 class="live-title">Primero define quién actúa y luego juega en el extremo correcto.</h2>
+            <p class="live-copy">Tu mano sigue siendo la acción principal. Para rivales, compón una ficha contextual y regístrala en la mesa.</p>
+          </div>
+          <div class="live-hero-status">
+            <div class="live-stat"><span class="live-stat-label">Turno actual</span><strong id="activeActorSummary">Tú</strong></div>
+            <div class="live-stat"><span class="live-stat-label">Extremos</span><strong id="openEndsSummary">Mesa vacía</strong></div>
+          </div>
+        </div>
+        <div class="live-flow">
+          <div class="flow-steps" aria-label="Flujo recomendado">
+            <div class="flow-step"><span class="flow-step-number">1</span><span>Actor</span></div>
+            <div class="flow-step"><span class="flow-step-number">2</span><span>Extremo</span></div>
+            <div class="flow-step"><span class="flow-step-number">3</span><span>Jugada</span></div>
+          </div>
+          <p class="live-flow-copy">“Pasar” queda al final como acción de respaldo cuando el jugador activo no tiene salida.</p>
+        </div>
+      </section>
       <div class="table-layout">
         <section class="opponent-hand top" aria-label="Mano simulada del jugador de arriba">
-          <div>
+          <div class="opponent-head">
             <p class="opponent-label">Arriba</p>
-            <div id="topOpponent" class="opponent-stack" aria-hidden="true"></div>
+            <p class="opponent-meta"><strong id="topOpponentCount">7 fichas</strong> mano rival simulada</p>
           </div>
+          <div id="topOpponent" class="opponent-stack" aria-hidden="true"></div>
         </section>
         <section class="opponent-hand left" aria-label="Mano simulada del jugador de la izquierda">
-          <div>
+          <div class="opponent-head">
             <p class="opponent-label">Izquierda</p>
-            <div id="leftOpponent" class="opponent-stack" aria-hidden="true"></div>
+            <p class="opponent-meta"><strong id="leftOpponentCount">7 fichas</strong> posible presión lateral</p>
+            <p class="opponent-context" id="leftOpponentContext">Observa este costado al decidir el extremo.</p>
           </div>
+          <div id="leftOpponent" class="opponent-stack" aria-hidden="true"></div>
         </section>
         <section id="boardMap" class="board-map" aria-label="Tablero principal para simular jugadas">
           <div class="board-map-head">
             <div>
-              <h2 class="board-map-title">Mesa en vivo</h2>
-              <p class="board-map-copy">La mesa es la superficie principal: juega desde tu bandeja o compón una ficha para simular rivales.</p>
+              <h2 class="board-map-title">Superficie principal</h2>
+              <p class="board-map-copy">La mesa concentra la jugada actual. Los selectores viven arriba; la acción importante vive a la derecha.</p>
             </div>
             <div class="board-chip-row" id="actorChips" aria-label="Jugador que actúa">
               <button class="board-chip active" type="button" data-actor="self">Tú</button>
@@ -1712,34 +2019,40 @@
             </div>
           </div>
 
-          <div class="board-controls">
-            <label class="board-control">Extremo
-              <select id="boardSideSelect">
-                <option value="right">Derecha</option>
-                <option value="left">Izquierda</option>
-              </select>
-            </label>
+          <div class="board-surface">
+            <div class="board-stepper">
+              <div>
+                <p class="board-step-copy"><strong>Paso actual:</strong> elige el extremo y coloca la ficha del jugador activo.</p>
+              </div>
+              <div class="board-side-row" aria-label="Extremo activo">
+                <button id="sideRightBtn" class="side-pill active" type="button" data-side="right">Extremo derecho</button>
+                <button id="sideLeftBtn" class="side-pill" type="button" data-side="left">Extremo izquierdo</button>
+              </div>
+            </div>
             <div id="boardStatus" class="board-status">
               <span class="board-control">Abiertos: <strong id="openEndsText">—</strong></span>
               <span class="board-control">Turno simulado: <strong id="activeActorText">Tú</strong></span>
             </div>
-          </div>
-
-          <div class="board-surface">
             <div id="boardChain" class="board-chain" aria-live="polite"></div>
             <p id="boardHint" class="board-hint">Confirma tu mano y luego usa la mesa para registrar jugadas o pases.</p>
           </div>
 
           <section class="draft-card" aria-labelledby="draftTitle">
             <div class="board-actions">
-              <h3 id="draftTitle" class="board-map-title">Ficha contextual</h3>
               <div>
-                <button id="clearDraftBtn" class="board-action-btn" type="button">Limpiar borrador</button>
-                <button id="playDraftBtn" class="board-action-btn primary" type="button">Jugar borrador</button>
-                <button id="passBtn" class="pass-btn" type="button">Registrar pase</button>
+                <h3 id="draftTitle" class="board-map-title">Acción principal</h3>
+                <p class="board-map-copy">Si juega un rival, compón la ficha en el selector de valores y regístrala aquí.</p>
               </div>
             </div>
             <div id="draftPreview" class="draft-preview"><span class="draft-empty">Sin ficha en borrador</span></div>
+            <div class="action-stack">
+              <button id="playDraftBtn" class="board-action-btn primary" type="button">Jugar ficha</button>
+              <button id="clearDraftBtn" class="board-action-btn secondary" type="button">Limpiar borrador</button>
+            </div>
+            <div class="pass-stack">
+              <button id="passBtn" class="pass-btn" type="button">Registrar pase</button>
+              <p class="pass-copy">Úsalo solo cuando el jugador activo no tenga una jugada válida.</p>
+            </div>
           </section>
 
           <section class="move-log" aria-labelledby="moveLogTitle">
@@ -1752,10 +2065,12 @@
           </section>
         </section>
         <section class="opponent-hand right" aria-label="Mano simulada del jugador de la derecha">
-          <div>
+          <div class="opponent-head">
             <p class="opponent-label">Derecha</p>
-            <div id="rightOpponent" class="opponent-stack" aria-hidden="true"></div>
+            <p class="opponent-meta"><strong id="rightOpponentCount">7 fichas</strong> posible cierre del extremo</p>
+            <p class="opponent-context" id="rightOpponentContext">Útil para anticipar presión en la salida derecha.</p>
           </div>
+          <div id="rightOpponent" class="opponent-stack" aria-hidden="true"></div>
         </section>
       </div>
     </section>
@@ -1819,10 +2134,18 @@
     const topOpponent=document.getElementById('topOpponent');
     const leftOpponent=document.getElementById('leftOpponent');
     const rightOpponent=document.getElementById('rightOpponent');
+    const topOpponentCount=document.getElementById('topOpponentCount');
+    const leftOpponentCount=document.getElementById('leftOpponentCount');
+    const rightOpponentCount=document.getElementById('rightOpponentCount');
+    const leftOpponentContext=document.getElementById('leftOpponentContext');
+    const rightOpponentContext=document.getElementById('rightOpponentContext');
     const actorChips=document.getElementById('actorChips');
-    const boardSideSelect=document.getElementById('boardSideSelect');
+    const sideRightBtn=document.getElementById('sideRightBtn');
+    const sideLeftBtn=document.getElementById('sideLeftBtn');
     const activeActorText=document.getElementById('activeActorText');
+    const activeActorSummary=document.getElementById('activeActorSummary');
     const openEndsText=document.getElementById('openEndsText');
+    const openEndsSummary=document.getElementById('openEndsSummary');
     const boardChain=document.getElementById('boardChain');
     const boardHint=document.getElementById('boardHint');
     const draftPreview=document.getElementById('draftPreview');
@@ -1878,6 +2201,11 @@
 
     function actorLabel(actor){
       return ({self:'Tú',top:'Arriba',left:'Izquierda',right:'Derecha'})[actor] || 'Jugador';
+    }
+
+    function opponentRemaining(actor){
+      const plays=state.live.moves.filter(move=>move.type==='play' && move.actor===actor).length;
+      return Math.max(0, 7-plays);
     }
 
     function getOpenEnds(){
@@ -2097,14 +2425,24 @@
       topOpponent.innerHTML=createOpponentTiles('top');
       leftOpponent.innerHTML=createOpponentTiles('left');
       rightOpponent.innerHTML=createOpponentTiles('right');
+      topOpponentCount.textContent=`${opponentRemaining('top')} fichas`;
+      leftOpponentCount.textContent=`${opponentRemaining('left')} fichas`;
+      rightOpponentCount.textContent=`${opponentRemaining('right')} fichas`;
+      const openEnds=getOpenEnds();
+      leftOpponentContext.textContent=openEnds.length ? `Conviene mirar ${openEnds[0]} en el extremo izquierdo.` : 'Observa este costado al decidir el extremo.';
+      rightOpponentContext.textContent=openEnds.length ? `Conviene mirar ${openEnds[1]} en el extremo derecho.` : 'Útil para anticipar presión en la salida derecha.';
     }
 
     function renderLiveBoard(){
       actorChips.querySelectorAll('[data-actor]').forEach(btn=>btn.classList.toggle('active', btn.dataset.actor===state.live.actor));
-      boardSideSelect.value=state.live.side;
+      sideRightBtn.classList.toggle('active', state.live.side==='right');
+      sideLeftBtn.classList.toggle('active', state.live.side==='left');
       activeActorText.textContent=actorLabel(state.live.actor);
+      activeActorSummary.textContent=actorLabel(state.live.actor);
       const openEnds=getOpenEnds();
-      openEndsText.textContent=openEnds.length ? openEnds.join(' · ') : 'Mesa vacía';
+      const openEndsLabel=openEnds.length ? openEnds.join(' · ') : 'Mesa vacía';
+      openEndsText.textContent=openEndsLabel;
+      openEndsSummary.textContent=openEndsLabel;
 
       if(!state.live.board.length){
         boardChain.innerHTML='<div class="board-chain-slot">Salida</div>';
@@ -2177,10 +2515,10 @@
       state.live.actor=button.dataset.actor;
       renderLiveBoard();
     });
-    boardSideSelect.addEventListener('change',()=>{
-      state.live.side=boardSideSelect.value;
+    [sideRightBtn, sideLeftBtn].forEach(button=>button.addEventListener('click',()=>{
+      state.live.side=button.dataset.side;
       renderLiveBoard();
-    });
+    }));
     clearDraftBtn.addEventListener('click',()=>{ resetLiveDraft(); renderLiveBoard(); });
     playDraftBtn.addEventListener('click',()=>{
       const draftTile=getLiveDraftTile();
