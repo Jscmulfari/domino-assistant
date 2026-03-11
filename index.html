@@ -164,10 +164,18 @@
       gap:20px;
     }
 
+    .app.menu-active{
+      justify-content:center;
+    }
+
     .board{
       width:min(760px, calc(100vw - 28px));
       position:relative;
       z-index:1;
+    }
+
+    .board.menu-focus{
+      width:min(520px, calc(100vw - 28px));
     }
 
     .app > .board:first-of-type{order:1}
@@ -299,6 +307,16 @@
       gap:14px;
     }
 
+    .menu-active .gate-panel{
+      text-align:center;
+      padding:28px 24px;
+      gap:18px;
+    }
+
+    .menu-active .gate-actions{
+      justify-content:center;
+    }
+
     .gate-actions{
       display:flex;
       gap:10px;
@@ -317,6 +335,11 @@
       font-weight:800;
       letter-spacing:-.01em;
       transition:border-color .14s ease, background .14s ease, transform .14s ease;
+    }
+
+    .menu-active .gate-btn{
+      flex:0 1 220px;
+      text-align:center;
     }
 
     .gate-btn:hover{
@@ -1257,7 +1280,8 @@
 
     @media (max-width:680px){
       .gate-actions{flex-direction:column;}
-      .gate-btn{width:100%;}
+      .gate-btn,
+      .menu-active .gate-btn{width:100%;flex:1 1 auto;}
       .app{padding:20px 10px 20px}
       .shell{padding:10px;border-radius:22px}
       .hero,
@@ -1419,6 +1443,8 @@
     };
 
     const root=document.documentElement;
+    const app=document.querySelector('.app');
+    const board=document.querySelector('.board');
     const startPanel=document.getElementById('startPanel');
     const newGameBtn=document.getElementById('newGameBtn');
     const continueGameBtn=document.getElementById('continueGameBtn');
@@ -1550,6 +1576,9 @@
       const atStart=state.phase==='start_menu';
       const atPoints=state.phase==='points_menu';
       const atBuilder=state.phase==='build_hand' || state.phase==='hand_confirmed';
+      const menuActive=atStart || atPoints;
+      app.classList.toggle('menu-active', menuActive);
+      board.classList.toggle('menu-focus', menuActive);
       startPanel.classList.toggle('hidden', !atStart);
       pointsPanel.classList.toggle('flow-locked', !atPoints);
       valuesPanel.classList.toggle('flow-locked', !atBuilder);
