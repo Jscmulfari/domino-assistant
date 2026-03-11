@@ -876,8 +876,61 @@
       transform:translateX(-50%);
       width:min(520px, calc(100% - 28px));
       backdrop-filter:blur(8px);
-      background:linear-gradient(180deg, rgba(17,28,45,.92), rgba(17,28,45,.82));
+      background:linear-gradient(180deg, rgba(17,28,45,.94), rgba(17,28,45,.84));
       box-shadow:0 16px 30px rgba(0,0,0,.18);
+      z-index:2;
+    }
+
+    .board-selector-overlay.hidden{display:none}
+
+    .selector-title-wrap{
+      display:grid;
+      gap:4px;
+    }
+
+    .selector-copy{
+      margin:0;
+      color:var(--muted);
+      font-size:.82rem;
+      line-height:1.35;
+      font-weight:700;
+    }
+
+    .side-choice-row{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:8px;
+    }
+
+    .side-choice-btn{
+      min-height:44px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      color:var(--soft);
+      display:grid;
+      gap:2px;
+      text-align:left;
+      transition:border-color .14s ease, background .14s ease, transform .14s ease;
+    }
+
+    .side-choice-btn:hover{
+      transform:translateY(-1px);
+      border-color:rgba(255,255,255,.2);
+      background:rgba(255,255,255,.07);
+    }
+
+    .side-choice-btn strong{
+      color:var(--text);
+      font-size:.88rem;
+      letter-spacing:-.01em;
+    }
+
+    .side-choice-btn span{
+      font-size:.76rem;
+      color:var(--muted);
+      font-weight:700;
     }
 
     .compose-card-head.compact{align-items:center}
@@ -1598,12 +1651,25 @@
       .scroll-fade.right{right:11px}
       .seat-grid,.player-grid,.summary-grid{grid-template-columns:1fr}
       .board.menu-focus{margin-top:-1vh}
-      .table-stage{padding:14px 10px 10px}
-      .table-layout{grid-template-columns:minmax(0, 1fr);grid-template-rows:auto;gap:10px}
+      .table-stage{padding:10px 8px 8px;border-radius:18px}
+      .board-playfield{min-height:420px;padding:12px 12px 100px;border-radius:22px}
+      .board-playfield::before{inset:12px;border-radius:18px}
+      .board-playfield-head{margin-bottom:10px}
+      .table-layout{grid-template-columns:minmax(0, 1fr);grid-template-rows:auto;gap:8px}
       .table-center,.table-hand-zone,.opponent-hand.top,.opponent-hand.left,.opponent-hand.right{grid-column:1;grid-row:auto;min-height:auto}
       .opponent-hand.left .opponent-stack,
       .opponent-hand.right .opponent-stack{flex-direction:row}
-      .opponent-hand{padding:10px 8px;min-height:74px}
+      .opponent-hand{padding:6px 6px;min-height:58px;border-radius:16px;background:rgba(255,255,255,.025)}
+      .opponent-hand.top{order:1}
+      .table-center{order:2}
+      .table-hand-zone{order:3}
+      .opponent-hand.left,.opponent-hand.right{display:none}
+      .board-chain{min-height:250px;padding:8px 4px 18px;gap:8px}
+      .board-tile .domino.small{width:48px;height:76px}
+      .board-owner{font-size:.66rem}
+      .board-selector-overlay{width:calc(100% - 16px);bottom:8px}
+      .table-selector-card{padding:12px;border-radius:18px}
+      .side-choice-row{grid-template-columns:1fr}
     }
 
     @media (max-width:560px){
@@ -1640,8 +1706,11 @@
       .hand-head-copy{align-items:flex-start;gap:8px}
       .hand-tray-wrap::before{top:78px}
       .scroll-fade{top:92px}
-      .table-stage{padding:12px 8px 8px}
-      .opponent-hand.top .opponent-tile{width:30px;height:48px;margin-inline:0}
+      .table-stage{padding:10px 6px 6px}
+      .board-playfield{min-height:380px;padding:10px 10px 92px}
+      .board-chain{min-height:220px}
+      .board-selector-overlay{width:calc(100% - 12px);bottom:6px}
+      .opponent-hand.top .opponent-tile{width:26px;height:42px;margin-inline:0}
       .opponent-hand.left .opponent-tile,
       .opponent-hand.right .opponent-tile{width:48px;height:30px;margin-inline:0}
     }
@@ -1719,15 +1788,14 @@
               <div id="boardEnds" class="board-ends hidden" aria-live="polite"></div>
             </div>
             <div id="boardChain" class="board-chain board-chain-empty">La cadena aparecerá aquí.</div>
-            <section class="compose-card table-selector-card board-selector-overlay" aria-labelledby="tableHalfSelectorTitle">
+            <section id="boardSelectorOverlay" class="compose-card table-selector-card board-selector-overlay hidden" aria-labelledby="tableHalfSelectorTitle" aria-live="polite">
               <div class="compose-card-head compact">
-                <h3 id="tableHalfSelectorTitle" class="compose-label">Selector</h3>
-                <div class="compose-choice-row" aria-label="Selección actual en mesa">
-                  <div id="tableFirstHalfChoice" class="compose-choice empty" aria-label="Primera mitad pendiente"><span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">Primera mitad pendiente</span></div>
-                  <div id="tableSecondHalfChoice" class="compose-choice empty" aria-label="Segunda mitad pendiente"><span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">Segunda mitad pendiente</span></div>
+                <div class="selector-title-wrap">
+                  <h3 id="tableHalfSelectorTitle" class="compose-label">Elige dónde jugar</h3>
+                  <p id="boardSelectorCopy" class="selector-copy">Esta ficha cabe en ambos lados. Elige izquierda o derecha.</p>
                 </div>
               </div>
-              <div id="tableSharedHalfGrid" class="half-grid compact" role="list" aria-label="Opciones para componer la ficha en mesa"></div>
+              <div id="sideChoiceRow" class="side-choice-row" role="group" aria-label="Elegir lado de la mesa"></div>
             </section>
           </section>
         </section>
@@ -1783,7 +1851,7 @@
     const valueLabels=['Blanco','1','2','3','4','5','6'];
     const themes=['midnight','wood'];
     const savedTheme=localStorage.getItem('domino-theme');
-    const state={selected:[],theme:themes.includes(savedTheme)?savedTheme:'midnight',compose:{first:null,second:null},handConfirmed:false,phase:'start_menu',startMode:null,targetPoints:null,userHasOpeningDouble:false,userIsOpener:false,game:null,playerId:0,lastMove:null};
+    const state={selected:[],theme:themes.includes(savedTheme)?savedTheme:'midnight',compose:{first:null,second:null},handConfirmed:false,phase:'start_menu',startMode:null,targetPoints:null,userHasOpeningDouble:false,userIsOpener:false,game:null,playerId:0,lastMove:null,pendingSideChoice:null};
 
     const root=document.documentElement;
     const app=document.querySelector('.app');
@@ -1817,17 +1885,17 @@
     const handStatus=document.getElementById('handStatus');
     const tableHandStatus=document.getElementById('tableHandStatus');
     const sharedHalfGrid=document.getElementById('sharedHalfGrid');
-    const tableSharedHalfGrid=document.getElementById('tableSharedHalfGrid');
     const firstHalfChoice=document.getElementById('firstHalfChoice');
     const secondHalfChoice=document.getElementById('secondHalfChoice');
-    const tableFirstHalfChoice=document.getElementById('tableFirstHalfChoice');
-    const tableSecondHalfChoice=document.getElementById('tableSecondHalfChoice');
+    const boardSelectorOverlay=document.getElementById('boardSelectorOverlay');
+    const boardSelectorCopy=document.getElementById('boardSelectorCopy');
+    const sideChoiceRow=document.getElementById('sideChoiceRow');
     const handTrays=[handTray, tableHandTray];
     const handTrayWraps=[handTrayWrap, tableHandTrayWrap];
     const handStatusBadges=[handStatus, tableHandStatus];
     const handConfirmButtons=[handConfirmBtn, tableHandConfirmBtn];
     const handConfirmLabels=[handConfirmLabel, tableHandConfirmLabel];
-    const composeTargets=[{grid:sharedHalfGrid, first:firstHalfChoice, second:secondHalfChoice},{grid:tableSharedHalfGrid, first:tableFirstHalfChoice, second:tableSecondHalfChoice}];
+    const composeTargets=[{grid:sharedHalfGrid, first:firstHalfChoice, second:secondHalfChoice}];
 
     const key=tile=>`${tile[0] ?? tile.a}-${tile[1] ?? tile.b}`;
     const normalize=(a,b)=>a<=b?[a,b]:[b,a];
@@ -1843,7 +1911,7 @@
     function pips(n){ const visible=new Set(PIP_MAP[n]); return `<div class="pips">${Array.from({length:9},(_,i)=>`<span class="pip ${visible.has(i)?'show':''}"></span>`).join('')}</div>`; }
     function domino(a,b,size='large',orientation='vertical'){ return `<div class="domino ${size} ${orientation==='horizontal'?'pair-visual':''}"><div class="half">${pips(a)}</div><div class="half">${pips(b)}</div></div>`; }
 
-    function markHandUnconfirmed(){ state.handConfirmed=false; state.phase='build_hand'; state.userHasOpeningDouble=false; state.userIsOpener=false; state.game=null; state.lastMove=null; }
+    function markHandUnconfirmed(){ state.handConfirmed=false; state.phase='build_hand'; state.userHasOpeningDouble=false; state.userIsOpener=false; state.game=null; state.lastMove=null; state.pendingSideChoice=null; }
     function addTile(tile){ if(canAddTile(tile)){ state.selected.push(tile); markHandUnconfirmed(); return true; } return false; }
     function removeTile(tile){ const i=state.selected.findIndex(item=>key(item)===key(tile)); if(i>=0){ state.selected.splice(i,1); markHandUnconfirmed(); return true; } return false; }
     function clearCompose(){ state.compose={first:null,second:null}; }
@@ -1957,31 +2025,62 @@
       }
     }
 
+    function renderBoardSelector(){
+      const pending=state.pendingSideChoice;
+      if(!pending || !pending.moves?.length){
+        boardSelectorOverlay.classList.add('hidden');
+        sideChoiceRow.innerHTML='';
+        boardSelectorCopy.textContent='Esta ficha cabe en ambos lados. Elige izquierda o derecha.';
+        return;
+      }
+      boardSelectorOverlay.classList.remove('hidden');
+      boardSelectorCopy.textContent=`La ficha ${pending.tileKey} se puede jugar a la izquierda o a la derecha.`;
+      sideChoiceRow.innerHTML=pending.moves.map(move=>`<button class="side-choice-btn" type="button" data-side-choice="${move.side}"><strong>${move.side==='left'?'Jugar a la izquierda':'Jugar a la derecha'}</strong><span>Conecta con ${move.side==='left'?state.game.ends.left:state.game.ends.right}</span></button>`).join('');
+      sideChoiceRow.querySelectorAll('[data-side-choice]').forEach(button=>{
+        button.onclick=()=>applyMoveChoice(button.dataset.sideChoice);
+      });
+    }
+
     function renderBoard(){
-      if(!state.game || !state.game.board.length){ boardChain.className='board-chain board-chain-empty'; boardChain.textContent='La cadena aparecerá aquí.'; boardEnds.classList.add('hidden'); boardEnds.innerHTML=''; boardStatus.textContent='Confirma tu mano para empezar la simulación.'; return; }
+      if(!state.game || !state.game.board.length){ boardChain.className='board-chain board-chain-empty'; boardChain.textContent='La cadena aparecerá aquí.'; boardEnds.classList.add('hidden'); boardEnds.innerHTML=''; boardStatus.textContent='Confirma tu mano para empezar la simulación.'; renderBoardSelector(); return; }
       boardChain.className='board-chain';
       boardChain.innerHTML=state.game.board.map(entry=>`<div class="board-tile"><span class="board-owner">P${entry.playerId+1}</span>${domino(entry.left,entry.right,'small')}</div>`).join('');
       boardEnds.classList.remove('hidden');
       boardEnds.innerHTML=`<span class="board-end-chip">Izquierda ${state.game.ends.left}</span><span class="board-end-chip">Derecha ${state.game.ends.right}</span>`;
-      const turnLabel=state.game.status==='finished' ? `Ronda terminada. Ganó P${state.game.winner.playerId+1}.` : state.game.currentPlayerId===state.playerId ? 'Tu turno: toca una ficha válida de tu mano.' : `Turno de P${state.game.currentPlayerId+1}.`;
+      const turnLabel=state.game.status==='finished' ? `Ronda terminada. Ganó P${state.game.winner.playerId+1}.` : state.pendingSideChoice ? `Elige si ${state.pendingSideChoice.tileKey} va a la izquierda o a la derecha.` : state.game.currentPlayerId===state.playerId ? 'Tu turno: toca una ficha válida de tu mano.' : `Turno de P${state.game.currentPlayerId+1}.`;
       const lastMoveLabel=state.lastMove ? state.lastMove.side==='pass' ? ` Última jugada: P${state.lastMove.playerId+1} pasó.` : ` Última jugada: P${state.lastMove.playerId+1} puso ${state.lastMove.tile}${state.lastMove.side==='start'?'':` a la ${state.lastMove.side==='left'?'izquierda':'derecha'}`}.` : ''; 
       boardStatus.textContent=`${turnLabel}${lastMoveLabel}`;
+      renderBoardSelector();
     }
 
     function confirmHand(){
       if(state.selected.length!==7) return;
-      state.handConfirmed=true; state.userHasOpeningDouble=state.selected.some(tile=>tile[0]===6 && tile[1]===6); state.userIsOpener=state.userHasOpeningDouble; state.game=buildGameFromSelection(); state.phase='hand_confirmed'; state.lastMove=null;
+      state.handConfirmed=true; state.userHasOpeningDouble=state.selected.some(tile=>tile[0]===6 && tile[1]===6); state.userIsOpener=state.userHasOpeningDouble; state.game=buildGameFromSelection(); state.phase='hand_confirmed'; state.lastMove=null; state.pendingSideChoice=null;
       maybeAutoAdvanceOpponents(); render();
+    }
+
+    function applyMoveChoice(side){
+      const pending=state.pendingSideChoice;
+      if(!pending || !state.game) return;
+      const move=pending.moves.find(entry=>entry.side===side) ?? pending.moves[0];
+      state.pendingSideChoice=null;
+      playTile(state.game,{playerId:state.playerId,tile:move.tile,side:move.side});
+      state.lastMove={playerId:state.playerId,tile:pending.tileKey,side:move.side ?? 'start'};
+      maybeAutoAdvanceOpponents();
+      render();
     }
 
     function handleHandTileClick(tile){
       if(!state.handConfirmed){ if(window.confirm(`¿Quitar la ficha ${key(tile)} de tu mano?`)){ removeTile(tile); render(); } return; }
       if(!state.game || state.game.currentPlayerId!==state.playerId || state.game.status!=='in_progress') return;
-      const moves=getLegalMoves(state.game, state.playerId).filter(move=>move.tile.key===key(tile));
+      const tileKey=key(tile);
+      const moves=getLegalMoves(state.game, state.playerId).filter(move=>move.tile.key===tileKey);
       if(!moves.length) return;
-      const move=moves.find(entry=>entry.side==='right') ?? moves[0];
+      if(moves.length>1){ state.pendingSideChoice={tileKey,moves}; render(); return; }
+      state.pendingSideChoice=null;
+      const move=moves[0];
       playTile(state.game,{playerId:state.playerId,tile:move.tile,side:move.side});
-      state.lastMove={playerId:state.playerId,tile:key(tile),side:move.side ?? 'start'};
+      state.lastMove={playerId:state.playerId,tile:tileKey,side:move.side ?? 'start'};
       maybeAutoAdvanceOpponents();
       render();
     }
