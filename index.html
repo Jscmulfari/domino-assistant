@@ -814,9 +814,40 @@
     .table-layout{
       display:grid;
       grid-template-columns:92px minmax(0,1fr) 92px;
-      grid-template-rows:auto auto;
+      grid-template-rows:auto minmax(0,1fr) auto;
       gap:14px 10px;
       align-items:center;
+    }
+
+    .table-center{
+      grid-column:2;
+      grid-row:2;
+      display:grid;
+      gap:12px;
+      min-width:0;
+      align-self:stretch;
+    }
+
+    .table-selector-card{
+      min-height:100%;
+      padding:14px;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+    }
+
+    .table-hand-zone{
+      grid-column:1 / -1;
+      grid-row:3;
+      width:100%;
+      margin-top:2px;
+    }
+
+    .table-hand-zone .hand-tray-wrap{
+      width:100%;
+      max-width:none;
+      margin:0;
     }
 
     .opponent-hand{
@@ -1492,10 +1523,8 @@
       .seat-grid,.player-grid,.summary-grid{grid-template-columns:1fr}
       .board.menu-focus{margin-top:-1vh}
       .table-stage{padding:14px 10px 10px}
-      .table-layout{grid-template-columns:1fr;grid-template-rows:auto auto auto auto;gap:10px}
-      .opponent-hand.top,
-      .opponent-hand.left,
-      .opponent-hand.right{grid-column:1;grid-row:auto;min-height:auto}
+      .table-layout{grid-template-columns:minmax(0, 1fr);grid-template-rows:auto;gap:10px}
+      .table-center,.table-hand-zone,.opponent-hand.top,.opponent-hand.left,.opponent-hand.right{grid-column:1;grid-row:auto;min-height:auto}
       .opponent-hand.left .opponent-stack,
       .opponent-hand.right .opponent-stack{flex-direction:row}
       .opponent-hand{padding:10px 8px;min-height:74px}
@@ -1604,6 +1633,39 @@
         <section class="opponent-hand right" aria-label="Mano simulada del jugador de la derecha">
           <div id="rightOpponent" class="opponent-stack" aria-hidden="true"></div>
         </section>
+        <section class="table-center" aria-label="Área central de interacción en la mesa">
+          <div class="compose-shell">
+            <section class="compose-card table-selector-card" aria-labelledby="tableHalfSelectorTitle">
+              <div class="compose-card-head">
+                <h3 id="tableHalfSelectorTitle" class="compose-label">Valores</h3>
+                <div class="compose-choice-row" aria-label="Selección actual en mesa">
+                  <div id="tableFirstHalfChoice" class="compose-choice empty" aria-label="Primera mitad pendiente"><span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">Primera mitad pendiente</span></div>
+                  <div id="tableSecondHalfChoice" class="compose-choice empty" aria-label="Segunda mitad pendiente"><span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">Segunda mitad pendiente</span></div>
+                </div>
+              </div>
+              <div id="tableSharedHalfGrid" class="half-grid" role="list" aria-label="Opciones para componer la ficha en mesa"></div>
+            </section>
+          </div>
+        </section>
+        <section id="tableHandZone" class="hand-zone table-hand-zone" aria-label="Tu mano integrada en la mesa">
+          <div id="tableHandTrayWrap" class="hand-tray-wrap">
+            <div class="hand-panel-head">
+              <div class="hand-head-copy">
+                <h2 class="hand-title">Tu mano</h2>
+                <div id="tableHandStatus" class="hand-status">0 / 7</div>
+              </div>
+              <div class="hand-head-actions">
+                <button id="tableHandConfirmBtn" class="confirm-btn hand-confirm-btn" type="button" aria-label="Confirmar mano desde la mesa">
+                  <span class="hand-confirm-icon" aria-hidden="true">✓</span>
+                  <span id="tableHandConfirmLabel">Confirmar</span>
+                </button>
+              </div>
+            </div>
+            <div class="scroll-fade left" aria-hidden="true"></div>
+            <div class="scroll-fade right" aria-hidden="true"></div>
+            <div id="tableHandTray" class="hand-tray hand-empty"></div>
+          </div>
+        </section>
       </div>
     </section>
 
@@ -1666,12 +1728,30 @@
     const handConfirmLabel=document.getElementById('handConfirmLabel');
     const handTray=document.getElementById('handTray');
     const handTrayWrap=document.getElementById('handTrayWrap');
+    const tableHandZone=document.getElementById('tableHandZone');
+    const tableHandConfirmBtn=document.getElementById('tableHandConfirmBtn');
+    const tableHandConfirmLabel=document.getElementById('tableHandConfirmLabel');
+    const tableHandTray=document.getElementById('tableHandTray');
+    const tableHandTrayWrap=document.getElementById('tableHandTrayWrap');
     const themePicker=document.querySelector('.theme-picker');
     const themeChips=document.querySelectorAll('.theme-chip');
     const handStatus=document.getElementById('handStatus');
+    const tableHandStatus=document.getElementById('tableHandStatus');
     const sharedHalfGrid=document.getElementById('sharedHalfGrid');
+    const tableSharedHalfGrid=document.getElementById('tableSharedHalfGrid');
     const firstHalfChoice=document.getElementById('firstHalfChoice');
     const secondHalfChoice=document.getElementById('secondHalfChoice');
+    const tableFirstHalfChoice=document.getElementById('tableFirstHalfChoice');
+    const tableSecondHalfChoice=document.getElementById('tableSecondHalfChoice');
+    const handTrays=[handTray, tableHandTray];
+    const handTrayWraps=[handTrayWrap, tableHandTrayWrap];
+    const handStatusBadges=[handStatus, tableHandStatus];
+    const handConfirmButtons=[handConfirmBtn, tableHandConfirmBtn];
+    const handConfirmLabels=[handConfirmLabel, tableHandConfirmLabel];
+    const composeTargets=[
+      {grid:sharedHalfGrid, first:firstHalfChoice, second:secondHalfChoice},
+      {grid:tableSharedHalfGrid, first:tableFirstHalfChoice, second:tableSecondHalfChoice}
+    ];
 
 
     const key=tile=>`${tile[0]}-${tile[1]}`;
@@ -1758,7 +1838,7 @@
     function renderHalfGrid(){
       const first=state.compose.first;
       const second=state.compose.second;
-      sharedHalfGrid.innerHTML=values.map(value=>{
+      const markup=values.map(value=>{
         const isFirst=first===value;
         const isSecond=second===value;
         let roleClass='';
@@ -1769,18 +1849,23 @@
         const ariaSuffix=isFirst && isSecond ? ' seleccionada como doble' : isFirst ? ' seleccionada como primera mitad' : isSecond ? ' seleccionada como segunda mitad' : '';
         return `<button class="half-btn ${roleClass}" type="button" data-value="${value}" aria-label="Valor ${valueLabels[value]}${ariaSuffix}">${marker}${halfDomino(value)}</button>`;
       }).join('');
-      sharedHalfGrid.querySelectorAll('.half-btn').forEach(btn=>{ btn.onclick=()=>selectComposeHalf(Number(btn.dataset.value)); });
+      composeTargets.forEach(({grid})=>{
+        grid.innerHTML=markup;
+        grid.querySelectorAll('.half-btn').forEach(btn=>{ btn.onclick=()=>selectComposeHalf(Number(btn.dataset.value)); });
+      });
     }
 
     function renderCompose(){
       renderHalfGrid();
       const isDouble=state.compose.first!==null && state.compose.first===state.compose.second;
-      firstHalfChoice.className=`compose-choice${state.compose.first===null?' empty':' first-filled'}${isDouble?' double-filled':''}`;
-      firstHalfChoice.setAttribute('aria-label', state.compose.first===null ? 'Primera mitad pendiente' : `Primera mitad: ${valueLabels[state.compose.first]}`);
-      firstHalfChoice.innerHTML=`<span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">${state.compose.first===null?'Primera mitad pendiente':`Primera mitad: ${valueLabels[state.compose.first]}`}</span>`;
-      secondHalfChoice.className=`compose-choice${state.compose.second===null?' empty':' second-filled'}${isDouble?' double-filled':''}`;
-      secondHalfChoice.setAttribute('aria-label', state.compose.second===null ? 'Segunda mitad pendiente' : `Segunda mitad: ${valueLabels[state.compose.second]}`);
-      secondHalfChoice.innerHTML=`<span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">${state.compose.second===null?'Segunda mitad pendiente':`Segunda mitad: ${valueLabels[state.compose.second]}`}</span>`;
+      composeTargets.forEach(({first,second})=>{
+        first.className=`compose-choice${state.compose.first===null?' empty':' first-filled'}${isDouble?' double-filled':''}`;
+        first.setAttribute('aria-label', state.compose.first===null ? 'Primera mitad pendiente' : `Primera mitad: ${valueLabels[state.compose.first]}`);
+        first.innerHTML=`<span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">${state.compose.first===null?'Primera mitad pendiente':`Primera mitad: ${valueLabels[state.compose.first]}`}</span>`;
+        second.className=`compose-choice${state.compose.second===null?' empty':' second-filled'}${isDouble?' double-filled':''}`;
+        second.setAttribute('aria-label', state.compose.second===null ? 'Segunda mitad pendiente' : `Segunda mitad: ${valueLabels[state.compose.second]}`);
+        second.innerHTML=`<span class="compose-choice-dot" aria-hidden="true"></span><span class="sr-only">${state.compose.second===null?'Segunda mitad pendiente':`Segunda mitad: ${valueLabels[state.compose.second]}`}</span>`;
+      });
     }
 
     function renderFlow(){
@@ -1792,9 +1877,10 @@
       board.classList.toggle('menu-focus', menuActive);
       startPanel.classList.toggle('hidden', !atStart);
       pointsPanel.classList.toggle('flow-locked', !atPoints);
-      valuesPanel.classList.toggle('flow-locked', !atBuilder);
-      handZone.classList.toggle('flow-locked', !atBuilder);
+      valuesPanel.classList.toggle('flow-locked', !atBuilder || state.phase==='hand_confirmed');
+      handZone.classList.toggle('flow-locked', !atBuilder || state.phase==='hand_confirmed');
       tableStage.classList.toggle('hidden', state.phase!=='hand_confirmed');
+      tableHandZone.classList.toggle('flow-locked', state.phase!=='hand_confirmed');
     }
 
     function startNewGame(){
@@ -1820,34 +1906,47 @@
       const count=state.selected.length;
       const ready=count===7;
       const confirmed=state.handConfirmed;
-      handStatus.textContent=`${count} / 7`;
-      handConfirmBtn.disabled=!ready || confirmed;
-      handConfirmBtn.setAttribute('aria-pressed', String(confirmed));
-      handConfirmLabel.textContent=confirmed ? 'Confirmada' : 'Confirmar';
+      handStatusBadges.forEach(node=>{ node.textContent=`${count} / 7`; });
+      handConfirmButtons.forEach(button=>{
+        button.disabled=!ready || confirmed;
+        button.setAttribute('aria-pressed', String(confirmed));
+      });
+      handConfirmLabels.forEach(label=>{ label.textContent=confirmed ? 'Confirmada' : 'Confirmar'; });
+    }
+
+    function updateSingleHandTrayAffordance(tray,wrap){
+      const canScroll=tray.scrollWidth-tray.clientWidth>8;
+      const maxScroll=Math.max(0, tray.scrollWidth-tray.clientWidth);
+      const atStart=tray.scrollLeft<=4;
+      const atEnd=tray.scrollLeft>=maxScroll-4;
+      wrap.classList.toggle('scrollable', canScroll);
+      wrap.classList.toggle('can-scroll-left', canScroll && !atStart);
+      wrap.classList.toggle('can-scroll-right', canScroll && !atEnd);
     }
 
     function updateHandTrayAffordance(){
-      const canScroll=handTray.scrollWidth-handTray.clientWidth>8;
-      const maxScroll=Math.max(0, handTray.scrollWidth-handTray.clientWidth);
-      const atStart=handTray.scrollLeft<=4;
-      const atEnd=handTray.scrollLeft>=maxScroll-4;
-      handTrayWrap.classList.toggle('scrollable', canScroll);
-      handTrayWrap.classList.toggle('can-scroll-left', canScroll && !atStart);
-      handTrayWrap.classList.toggle('can-scroll-right', canScroll && !atEnd);
+      handTrays.forEach((tray,index)=>updateSingleHandTrayAffordance(tray, handTrayWraps[index]));
     }
 
     function renderHand(){
-      handTrayWrap.classList.toggle('is-opening-hand', state.userHasOpeningDouble);
+      handTrayWraps.forEach(wrap=>wrap.classList.toggle('is-opening-hand', state.userHasOpeningDouble));
       if(!state.selected.length){
-        handTray.className='hand-tray hand-empty';
-        handTray.textContent='';
-        handTray.scrollLeft=0; updateHandTrayAffordance(); return;
+        handTrays.forEach(tray=>{
+          tray.className='hand-tray hand-empty';
+          tray.textContent='';
+          tray.scrollLeft=0;
+        });
+        updateHandTrayAffordance();
+        return;
       }
-      handTray.className='hand-tray';
-      handTray.innerHTML=state.selected.map(tile=>{
+      const markup=state.selected.map(tile=>{
         const isOpeningDouble=state.userHasOpeningDouble && tile[0]===6 && tile[1]===6;
         return `<button class="hand-tile-wrap${isOpeningDouble?' is-opening-double':''}" type="button" data-hand-tile="${key(tile)}" aria-label="Quitar ficha ${key(tile)}">${domino(tile[0],tile[1],'small')}</button>`;
       }).join('');
+      handTrays.forEach(tray=>{
+        tray.className='hand-tray';
+        tray.innerHTML=markup;
+      });
       updateHandTrayAffordance();
     }
 
@@ -1893,15 +1992,17 @@
     }
 
     themePicker.addEventListener('click',event=>{ const chip=event.target.closest('.theme-chip'); if(!chip) return; setTheme(chip.dataset.themeOption); });
-    handTray.addEventListener('scroll', updateHandTrayAffordance, {passive:true});
-    window.addEventListener('resize', updateHandTrayAffordance);
-    handTray.addEventListener('click',event=>{
-      if(state.handConfirmed) return;
-      const button=event.target.closest('[data-hand-tile]'); if(!button) return;
-      const tile=button.dataset.handTile.split('-').map(Number);
-      if(window.confirm(`¿Quitar la ficha ${key(tile)} de tu mano?`)){ removeTile(tile); render(); }
+    handTrays.forEach((tray,index)=>{
+      tray.addEventListener('scroll', ()=>updateSingleHandTrayAffordance(tray, handTrayWraps[index]), {passive:true});
+      tray.addEventListener('click',event=>{
+        if(state.handConfirmed) return;
+        const button=event.target.closest('[data-hand-tile]'); if(!button) return;
+        const tile=button.dataset.handTile.split('-').map(Number);
+        if(window.confirm(`¿Quitar la ficha ${key(tile)} de tu mano?`)){ removeTile(tile); render(); }
+      });
     });
-    handConfirmBtn.addEventListener('click', confirmHand);
+    window.addEventListener('resize', updateHandTrayAffordance);
+    handConfirmButtons.forEach(button=>button.addEventListener('click', confirmHand));
     newGameBtn.addEventListener('click', startNewGame);
     continueGameBtn.addEventListener('click', continueGame);
     points70Btn.addEventListener('click',()=>chooseTargetPoints(70));
