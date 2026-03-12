@@ -814,7 +814,7 @@
     .board-playfield{
       position:relative;
       min-height:520px;
-      padding:18px 18px 168px;
+      padding:18px;
       border-radius:28px;
       border:1px solid rgba(255,255,255,.08);
       background:
@@ -872,7 +872,7 @@
     .board-selector-overlay{
       position:absolute;
       left:50%;
-      bottom:92px;
+      bottom:18px;
       transform:translateX(-50%);
       width:min(560px, calc(100% - 64px));
       backdrop-filter:blur(8px);
@@ -943,7 +943,7 @@
     .table-layout{
       display:grid;
       grid-template-columns:92px minmax(0,1fr) 92px;
-      grid-template-rows:auto minmax(0,1fr);
+      grid-template-rows:auto minmax(0,1fr) auto;
       gap:14px 10px;
       align-items:center;
     }
@@ -967,13 +967,10 @@
     }
 
     .table-hand-zone{
-      position:absolute;
-      left:50%;
-      bottom:14px;
-      transform:translateX(-50%);
-      width:min(900px, calc(100% - 108px));
-      margin:0;
-      z-index:3;
+      grid-column:1 / -1;
+      grid-row:3;
+      width:100%;
+      margin-top:2px;
     }
 
     .table-hand-zone .hand-tray-wrap{
@@ -1655,7 +1652,7 @@
       .seat-grid,.player-grid,.summary-grid{grid-template-columns:1fr}
       .board.menu-focus{margin-top:-1vh}
       .table-stage{padding:10px 8px 8px;border-radius:18px}
-      .board-playfield{min-height:420px;padding:12px 12px 112px;border-radius:22px}
+      .board-playfield{min-height:420px;padding:12px;border-radius:22px}
       .board-playfield::before{inset:12px;border-radius:18px}
       .board-playfield-head{margin-bottom:10px}
       .table-layout{grid-template-columns:minmax(0, 1fr);grid-template-rows:auto;gap:8px}
@@ -1677,7 +1674,7 @@
       .board-chain{min-height:250px;padding:8px 4px 18px;gap:8px}
       .board-tile .domino.small{width:48px;height:76px}
       .board-owner{font-size:.66rem}
-      .board-selector-overlay{width:calc(100% - 16px);bottom:8px}
+      .board-selector-overlay{width:calc(100% - 16px);bottom:12px}
       .table-selector-card{padding:12px;border-radius:18px}
       .side-choice-row{grid-template-columns:1fr}
     }
@@ -1717,9 +1714,9 @@
       .hand-tray-wrap::before{top:78px}
       .scroll-fade{top:92px}
       .table-stage{padding:10px 6px 6px}
-      .board-playfield{min-height:380px;padding:10px 10px 92px}
+      .board-playfield{min-height:380px;padding:10px}
       .board-chain{min-height:220px}
-      .board-selector-overlay{width:calc(100% - 12px);bottom:6px}
+      .board-selector-overlay{width:calc(100% - 12px);bottom:10px}
       .opponent-hand.top .opponent-tile{width:26px;height:42px;margin-inline:0}
       .opponent-hand.left .opponent-tile,
       .opponent-hand.right .opponent-tile{width:48px;height:30px;margin-inline:0}
